@@ -240,7 +240,7 @@ public static class SeedData
 
         List<Engine> engines = [];
 
-        for (int i = 0; i < vehicle.Engines.Length; i++)
+        for (int i = 0; i < vehicle.Engines.Count; i++)
         {
             SeedEngineDto? seed = vehicle.Engines[i];
 

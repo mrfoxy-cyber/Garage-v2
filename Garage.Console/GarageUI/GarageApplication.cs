@@ -76,7 +76,7 @@ internal sealed class GarageApplication
             VehicleGarage selectedGarage = garages[i];
 
             var menuOption= new MenuOption(
-                $"{garages[i].GarageName} ({garages[i].OccupiedSpaces}/{garages[i].Capacity})",
+                () => $"{selectedGarage.GarageName} ({selectedGarage.OccupiedSpaces}/{selectedGarage.Capacity})",
                 () => OpenGarage(selectedGarage)
                 );
 

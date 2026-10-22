@@ -250,7 +250,8 @@ public class Garage
                 "We could not find your vehicle.");
         }
 
-        parkingSpots[match.Value.SpotIndex] = (SpotNumber: match.Value.SpotIndex, Vehicle: null); ;
+        int index = match.Value.SpotIndex;
+        parkingSpots[index] = (parkingSpots[index].SpotNumber, null);
 
         return new GarageOperationResult(
             true,
@@ -294,19 +295,6 @@ public class Garage
     public List<Vehicle> Search(
     VehicleSearchCriteria criteria)
     {
-        int matchCount = 0;
-
-        for (int index = 0;
-             index < parkingSpots.Count;
-             index++)
-        {
-            if (parkingSpots[index].Vehicle is Vehicle vehicle &&
-                MatchesCriteria(vehicle, criteria))
-            {
-                matchCount++;
-            }
-        }
-
         List<Vehicle> matches = [];
 
         int matchIndex = 0;

@@ -5,8 +5,8 @@ using Garage.Vehicles;
 using VehicleGarage = Garage.Parking.Garage;
 
 
-//try
-//{
+try
+{
     List<Vehicle> parkedVehicles =
         SeedData.LoadVehicles("vehicles.json");
 
@@ -26,9 +26,9 @@ using VehicleGarage = Garage.Parking.Garage;
     application.Run();
 
     Console.WriteLine("Goodbye!");
-//}
-/*
- * catch (Exception exception) when (
+}
+
+  catch (Exception exception) when (
     exception is IOException or
     System.Text.Json.JsonException or
     ArgumentException)
@@ -46,4 +46,4 @@ catch (Exception exception)
     Environment.ExitCode = 1;
 }
 
-*/
+

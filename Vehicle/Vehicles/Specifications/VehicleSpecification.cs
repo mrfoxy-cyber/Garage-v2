@@ -16,18 +16,17 @@ public abstract class VehicleSpecification
 
     public List<Engine> Engines
     {
-        get => [.. engines];
+        get => new List<Engine>(engines);
         init
         {
             if (value.Count > MaximumNumberOfEngines)
             {
                 throw new ArgumentException(
-                    $"A vehicle cannot have more than " +
-                    $"{MaximumNumberOfEngines} engines.",
+                    $"A vehicle cannot have more than {MaximumNumberOfEngines} engines.",
                     nameof(value));
             }
 
-            engines = [.. value];
+            engines = new List<Engine>(value);
         }
     }
 
@@ -62,34 +61,7 @@ public abstract class VehicleSpecification
             return false;
         }
 
-        /* same as
-
-        Engine[] newEngines =
-    new Engine[engines.Length - 1];
-
-    Array.Copy(
-        engines,
-        sourceIndex: 0,
-        newEngines,
-        destinationIndex: 0,
-        length: index);
-
-    Array.Copy(
-        engines,
-        sourceIndex: index + 1,
-        newEngines,
-        destinationIndex: index,
-        length: engines.Length - index - 1);
-
-    engines = newEngines;
-
-        */
-
-        engines =
-        [
-            .. engines[..index],
-            .. engines[(index + 1)..]
-        ];
+        engines.RemoveAt(index);
 
         return true;
     }
