@@ -7,7 +7,7 @@ namespace Garage.Parking;
 
 public class Garage
 {
-    private readonly Vehicle?[] vehicles;
+    private readonly Vehicle?[] parkingSpots;
     public const int MaximumGarageCapacity = 100_000;
 
     public string GarageName { get; }
@@ -21,10 +21,10 @@ public class Garage
             int count = 0;
 
             for (int index = 0;
-                 index < vehicles.Length;
+                 index < parkingSpots.Length;
                  index++)
             {
-                if (vehicles[index] is not null)
+                if (parkingSpots[index] is not null)
                 {
                     count++;
                 }
@@ -46,10 +46,10 @@ public class Garage
             int parkedVehicleIndex = 0;
 
             for (int index = 0;
-                 index < vehicles.Length;
+                 index < parkingSpots.Length;
                  index++)
             {
-                if (vehicles[index] is Vehicle vehicle)
+                if (parkingSpots[index] is Vehicle vehicle)
                 {
                     parkedVehicles[parkedVehicleIndex] =
                         vehicle;
@@ -110,10 +110,10 @@ public class Garage
     string registrationNumber)
     {
         for (int index = 0;
-             index < vehicles.Length;
+             index < parkingSpots.Length;
              index++)
         {
-            Vehicle? parkedVehicle = vehicles[index];
+            Vehicle? parkedVehicle = parkingSpots[index];
 
             if (parkedVehicle is not null &&
                 parkedVehicle.RegistrationNumber.Equals(
@@ -138,10 +138,10 @@ public class Garage
             int resultIndex = 0;
 
             for (int spotIndex = 0;
-                 spotIndex < vehicles.Length;
+                 spotIndex < parkingSpots.Length;
                  spotIndex++)
             {
-                if (vehicles[spotIndex] is Vehicle vehicle)
+                if (parkingSpots[spotIndex] is Vehicle vehicle)
                 {
                     parkedVehicles[resultIndex] = (
                         SpotNumber: spotIndex + 1,
@@ -220,10 +220,10 @@ public class Garage
     public (int SpotIndex, Vehicle Vehicle)? FindVehicleByRegistration( string registrationNumber)
     {
         for (int index = 0;
-             index < vehicles.Length;
+             index < parkingSpots.Length;
              index++)
         {
-            if (vehicles[index] is Vehicle vehicle &&
+            if (parkingSpots[index] is Vehicle vehicle &&
                 vehicle.RegistrationNumber.Equals(
                     registrationNumber,
                     StringComparison.OrdinalIgnoreCase))
@@ -302,11 +302,11 @@ public class Garage
 
         this.GarageName = garageName;
         this.Capacity = capacity;
-        this.vehicles = new Vehicle?[capacity];
+        this.parkingSpots = new Vehicle?[capacity];
 
         Array.Copy(
             startingVehicles,
-            this.vehicles,
+            this.parkingSpots,
             startingVehicles.Length);
     }
 
@@ -314,7 +314,7 @@ public class Garage
     {
         ArgumentNullException.ThrowIfNull(vehicle);
 
-        int availableSpotIndex = NextOpenSpace(vehicles);
+        int availableSpotIndex = NextOpenSpace(parkingSpots);
 
         if (availableSpotIndex == -1)
         {
@@ -339,7 +339,7 @@ public class Garage
                     $"I am sorry, but there doesnt exists {spot}"
                 );
 
-        if (vehicles[spot-1] is not null)
+        if (parkingSpots[spot-1] is not null)
             return new GarageOperationResult
                     (
                         false,
@@ -356,7 +356,7 @@ public class Garage
                 $"{vehicle.RegistrationNumber} is already parked.");
         }
 
-        vehicles[spot - 1] = vehicle;
+        parkingSpots[spot - 1] = vehicle;
         return new GarageOperationResult(
             true,
             spot-1,
@@ -384,7 +384,7 @@ public class Garage
                 "We could not find your vehicle.");
         }
 
-        vehicles[match.Value.SpotIndex] = null;
+        parkingSpots[match.Value.SpotIndex] = null;
 
         return new GarageOperationResult(
             true,
@@ -407,7 +407,7 @@ public class Garage
 
         int spotIndex = spotNumber - 1;
 
-        Vehicle? vehicle = vehicles[spotIndex];
+        Vehicle? vehicle = parkingSpots[spotIndex];
 
         if(vehicle is null)
         {
@@ -431,10 +431,10 @@ public class Garage
         int matchCount = 0;
 
         for (int index = 0;
-             index < vehicles.Length;
+             index < parkingSpots.Length;
              index++)
         {
-            if (vehicles[index] is Vehicle vehicle &&
+            if (parkingSpots[index] is Vehicle vehicle &&
                 MatchesCriteria(vehicle, criteria))
             {
                 matchCount++;
@@ -446,10 +446,10 @@ public class Garage
         int matchIndex = 0;
 
         for (int index = 0;
-             index < vehicles.Length;
+             index < parkingSpots.Length;
              index++)
         {
-            if (vehicles[index] is Vehicle vehicle &&
+            if (parkingSpots[index] is Vehicle vehicle &&
                 MatchesCriteria(vehicle, criteria))
             {
                 matches[matchIndex] = vehicle;
