@@ -10,7 +10,7 @@ namespace Garage.ConsoleApp.GarageUI;
 
 internal sealed class SearchCriteriaCreator
 {
-    private readonly Type[] availableVehicleTypes =
+    private readonly List<Type> availableVehicleTypes =
     [
         typeof(Car),
         typeof(Motorcycle),
@@ -20,7 +20,7 @@ internal sealed class SearchCriteriaCreator
         typeof(Truck)
     ];
 
-    private readonly bool[] selectedVehicleTypes = new bool[6];
+    private readonly List<bool> selectedVehicleTypes = [false,false,false,false,false,false];
     private VehicleColor? color;
     private int? numberOfWheels;
     private int? numberOfEngines;
@@ -37,26 +37,11 @@ internal sealed class SearchCriteriaCreator
     {
         get
         {
-            string text = "";
+            List<Type> selectedTypes = CreateSelectedVehicleTypes();
 
-            for (int index = 0;
-                 index < availableVehicleTypes.Length;
-                 index++)
-            {
-                if (!selectedVehicleTypes[index])
-                {
-                    continue;
-                }
-
-                if (text.Length > 0)
-                {
-                    text += ", ";
-                }
-
-                text += availableVehicleTypes[index].Name;
-            }
-
-            return text.Length == 0 ? "Any" : text;
+            return selectedTypes.Count == 0
+                ? "Any"
+                : string.Join(", ", selectedTypes.Select(type => type.Name));
         }
     }
     public string ColorText => color?.ToString() ?? "Any";
@@ -104,17 +89,12 @@ internal sealed class SearchCriteriaCreator
             Console.WriteLine("=== Choose vehicle types ===");
             Console.WriteLine();
 
-            for (int index = 0;
-                 index < availableVehicleTypes.Length;
-                 index++)
+            for (int index = 0; index < availableVehicleTypes.Count; index++)
             {
-                string marker = selectedVehicleTypes[index]
-                    ? "X"
-                    : " ";
+                string marker = selectedVehicleTypes[index] ? "X" : " ";
+                string name = availableVehicleTypes[index].Name;
 
-                Console.WriteLine(
-                    $"{index + 1}. [{marker}] " +
-                    availableVehicleTypes[index].Name);
+                Console.WriteLine($"{index + 1}. [{marker}] {name}");
             }
 
             Console.WriteLine("0. Done");
@@ -123,7 +103,7 @@ internal sealed class SearchCriteriaCreator
             int choice = ConsoleInput.ReadInt(
                 "Toggle type: ",
                 minimum: 0,
-                maximum: availableVehicleTypes.Length);
+                maximum: availableVehicleTypes.Count);
 
             if (choice == 0)
             {
@@ -219,7 +199,7 @@ internal sealed class SearchCriteriaCreator
     public void Clear()
     {
         for (int index = 0;
-             index < selectedVehicleTypes.Length;
+             index < selectedVehicleTypes.Count;
              index++)
         {
             selectedVehicleTypes[index] = false;
@@ -238,32 +218,17 @@ internal sealed class SearchCriteriaCreator
         manufacturingYear = null;
     }
 
-    private Type[] CreateSelectedVehicleTypes()
+    private List<Type> CreateSelectedVehicleTypes()
     {
-        int selectedCount = 0;
+        List<Type> vehicleTypes = [];
 
         for (int index = 0;
-             index < selectedVehicleTypes.Length;
+             index < selectedVehicleTypes.Count;
              index++)
         {
             if (selectedVehicleTypes[index])
             {
-                selectedCount++;
-            }
-        }
-
-        Type[] vehicleTypes = new Type[selectedCount];
-        int resultIndex = 0;
-
-        for (int index = 0;
-             index < selectedVehicleTypes.Length;
-             index++)
-        {
-            if (selectedVehicleTypes[index])
-            {
-                vehicleTypes[resultIndex] =
-                    availableVehicleTypes[index];
-                resultIndex++;
+                vehicleTypes.Add(availableVehicleTypes[index]);
             }
         }
 

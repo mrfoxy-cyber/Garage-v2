@@ -4,14 +4,14 @@ namespace Garage.ConsoleApp.ConsoleFramework;
 
 internal sealed class ConsoleMenu
 {
-    private readonly MenuOption[] options;
+    private readonly List<MenuOption> options;
 
     public string Title { get; }
     public string BackOptionText { get; }
 
     public ConsoleMenu(
         string title,
-        MenuOption[] options,
+        List<MenuOption> options,
         string backOptionText = "Back")
     {
         Title = title;
@@ -29,7 +29,7 @@ internal sealed class ConsoleMenu
             int choice = ConsoleInput.ReadInt(
                 "Choose: ",
                 minimum: 0,
-                maximum: options.Length
+                maximum: options.Count
                 );
 
             if (choice == 0)
@@ -72,7 +72,7 @@ internal sealed class ConsoleMenu
         Console.WriteLine($"=== {Title} ===");
         Console.WriteLine();
 
-        for (int index = 0; index < options.Length; index++)
+        for (int index = 0; index < options.Count; index++)
         {
             Console.WriteLine(
                 $"{index + 1}. {options[index].Text}");

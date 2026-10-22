@@ -29,10 +29,10 @@ internal sealed class EngineCreator
         menu.Show();
     }
 
-    private MenuOption[] CreateOptions(
+    private List<MenuOption> CreateOptions(
         EngineCreatedHandler handleCreatedEngine)
     {
-        MenuOption[] options =
+        List<MenuOption> options =
         [
             new MenuOption(
                 () => $"Serial number: {draft.SerialNumberText}",
@@ -51,7 +51,7 @@ internal sealed class EngineCreator
                 AddFuelOption(ref options);
                 AddHorsePowerOption(ref options);
                 AddDisplacementOption(ref options);
-                AddOption(ref options, new MenuOption(
+                options.Add( new MenuOption(
                     () => $"Cylinders: {draft.CylinderCountText}",
                     ChooseCylinderCount));
                 break;
@@ -60,16 +60,16 @@ internal sealed class EngineCreator
                 AddFuelOption(ref options);
                 AddHorsePowerOption(ref options);
                 AddDisplacementOption(ref options);
-                AddOption(ref options, new MenuOption(
+                options.Add( new MenuOption(
                     () => $"Rotors: {draft.RotorCountText}",
                     ChooseRotorCount));
                 break;
 
             case EngineKind.ElectricMotor:
-                AddOption(ref options, new MenuOption(
+                options.Add( new MenuOption(
                     () => $"Power: {draft.PowerText} kW",
                     ChoosePower));
-                AddOption(ref options, new MenuOption(
+                options.Add( new MenuOption(
                     () => $"Voltage: {draft.VoltageText} V",
                     ChooseVoltage));
                 break;
@@ -77,7 +77,7 @@ internal sealed class EngineCreator
             case EngineKind.Steam:
                 AddFuelOption(ref options);
                 AddHorsePowerOption(ref options);
-                AddOption(ref options, new MenuOption(
+                options.Add( new MenuOption(
                     () => $"Boiler pressure: {draft.BoilerPressureText} bar",
                     ChooseBoilerPressure));
                 break;
@@ -88,7 +88,7 @@ internal sealed class EngineCreator
 
             case EngineKind.Turbofan:
                 AddTurbineOptions(ref options);
-                AddOption(ref options, new MenuOption(
+                options.Add( new MenuOption(
                     () => $"Bypass ratio: {draft.BypassRatioText}",
                     ChooseBypassRatio));
                 break;
@@ -96,17 +96,17 @@ internal sealed class EngineCreator
             case EngineKind.Turboprop:
             case EngineKind.Turboshaft:
                 AddTurbineOptions(ref options);
-                AddOption(ref options, new MenuOption(
+                options.Add( new MenuOption(
                     () => $"Shaft horsepower: {draft.ShaftHorsePowerText}",
                     ChooseShaftHorsePower));
                 break;
         }
 
-        AddOption(ref options, new MenuOption(
+        options.Add( new MenuOption(
             "Create engine",
             () => CreateEngine(handleCreatedEngine)));
 
-        AddOption(ref options, new MenuOption(
+        options.Add( new MenuOption(
             "Clear engine fields",
             ClearFields));
 
@@ -138,41 +138,33 @@ internal sealed class EngineCreator
         draft.Kind = kind;
     }
 
-    private void AddFuelOption(ref MenuOption[] options)
+    private void AddFuelOption(ref List<MenuOption> options)
     {
-        AddOption(ref options, new MenuOption(
+        options.Add(new MenuOption(
             () => $"Fuel: {draft.FuelTypeText}",
             ChooseFuelType));
     }
 
-    private void AddHorsePowerOption(ref MenuOption[] options)
+    private void AddHorsePowerOption(ref  List<MenuOption> options)
     {
-        AddOption(ref options, new MenuOption(
+        options.Add(new MenuOption(
             () => $"Horsepower: {draft.HorsePowerText}",
             ChooseHorsePower));
     }
 
-    private void AddDisplacementOption(ref MenuOption[] options)
+    private void AddDisplacementOption(ref List<MenuOption> options)
     {
-        AddOption(ref options, new MenuOption(
+        options.Add(new MenuOption(
             () => $"Displacement: {draft.DisplacementText} cc",
             ChooseDisplacement));
     }
 
-    private void AddTurbineOptions(ref MenuOption[] options)
+    private void AddTurbineOptions(ref List<MenuOption> options)
     {
         AddFuelOption(ref options);
-        AddOption(ref options, new MenuOption(
+        options.Add( new MenuOption(
             () => $"Thrust: {draft.ThrustText} kN",
             ChooseThrust));
-    }
-
-    private static void AddOption(
-        ref MenuOption[] options,
-        MenuOption option)
-    {
-        Array.Resize(ref options, options.Length + 1);
-        options[^1] = option;
     }
 
     private void ChooseSerialNumber()

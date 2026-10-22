@@ -69,7 +69,7 @@ internal sealed class GarageApplication
             return;
         }
 
-        MenuOption[] garageOptions = new MenuOption[garages.Count];
+        List<MenuOption> garageOptions = [];
 
         for(int i=0; i < garages.Count; i++)
         {
@@ -80,7 +80,7 @@ internal sealed class GarageApplication
                 () => OpenGarage(selectedGarage)
                 );
 
-            garageOptions[i] = menuOption;
+            garageOptions.Add(menuOption);
         }
 
 

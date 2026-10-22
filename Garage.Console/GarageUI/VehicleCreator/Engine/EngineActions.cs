@@ -12,9 +12,9 @@ internal sealed class EngineActions
 {
     public EngineCreatorResult CreateEngine(EngineDraft draft)
     {
-        string[] missing = draft.GetMissingFields();
+        List<string> missing = draft.GetMissingFields();
 
-        if (missing.Length > 0)
+        if (missing.Count > 0)
         {
             return EngineCreatorResult.Failed(
                 $"Complete these engine fields: " +

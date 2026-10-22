@@ -38,7 +38,7 @@ public class GarageSearchTests
             NumberOfWheels = 4
         };
 
-        Vehicle[] matches = garage.Search(criteria);
+        List<Vehicle> matches = garage.Search(criteria);
 
         Assert.Same(matchingCar, Assert.Single(matches));
     }
@@ -51,7 +51,7 @@ public class GarageSearchTests
             2,
             [VehicleFixtures.CreateCar()]);
 
-        Vehicle[] matches = garage.Search(
+        List<Vehicle> matches = garage.Search(
             new VehicleSearchCriteria
             {
                 Color = VehicleColor.Pink

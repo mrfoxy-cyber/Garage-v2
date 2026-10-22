@@ -70,6 +70,10 @@ internal sealed class GarageActions
 
         foreach (var parkedVehicle in parkedVehicles)
         {
+            if (parkedVehicle.Vehicle is null)
+            {
+                continue;
+            } 
             Console.WriteLine(
                 $"Spot {parkedVehicle.SpotNumber}: " +
                 $"{parkedVehicle.Vehicle.GetType().Name}, " +
@@ -206,13 +210,13 @@ internal sealed class GarageActions
 
     private void ShowSearchResults(VehicleSearchCriteria criteria)
     {
-        Vehicle[] matches = garage.Search(criteria);
+        List<Vehicle> matches = garage.Search(criteria);
 
         Console.Clear();
-        Console.WriteLine($"Found {matches.Length} vehicle(s).");
+        Console.WriteLine($"Found {matches.Count} vehicle(s).");
         Console.WriteLine();
 
-        for (int index = 0; index < matches.Length; index++)
+        for (int index = 0; index < matches.Count; index++)
         {
             Vehicle vehicle = matches[index];
             var parkedVehicle = garage.FindVehicleByRegistration(

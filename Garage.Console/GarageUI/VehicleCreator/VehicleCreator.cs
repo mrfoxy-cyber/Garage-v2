@@ -168,11 +168,11 @@ internal sealed class VehicleCreator
     private void ShowDraftMenu(
         string title,
         VehicleDraft draft,
-        MenuOption[] typeOptions,
+        List<MenuOption> typeOptions,
         Action createVehicle,
         string middleDimensionName = "Width")
     {
-        MenuOption[] options =
+        List<MenuOption> options =
         [
             .. CreateCommonOptions(draft, middleDimensionName),
             .. typeOptions,
@@ -192,7 +192,7 @@ internal sealed class VehicleCreator
         new ConsoleMenu(title, options).Show();
     }
 
-    private static MenuOption[] CreateCommonOptions(
+    private static List<MenuOption> CreateCommonOptions(
         VehicleDraft draft,
         string middleDimensionName)
     {

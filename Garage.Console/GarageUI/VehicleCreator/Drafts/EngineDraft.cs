@@ -33,18 +33,18 @@ internal sealed class EngineDraft
     public string BypassRatioText => BypassRatio?.ToString() ?? "Not set";
     public string ShaftHorsePowerText => ShaftHorsePower?.ToString() ?? "Not set";
 
-    public string[] GetMissingFields()
+    public List<string> GetMissingFields()
     {
-        string[] missing = [];
+        List<string> missing = [];
 
         if (Kind is null)
-            AddMissingField(ref missing, "engine type");
+            missing.Add( "engine type");
 
         if (string.IsNullOrWhiteSpace(SerialNumber))
-            AddMissingField(ref missing, "serial number");
+            missing.Add("serial number");
 
         if (string.IsNullOrWhiteSpace(Model))
-            AddMissingField(ref missing, "model");
+            missing.Add("model");
 
         switch (Kind)
         {
@@ -119,36 +119,35 @@ internal sealed class EngineDraft
         ShaftHorsePower = null;
     }
 
-    private void RequireFuel(ref string[] missing)
+    private void RequireFuel(ref List<string> missing)
     {
         if (FuelType is null)
-            AddMissingField(ref missing, "fuel type");
+            missing.Add("fuel type");
     }
 
-    private void RequireHorsePower(ref string[] missing)
+    private void RequireHorsePower(ref List<string> missing)
     {
         if (HorsePower is null)
-            AddMissingField(ref missing, "horsepower");
+            missing.Add( "horsepower");
     }
 
-    private void RequireDisplacement(ref string[] missing)
+    private void RequireDisplacement(ref List<string> missing)
     {
         if (DisplacementCc is null)
-            AddMissingField(ref missing, "displacement");
+            missing.Add("displacement");
     }
 
-    private void RequireTurbineFields(ref string[] missing)
+    private void RequireTurbineFields(ref List<string> missing)
     {
         RequireFuel(ref missing);
         if (ThrustKn is null)
-            AddMissingField(ref missing, "thrust");
+            missing.Add( "thrust");
     }
 
     private static void AddMissingField(
-        ref string[] missing,
+        ref List<string> missing,
         string fieldName)
     {
-        Array.Resize(ref missing, missing.Length + 1);
-        missing[^1] = fieldName;
+        missing.Add(fieldName);
     }
 }

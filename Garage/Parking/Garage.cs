@@ -104,7 +104,7 @@ public class Garage
 
     public Garage(
         string garageName,
-        List<Vehicle?> vehicles)
+        List<Vehicle> vehicles)
         : this(
             garageName: garageName,
             capacity: vehicles?.Count ??
@@ -116,7 +116,7 @@ public class Garage
     public Garage(
     string garageName,
     int capacity,
-    List<Vehicle?> initialVehicles)
+    List<Vehicle> initialVehicles)
     {
         if (string.IsNullOrWhiteSpace(garageName))
         {
@@ -134,7 +134,7 @@ public class Garage
                 $"{MaximumGarageCapacity}.");
         }
 
-        List<Vehicle?> startingVehicles =
+        List<Vehicle> startingVehicles =
             initialVehicles ?? [];
 
         if (startingVehicles.Count > capacity)
@@ -291,7 +291,7 @@ public class Garage
     // Arrays have a fixed size, so the first loop counts the matches.
     // This lets us create an array of the exact required size.
     // The second loop then fills that array with the matching vehicles.
-    public Vehicle[] Search(
+    public List<Vehicle> Search(
     VehicleSearchCriteria criteria)
     {
         int matchCount = 0;
@@ -307,7 +307,7 @@ public class Garage
             }
         }
 
-        Vehicle[] matches = new Vehicle[matchCount];
+        List<Vehicle> matches = [];
 
         int matchIndex = 0;
 
@@ -318,7 +318,7 @@ public class Garage
             if (parkingSpots[index].Vehicle is Vehicle vehicle &&
                 MatchesCriteria(vehicle, criteria))
             {
-                matches[matchIndex] = vehicle;
+                matches.Add(vehicle);
                 matchIndex++;
             }
         }
@@ -367,12 +367,12 @@ public class Garage
             return false;
         }
 
-        if (criteria.VehicleTypes.Length > 0)
+        if (criteria.VehicleTypes.Count > 0)
         {
             bool matchesVehicleType = false;
 
             for (int index = 0;
-                 index < criteria.VehicleTypes.Length;
+                 index < criteria.VehicleTypes.Count;
                  index++)
             {
                 if (criteria.VehicleTypes[index]

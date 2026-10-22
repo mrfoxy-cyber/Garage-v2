@@ -5,10 +5,10 @@ namespace Garage.ConsoleApp.GarageUI;
 internal sealed record EngineCreatorResult(
     bool Success,
     bool Cancelled,
-    Engine[] Engines,
+    List<Engine> Engines,
     string Message)
 {
-    public static EngineCreatorResult Completed(Engine[] engines)
+    public static EngineCreatorResult Completed(List<Engine> engines)
     {
         string names = string.Join(
             ", ",
@@ -20,7 +20,7 @@ internal sealed record EngineCreatorResult(
             Success: true,
             Cancelled: false,
             Engines: engines,
-            Message: $"Created {engines.Length} engine(s): {names}");
+            Message: $"Created {engines.Count} engine(s): {names}");
     }
 
     public static EngineCreatorResult Failed(string message)
