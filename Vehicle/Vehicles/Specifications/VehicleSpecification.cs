@@ -44,12 +44,18 @@ public abstract class VehicleSpecification
 
     public Engine? FindEngine(string serialNumber)
     {
-        return engines.Find(engine => engine.SerialNumber == serialNumber);
+        return engines.Find(engine => string.Equals(
+                                                    engine.SerialNumber,
+                                                    serialNumber,
+                                                    StringComparison.OrdinalIgnoreCase));
     }
 
     public int FindEngineIndex(string serialNumber)
     {
-        return engines.FindIndex(engine => engine.SerialNumber == serialNumber);
+        return engines.FindIndex(engine => string.Equals(
+                                                    engine.SerialNumber,
+                                                    serialNumber,
+                                                    StringComparison.OrdinalIgnoreCase));
     }
 
     public bool RemoveEngine (Engine engine)

@@ -255,25 +255,14 @@ internal sealed class GarageActions
     {
         List<Vehicle> created = createdVehicles.Vehicles;
         List<global::Garage.Parking.Garage> garages = garageProvider();
-        int availableCount = 0;
-
-        for (int index = 0; index < created.Count; index++)
-        {
-            if (!VehicleParkingStatus.IsParked(created[index], garages))
-            {
-                availableCount++;
-            }
-        }
 
         List<Vehicle> vehicles = [];
-        int availableIndex = 0;
 
         for (int index = 0; index < created.Count; index++)
         {
             if (!VehicleParkingStatus.IsParked(created[index], garages))
             {
-                vehicles[availableIndex] = created[index];
-                availableIndex++;
+                vehicles.Add(created[index]);
             }
         }
 

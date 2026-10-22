@@ -158,45 +158,55 @@ internal static class ConsoleInput
         Type enumType,
         string prompt)
     {
-        Array values = Enum.GetValues(enumType);
+        List<Enum> values = [];
+
+        foreach (Enum value in Enum.GetValues(enumType))
+        {
+            values.Add(value);
+        }
 
         Console.WriteLine(prompt);
 
-        for (int index = 0; index < values.Length; index++)
+        for (int index = 0; index < values.Count; index++)
         {
-            Console.WriteLine($"{index + 1}. {values.GetValue(index)}");
+            Console.WriteLine($"{index + 1}. {values[index]}");
         }
 
         int choice = ReadInt(
             "Choose: ",
             minimum: 1,
-            maximum: values.Length);
+            maximum: values.Count);
 
-        return (Enum)values.GetValue(choice - 1)!;
+        return values[choice - 1];
     }
 
     public static Enum? ReadOptionalEnum(
         Type enumType,
         string prompt)
     {
-        Array values = Enum.GetValues(enumType);
+        List<Enum> values = [];
+
+        foreach (Enum value in Enum.GetValues(enumType))
+        {
+            values.Add(value);
+        }
 
         Console.WriteLine(prompt);
         Console.WriteLine("0. Any");
 
-        for (int index = 0; index < values.Length; index++)
+        for (int index = 0; index < values.Count; index++)
         {
-            Console.WriteLine($"{index + 1}. {values.GetValue(index)}");
+            Console.WriteLine($"{index + 1}. {values[index]}");
         }
 
         int choice = ReadInt(
             "Choose: ",
             minimum: 0,
-            maximum: values.Length);
+            maximum: values.Count);
 
         return choice == 0
             ? null
-            : (Enum)values.GetValue(choice - 1)!;
+            : (Enum)values[choice -1]!;
     }
 
     public static void Pause()

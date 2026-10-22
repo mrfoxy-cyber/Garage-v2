@@ -51,50 +51,50 @@ internal sealed class EngineDraft
             case EngineKind.Inline:
             case EngineKind.VEngine:
             case EngineKind.Flat:
-                RequireFuel(ref missing);
-                RequireHorsePower(ref missing);
-                RequireDisplacement(ref missing);
+                RequireFuel( missing);
+                RequireHorsePower( missing);
+                RequireDisplacement( missing);
                 if (CylinderCount is null)
-                    AddMissingField(ref missing, "cylinder count");
+                    AddMissingField( missing, "cylinder count");
                 break;
 
             case EngineKind.Rotary:
-                RequireFuel(ref missing);
-                RequireHorsePower(ref missing);
-                RequireDisplacement(ref missing);
+                RequireFuel( missing);
+                RequireHorsePower( missing);
+                RequireDisplacement( missing);
                 if (RotorCount is null)
-                    AddMissingField(ref missing, "rotor count");
+                    AddMissingField( missing, "rotor count");
                 break;
 
             case EngineKind.ElectricMotor:
                 if (PowerKw is null)
-                    AddMissingField(ref missing, "power");
+                    AddMissingField(missing, "power");
                 if (Voltage is null)
-                    AddMissingField(ref missing, "voltage");
+                    AddMissingField( missing, "voltage");
                 break;
 
             case EngineKind.Steam:
-                RequireFuel(ref missing);
-                RequireHorsePower(ref missing);
+                RequireFuel( missing);
+                RequireHorsePower( missing);
                 if (BoilerPressureBar is null)
-                    AddMissingField(ref missing, "boiler pressure");
+                    AddMissingField( missing, "boiler pressure");
                 break;
 
             case EngineKind.Turbojet:
-                RequireTurbineFields(ref missing);
+                RequireTurbineFields( missing);
                 break;
 
             case EngineKind.Turbofan:
-                RequireTurbineFields(ref missing);
+                RequireTurbineFields( missing);
                 if (BypassRatio is null)
-                    AddMissingField(ref missing, "bypass ratio");
+                    AddMissingField( missing, "bypass ratio");
                 break;
 
             case EngineKind.Turboprop:
             case EngineKind.Turboshaft:
-                RequireTurbineFields(ref missing);
+                RequireTurbineFields( missing);
                 if (ShaftHorsePower is null)
-                    AddMissingField(ref missing, "shaft horsepower");
+                    AddMissingField( missing, "shaft horsepower");
                 break;
         }
 
@@ -119,33 +119,33 @@ internal sealed class EngineDraft
         ShaftHorsePower = null;
     }
 
-    private void RequireFuel(ref List<string> missing)
+    private void RequireFuel(List<string> missing)
     {
         if (FuelType is null)
             missing.Add("fuel type");
     }
 
-    private void RequireHorsePower(ref List<string> missing)
+    private void RequireHorsePower(List<string> missing)
     {
         if (HorsePower is null)
             missing.Add( "horsepower");
     }
 
-    private void RequireDisplacement(ref List<string> missing)
+    private void RequireDisplacement(List<string> missing)
     {
         if (DisplacementCc is null)
             missing.Add("displacement");
     }
 
-    private void RequireTurbineFields(ref List<string> missing)
+    private void RequireTurbineFields( List<string> missing)
     {
-        RequireFuel(ref missing);
+        RequireFuel( missing);
         if (ThrustKn is null)
             missing.Add( "thrust");
     }
 
     private static void AddMissingField(
-        ref List<string> missing,
+         List<string> missing,
         string fieldName)
     {
         missing.Add(fieldName);
