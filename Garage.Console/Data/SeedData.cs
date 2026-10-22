@@ -9,7 +9,7 @@ namespace Garage.ConsoleApp.Data;
 
 public static class SeedData
 {
-    public static Vehicle[] LoadVehicles(string? filePath = null)
+    public static List<Vehicle> LoadVehicles(string? filePath = null)
     {
         filePath ??= "vehicles.json";
 
@@ -40,17 +40,13 @@ public static class SeedData
         string json = File.ReadAllText(filePath);
 
 
-        SeedVehicleDto[] seedVehicles =
-            (SeedVehicleDto[]?)JsonSerializer.Deserialize(
-                json,
-                typeof(SeedVehicleDto[]),
-                options) ?? throw new InvalidDataException(
-                    "The seed file must contain a JSON array of vehicles.");
+        List<SeedVehicleDto> seedVehicles =
+                                    JsonSerializer.Deserialize<List<SeedVehicleDto>>(json)
+                                    ?? new List<SeedVehicleDto>();
 
-        Vehicle[] vehicles =
-    new Vehicle[seedVehicles.Length];
+        List<Vehicle> vehicles = new List<Vehicle>();
 
-        for (int i = 0; i < seedVehicles.Length; i++)
+        for (int i = 0; i < seedVehicles.Count; i++)
         {
             SeedVehicleDto? seed = seedVehicles[i];
 

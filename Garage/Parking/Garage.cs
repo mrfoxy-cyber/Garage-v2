@@ -2,12 +2,14 @@ using Garage.Results;
 using Garage.Search;
 using Garage.Vehicles;
 using Garage.Vehicles.Interfaces;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace Garage.Parking;
 
 public class Garage
 {
-    private readonly Vehicle?[] parkingSpots;
+    private readonly List<(int SpotNumber,Vehicle? Vehicle)> parkingSpots;
     public const int MaximumGarageCapacity = 100_000;
 
     public string GarageName { get; }
@@ -18,223 +20,72 @@ public class Garage
     {
         get
         {
-            int count = 0;
 
-            for (int index = 0;
-                 index < parkingSpots.Length;
-                 index++)
-            {
-                if (parkingSpots[index] is not null)
-                {
-                    count++;
-                }
-            }
-
-            return count;
+            return parkingSpots.Count(spot => spot.Vehicle is not null);
         }
     }
 
     public int AvailableSpaces => Capacity - OccupiedSpaces;
 
-    public Vehicle[] Vehicles
+    public List<(int SpotNumber, Vehicle? Vehicle)> ParkedVehicles
     {
         get
         {
-            Vehicle[] parkedVehicles =
-                new Vehicle[OccupiedSpaces];
-
-            int parkedVehicleIndex = 0;
-
-            for (int index = 0;
-                 index < parkingSpots.Length;
-                 index++)
-            {
-                if (parkingSpots[index] is Vehicle vehicle)
-                {
-                    parkedVehicles[parkedVehicleIndex] =
-                        vehicle;
-
-                    parkedVehicleIndex++;
-                }
-            }
-
-            return parkedVehicles;
-        }
-    }
-
-    private static bool HasDuplicateRegistrations(
-    Vehicle[] vehicles)
-    {
-        for (int firstIndex = 0;
-             firstIndex < vehicles.Length;
-             firstIndex++)
-        {
-            for (int secondIndex = firstIndex + 1;
-                 secondIndex < vehicles.Length;
-                 secondIndex++)
-            {
-                bool registrationsMatch =
-                    vehicles[firstIndex]
-                        .RegistrationNumber
-                        .Equals(
-                            vehicles[secondIndex]
-                                .RegistrationNumber,
-                            StringComparison.OrdinalIgnoreCase);
-
-                if (registrationsMatch)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private static void EnsureVehiclesAreNotNull(
-        Vehicle[] vehicles,
-        string parameterName)
-    {
-        for (int index = 0; index < vehicles.Length; index++)
-        {
-            if (vehicles[index] is null)
-            {
-                throw new ArgumentException(
-                    $"Vehicle at index {index} cannot be null.",
-                    parameterName);
-            }
+            return parkingSpots.Where(spot => spot.Vehicle is not null).ToList();
         }
     }
 
     private bool RegistrationExists(
     string registrationNumber)
     {
-        for (int index = 0;
-             index < parkingSpots.Length;
-             index++)
-        {
-            Vehicle? parkedVehicle = parkingSpots[index];
-
-            if (parkedVehicle is not null &&
-                parkedVehicle.RegistrationNumber.Equals(
-                    registrationNumber,
-                    StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return parkingSpots.Any(spot => spot.Vehicle is not null && spot.Vehicle.RegistrationNumber.Equals(registrationNumber, StringComparison.OrdinalIgnoreCase));
     }
 
-    public (int SpotNumber, Vehicle Vehicle)[]
-    ParkedVehicles
+    public List<(string VehicleType, List<(int SpotNumber, Vehicle Vehicle)> Vehicles)> VehiclesByType
     {
         get
         {
-            (int SpotNumber, Vehicle Vehicle)[] parkedVehicles =
-                new (int SpotNumber, Vehicle Vehicle)[OccupiedSpaces];
+            return parkingSpots
+                .Where(spot => spot.Vehicle is not null)
+                .GroupBy(spot => spot.Vehicle!.GetType().Name)
+                .Select(group =>
+                            (
+                                VehicleType: group.Key,
+                                Vehicles: group
+                                    .Select
+                                    (
+                                        spot => 
+                                            (
+                                            SpotNumber: spot.SpotNumber,
+                                            Vehicle: spot.Vehicle!
+                                            )
+                                    ).ToList()
+                            )
+                        ).ToList();
 
-            int resultIndex = 0;
-
-            for (int spotIndex = 0;
-                 spotIndex < parkingSpots.Length;
-                 spotIndex++)
-            {
-                if (parkingSpots[spotIndex] is Vehicle vehicle)
-                {
-                    parkedVehicles[resultIndex] = (
-                        SpotNumber: spotIndex + 1,
-                        Vehicle: vehicle);
-
-                    resultIndex++;
-                }
-            }
-
-            return parkedVehicles;
-        }
-    }
-
-    public (string VehicleType, Vehicle[] Vehicles)[]
-        VehiclesByType
-    {
-        get
-        {
-            Vehicle[] parkedVehicles = Vehicles;
-
-            (string VehicleType, Vehicle[] Vehicles)[] groups = [];
-
-            for (int vehicleIndex = 0;
-                 vehicleIndex < parkedVehicles.Length;
-                 vehicleIndex++)
-            {
-                Vehicle vehicle = parkedVehicles[vehicleIndex];
-
-                string vehicleType =
-                    vehicle.GetType().Name;
-
-                int groupIndex = -1;
-
-                for (int index = 0;
-                     index < groups.Length;
-                     index++)
-                {
-                    if (groups[index].VehicleType == vehicleType)
-                    {
-                        groupIndex = index;
-                        break;
-                    }
-                }
-
-                if (groupIndex == -1)
-                {
-                    Array.Resize(
-                        ref groups,
-                        groups.Length + 1);
-
-                    groups[^1] = (
-                        VehicleType: vehicleType,
-                        Vehicles: [vehicle]);
-                }
-                else
-                {
-                    Vehicle[] vehiclesInGroup =
-                        groups[groupIndex].Vehicles;
-
-                    Array.Resize(
-                        ref vehiclesInGroup,
-                        vehiclesInGroup.Length + 1);
-
-                    vehiclesInGroup[^1] = vehicle;
-
-                    groups[groupIndex] = (
-                        VehicleType: vehicleType,
-                        Vehicles: vehiclesInGroup);
-                }
-            }
-
-            return groups;
         }
     }
 
     public (int SpotIndex, Vehicle Vehicle)? FindVehicleByRegistration( string registrationNumber)
     {
-        for (int index = 0;
-             index < parkingSpots.Length;
-             index++)
-        {
-            if (parkingSpots[index] is Vehicle vehicle &&
-                vehicle.RegistrationNumber.Equals(
-                    registrationNumber,
-                    StringComparison.OrdinalIgnoreCase))
-            {
-                return (
-                    SpotIndex: index,
-                    Vehicle: vehicle);
-            }
-        }
+        int index = parkingSpots.FindIndex(
+                                    spot => spot.Vehicle is not null 
+                                    && spot.Vehicle.RegistrationNumber
+                                    .Equals(registrationNumber, StringComparison.OrdinalIgnoreCase));
 
-        return null;
+        if (index != -1)
+        {
+            var spot = parkingSpots[index];
+
+            int spotNumber = spot.SpotNumber;
+            Vehicle vehicle = spot.Vehicle!;
+
+            return (spotNumber, vehicle);
+        }   else 
+            return null;
+
+
+
     }
 
     public Garage(
@@ -249,10 +100,10 @@ public class Garage
 
     public Garage(
         string garageName,
-        Vehicle[] vehicles)
+        List<Vehicle?> vehicles)
         : this(
             garageName: garageName,
-            capacity: vehicles?.Length ??
+            capacity: vehicles?.Count ??
                 throw new ArgumentNullException(nameof(vehicles)),
             initialVehicles: vehicles)
     {
@@ -261,7 +112,7 @@ public class Garage
     public Garage(
     string garageName,
     int capacity,
-    Vehicle[]? initialVehicles = null)
+    List<Vehicle?> initialVehicles)
     {
         if (string.IsNullOrWhiteSpace(garageName))
         {
@@ -279,21 +130,29 @@ public class Garage
                 $"{MaximumGarageCapacity}.");
         }
 
-        Vehicle[] startingVehicles =
+        List<Vehicle?> startingVehicles =
             initialVehicles ?? [];
 
-        if (startingVehicles.Length > capacity)
+        if (startingVehicles.Count > capacity)
         {
             throw new ArgumentException(
                 "Too many initial vehicles.",
                 nameof(initialVehicles));
         }
 
-        EnsureVehiclesAreNotNull(
-            startingVehicles,
-            nameof(initialVehicles));
+        if(startingVehicles.Any(vehicle => vehicle is null))
+            throw new ArgumentException(
+                    "Inital Vehicles should not contain null vehicles",
+                    nameof(initialVehicles));
 
-        if (HasDuplicateRegistrations(startingVehicles))
+
+        if (startingVehicles
+            .OfType<Vehicle>()
+            .GroupBy(
+                vehicle => vehicle.RegistrationNumber,
+                            StringComparer.OrdinalIgnoreCase)
+            .Any(group => group.Count() > 1)
+            )
         {
             throw new ArgumentException(
                 "Initial vehicles contain duplicate registration numbers.",
@@ -302,19 +161,24 @@ public class Garage
 
         this.GarageName = garageName;
         this.Capacity = capacity;
-        this.parkingSpots = new Vehicle?[capacity];
+        this.parkingSpots = new List<(int SpotNumber, Vehicle? Vehicle)>();
 
-        Array.Copy(
-            startingVehicles,
-            this.parkingSpots,
-            startingVehicles.Length);
+        for (int i = 0; i < capacity; i++)
+        {
+            parkingSpots.Add((SpotNumber: i + 1, Vehicle: null));
+        }
+
+        for (int i = 0; i < startingVehicles.Count; i++)
+        {
+            parkingSpots[i] = (i + 1, startingVehicles[i]);
+        }
     }
 
     public GarageOperationResult Park(Vehicle vehicle)
     {
         ArgumentNullException.ThrowIfNull(vehicle);
 
-        int availableSpotIndex = NextOpenSpace(parkingSpots);
+        int availableSpotIndex = NextOpenSpace(this.parkingSpots);
 
         if (availableSpotIndex == -1)
         {
@@ -339,7 +203,7 @@ public class Garage
                     $"I am sorry, but there doesnt exists {spot}"
                 );
 
-        if (parkingSpots[spot-1] is not null)
+        if (parkingSpots[spot-1].Vehicle is not null)
             return new GarageOperationResult
                     (
                         false,
@@ -356,7 +220,7 @@ public class Garage
                 $"{vehicle.RegistrationNumber} is already parked.");
         }
 
-        parkingSpots[spot - 1] = vehicle;
+        parkingSpots[spot - 1] = (SpotNumber: spot, Vehicle: vehicle);
         return new GarageOperationResult(
             true,
             spot-1,
@@ -364,11 +228,9 @@ public class Garage
             );
     }
 
-    private static int NextOpenSpace(Vehicle?[] vehicles)
+    private static int NextOpenSpace(List<(int Spot,Vehicle? Vehicle)> parkingSpots)
     {
-        return Array.FindIndex(
-            vehicles,
-            vehicle => vehicle is null);
+        return parkingSpots.FindIndex(spot => spot.Vehicle is null);
     }
 
     public GarageOperationResult Remove(string registrationNumber)
@@ -384,7 +246,7 @@ public class Garage
                 "We could not find your vehicle.");
         }
 
-        parkingSpots[match.Value.SpotIndex] = null;
+        parkingSpots[match.Value.SpotIndex] = (SpotNumber: match.Value.SpotIndex, Vehicle: null); ;
 
         return new GarageOperationResult(
             true,
@@ -407,7 +269,7 @@ public class Garage
 
         int spotIndex = spotNumber - 1;
 
-        Vehicle? vehicle = parkingSpots[spotIndex];
+        Vehicle? vehicle = parkingSpots[spotIndex].Vehicle;
 
         if(vehicle is null)
         {
@@ -431,10 +293,10 @@ public class Garage
         int matchCount = 0;
 
         for (int index = 0;
-             index < parkingSpots.Length;
+             index < parkingSpots.Count;
              index++)
         {
-            if (parkingSpots[index] is Vehicle vehicle &&
+            if (parkingSpots[index].Vehicle is Vehicle vehicle &&
                 MatchesCriteria(vehicle, criteria))
             {
                 matchCount++;
@@ -446,10 +308,10 @@ public class Garage
         int matchIndex = 0;
 
         for (int index = 0;
-             index < parkingSpots.Length;
+             index < parkingSpots.Count;
              index++)
         {
-            if (parkingSpots[index] is Vehicle vehicle &&
+            if (parkingSpots[index].Vehicle is Vehicle vehicle &&
                 MatchesCriteria(vehicle, criteria))
             {
                 matches[matchIndex] = vehicle;

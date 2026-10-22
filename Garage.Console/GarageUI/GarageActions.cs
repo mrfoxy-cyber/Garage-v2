@@ -61,7 +61,7 @@ internal sealed class GarageActions
     {
         var parkedVehicles = garage.ParkedVehicles;
 
-        if (parkedVehicles.Length == 0)
+        if (parkedVehicles.Count == 0)
         {
             Console.WriteLine("The garage is empty.");
             ConsoleInput.Pause();
@@ -89,7 +89,7 @@ internal sealed class GarageActions
         {
             foundVehicle = true;
             Console.WriteLine(
-                $"{group.VehicleType}: {group.Vehicles.Length}");
+                $"{group.VehicleType}: {group.Vehicles.Count}");
         }
 
         if (!foundVehicle)

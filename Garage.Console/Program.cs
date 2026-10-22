@@ -7,10 +7,10 @@ using VehicleGarage = Garage.Parking.Garage;
 
 try
 {
-    Vehicle[] parkedVehicles =
+    List<Vehicle> parkedVehicles =
         SeedData.LoadVehicles("vehicles.json");
 
-    Vehicle[] createdVehicles =
+    List<Vehicle> createdVehicles =
         SeedData.LoadVehicles("created-vehicles.json");
 
     VehicleGarage startingGarage = new(

@@ -4,9 +4,9 @@ namespace Garage.ConsoleApp.GarageUI;
 
 internal sealed class CreatedVehicleStore
 {
-    private Vehicle[] vehicles;
+    private List<Vehicle> vehicles;
 
-    public CreatedVehicleStore(Vehicle[]? initialVehicles = null)
+    public CreatedVehicleStore(List<Vehicle>? initialVehicles = null)
     {
         vehicles = initialVehicles is null
             ? []
@@ -17,24 +17,13 @@ internal sealed class CreatedVehicleStore
 
     public void Add(Vehicle vehicle)
     {
-        vehicles = [.. vehicles, vehicle];
+        vehicles.Add(vehicle);
     }
 
     public bool Remove(Vehicle vehicle)
     {
-        int index = Array.IndexOf(vehicles, vehicle);
+        bool success = vehicles.Remove(vehicle);
 
-        if (index < 0)
-        {
-            return false;
-        }
-
-        vehicles =
-        [
-            .. vehicles[..index],
-            .. vehicles[(index + 1)..]
-        ];
-
-        return true;
+        return success;
     }
 }

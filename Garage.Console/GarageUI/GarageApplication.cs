@@ -7,16 +7,16 @@ namespace Garage.ConsoleApp.GarageUI;
 
 internal sealed class GarageApplication
 {
-    private VehicleGarage[] garages;
+    private List<VehicleGarage> garages;
     private readonly CreatedVehicleStore createdVehicles;
     private readonly VehicleCreator vehicleCreator;
 
-    public VehicleGarage[] Garages =>
+    public List<VehicleGarage> Garages =>
         [.. garages];
 
     public GarageApplication(
-        VehicleGarage[] initialGarages,
-        Vehicle[]? initialCreatedVehicles = null)
+        List<VehicleGarage> initialGarages,
+        List<Vehicle> initialCreatedVehicles)
     {
         garages = [.. initialGarages];
         createdVehicles = new CreatedVehicleStore(
@@ -62,16 +62,16 @@ internal sealed class GarageApplication
 
     private void ChooseGarage()
     {
-        if (garages.Length == 0)
+        if (garages.Count == 0)
         {
             Console.WriteLine("There are no garages yet.");
             ConsoleInput.Pause();
             return;
         }
 
-        MenuOption[] garageOptions = new MenuOption[garages.Length];
+        MenuOption[] garageOptions = new MenuOption[garages.Count];
 
-        for(int i=0; i < garages.Length; i++)
+        for(int i=0; i < garages.Count; i++)
         {
             VehicleGarage selectedGarage = garages[i];
 
@@ -99,7 +99,7 @@ internal sealed class GarageApplication
 
         bool nameAlreadyExists = false;
 
-        for (int i = 0; i < garages.Length; i++)
+        for (int i = 0; i < garages.Count; i++)
         {
             if (garages[i].GarageName.Equals(
                 name,
