@@ -25,6 +25,17 @@ public class Garage
         }
     }
 
+    public List<Vehicle> Vehicles
+    {
+        get
+        {
+            return parkingSpots
+                .Select(spot => spot.Vehicle)
+                .OfType<Vehicle>()
+                .ToList();
+        }
+    }
+
     public int AvailableSpaces => Capacity - OccupiedSpaces;
 
     public List<(int SpotNumber, Vehicle? Vehicle)> ParkedVehicles
@@ -76,16 +87,9 @@ public class Garage
         if (index != -1)
         {
             var spot = parkingSpots[index];
-
-            int spotNumber = spot.SpotNumber;
-            Vehicle vehicle = spot.Vehicle!;
-
-            return (spotNumber, vehicle);
+            return (index, parkingSpots[index].Vehicle!);
         }   else 
             return null;
-
-
-
     }
 
     public Garage(

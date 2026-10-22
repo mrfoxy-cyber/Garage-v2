@@ -41,7 +41,7 @@ internal sealed class VehicleCreator
                 new MenuOption("Create boat", ShowBoatMenu),
                 new MenuOption("Create truck", ShowTruckMenu),
                 new MenuOption(
-                    () => $"List created vehicles ({createdVehicles.Vehicles.Length})",
+                    () => $"List created vehicles ({createdVehicles.Vehicles.Count})",
                     ListCreatedVehicles)
             ]);
 
@@ -309,17 +309,17 @@ internal sealed class VehicleCreator
 
     private void ListCreatedVehicles()
     {
-        Vehicle[] vehicles = createdVehicles.Vehicles;
-        global::Garage.Parking.Garage[] garages = garageProvider();
+        List<Vehicle> vehicles = createdVehicles.Vehicles;
+        List<global::Garage.Parking.Garage> garages = garageProvider();
 
-        if (vehicles.Length == 0)
+        if (vehicles.Count == 0)
         {
             Console.WriteLine("There are no created vehicles.");
             ConsoleInput.Pause();
             return;
         }
 
-        for (int index = 0; index < vehicles.Length; index++)
+        for (int index = 0; index < vehicles.Count; index++)
         {
             Vehicle vehicle = vehicles[index];
             string status = VehicleParkingStatus.IsParked(

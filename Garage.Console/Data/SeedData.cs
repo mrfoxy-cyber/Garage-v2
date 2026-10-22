@@ -42,7 +42,8 @@ public static class SeedData
 
         List<SeedVehicleDto> seedVehicles =
                                     JsonSerializer.Deserialize<List<SeedVehicleDto>>(json,options)
-                                    ?? new List<SeedVehicleDto>();
+                                    ?? throw new InvalidDataException(
+                                                        "Seed data must be a JSON array and cannot be null.");
 
         List<Vehicle> vehicles = new List<Vehicle>();
 

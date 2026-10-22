@@ -7,9 +7,9 @@ internal static class VehicleParkingStatus
 {
     public static bool IsParked(
         Vehicle vehicle,
-        VehicleGarage[] garages)
+        List<VehicleGarage> garages)
     {
-        for (int index = 0; index < garages.Length; index++)
+        for (int index = 0; index < garages.Count; index++)
         {
             if (garages[index].FindVehicleByRegistration(
                 vehicle.RegistrationNumber) is not null)

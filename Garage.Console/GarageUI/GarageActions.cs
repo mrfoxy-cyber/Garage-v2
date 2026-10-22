@@ -249,11 +249,11 @@ internal sealed class GarageActions
 
     private Vehicle? SelectCreatedVehicle()
     {
-        Vehicle[] created = createdVehicles.Vehicles;
-        VehicleGarage[] garages = garageProvider();
+        List<Vehicle> created = createdVehicles.Vehicles;
+        List<global::Garage.Parking.Garage> garages = garageProvider();
         int availableCount = 0;
 
-        for (int index = 0; index < created.Length; index++)
+        for (int index = 0; index < created.Count; index++)
         {
             if (!VehicleParkingStatus.IsParked(created[index], garages))
             {
@@ -261,10 +261,10 @@ internal sealed class GarageActions
             }
         }
 
-        Vehicle[] vehicles = new Vehicle[availableCount];
+        List<Vehicle> vehicles = [];
         int availableIndex = 0;
 
-        for (int index = 0; index < created.Length; index++)
+        for (int index = 0; index < created.Count; index++)
         {
             if (!VehicleParkingStatus.IsParked(created[index], garages))
             {
@@ -273,7 +273,7 @@ internal sealed class GarageActions
             }
         }
 
-        if (vehicles.Length == 0)
+        if (vehicles.Count == 0)
         {
             Console.WriteLine(
                 "There are no available created vehicles to park.");
@@ -284,7 +284,7 @@ internal sealed class GarageActions
         Console.WriteLine("Choose a created vehicle:");
         Console.WriteLine("0. Cancel");
 
-        for (int index = 0; index < vehicles.Length; index++)
+        for (int index = 0; index < vehicles.Count; index++)
         {
             Vehicle vehicle = vehicles[index];
             Console.WriteLine(
@@ -294,7 +294,7 @@ internal sealed class GarageActions
         }
 
         int choice = ConsoleInput.ReadInt(
-            "Choose: ", 0, vehicles.Length);
+            "Choose: ", 0, vehicles.Count);
 
         return choice == 0
             ? null

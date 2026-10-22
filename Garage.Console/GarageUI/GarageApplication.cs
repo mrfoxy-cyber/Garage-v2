@@ -32,7 +32,7 @@ internal sealed class GarageApplication
         garages = [.. garages, garage];
     }
 
-    private VehicleGarage[] GetGarages()
+    private List<VehicleGarage> GetGarages()
     {
         return [.. garages];
     }

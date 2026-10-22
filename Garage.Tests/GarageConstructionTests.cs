@@ -13,7 +13,7 @@ public class GarageConstructionTests
 
         Assert.Equal(5, garage.Capacity);
         Assert.Equal(5, garage.AvailableSpaces);
-        Assert.Empty(garage.Vehicles);
+        Assert.Equal(garage.Vehicles,[]);
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class GarageConstructionTests
     [Fact]
     public void Constructor_RejectsNullVehicleInInitialArray()
     {
-        Vehicle[] initialVehicles = [null!];
+        List<Vehicle> initialVehicles = [null!];
 
         Exception exception = Assert.Throws(
             typeof(ArgumentException),
@@ -57,6 +57,6 @@ public class GarageConstructionTests
                 capacity: 5,
                 initialVehicles: initialVehicles));
 
-        Assert.Contains("cannot be null", exception.Message);
+        Assert.Contains("Inital Vehicles should not contain null vehicles", exception.Message);
     }
 }

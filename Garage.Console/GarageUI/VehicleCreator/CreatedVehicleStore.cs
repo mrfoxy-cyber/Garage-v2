@@ -13,7 +13,7 @@ internal sealed class CreatedVehicleStore
             : [.. initialVehicles];
     }
 
-    public Vehicle[] Vehicles => [.. vehicles];
+    public List<Vehicle> Vehicles => [.. vehicles];
 
     public void Add(Vehicle vehicle)
     {
