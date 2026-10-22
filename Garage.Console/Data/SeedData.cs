@@ -41,7 +41,7 @@ public static class SeedData
 
 
         List<SeedVehicleDto> seedVehicles =
-                                    JsonSerializer.Deserialize<List<SeedVehicleDto>>(json)
+                                    JsonSerializer.Deserialize<List<SeedVehicleDto>>(json,options)
                                     ?? new List<SeedVehicleDto>();
 
         List<Vehicle> vehicles = new List<Vehicle>();
@@ -55,8 +55,8 @@ public static class SeedData
                 throw new InvalidDataException(
                     $"Vehicle at position {i + 1} cannot be null.");
             }
-
-            vehicles[i] = CreateVehicle(seed);
+            
+            vehicles.Add(CreateVehicle(seed));
         }
 
         return vehicles;
