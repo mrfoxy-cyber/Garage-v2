@@ -1,3 +1,4 @@
+using Garage.Engines;
 using Garage.Factories;
 using Garage.Vehicles;
 using Garage.Vehicles.Types;
@@ -10,7 +11,8 @@ internal static class VehicleFixtures
         string registrationNumber = "ABC123",
         VehicleColor color = VehicleColor.Black,
         string manufacturer = "Volvo",
-        int manufacturingYear = 2020)
+        int manufacturingYear = 2020,
+        Engine? engine = null)
     {
         return CarFactory.CreateCar(
             registrationNumber,
@@ -26,13 +28,14 @@ internal static class VehicleFixtures
             BodyType.Sedan,
             5,
             5,
-            []);
+            [engine ?? EngineFixtures.CreateEngine(serialNumber: $"ENG-{registrationNumber}")]);
     }
 
     public static Motorcycle CreateMotorcycle(
         string registrationNumber = "MCY123",
         VehicleColor color = VehicleColor.Red,
-        int numberOfWheels = 2)
+        int numberOfWheels = 2,
+        Engine? engine = null)
     {
         return MotorcycleFactory.CreateMotorcycle(
             registrationNumber,
@@ -50,13 +53,19 @@ internal static class VehicleFixtures
             numberOfWheels,
             1,
             1,
-            []);
+            [engine ?? EngineFixtures.CreateEngine(
+                serialNumber: $"ENG-{registrationNumber}",
+                model: "Motorcycle inline twin",
+                horsePower: 90,
+                displacementCc: 1_000,
+                cylinderCount: 2)]);
     }
 
     public static Bus CreateBus(
         int passengerSeats = 30,
         int standingCapacity = 20,
-        int driverSeats = 1)
+        int driverSeats = 1,
+        Engine? engine = null)
     {
         return BusFactory.CreateBus(
             "BUS123",
@@ -74,12 +83,19 @@ internal static class VehicleFixtures
             passengerSeats,
             standingCapacity,
             driverSeats,
-            []);
+            [engine ?? EngineFixtures.CreateEngine(
+                serialNumber: "ENG-BUS123",
+                model: "Bus inline 6",
+                fuelType: FuelType.Diesel,
+                horsePower: 300,
+                displacementCc: 9_000,
+                cylinderCount: 6)]);
     }
 
     public static Airplane CreateAirplane(
         int pilotSeats = 2,
-        bool hasDualControls = true)
+        bool hasDualControls = true,
+        Engine? engine = null)
     {
         return AirplaneFactory.CreateAirplane(
             "AIR123",
@@ -98,12 +114,14 @@ internal static class VehicleFixtures
             pilotSeats,
             hasDualControls,
             4_200,
-            []);
+            [engine ?? EngineFixtures.CreateFlatEngine(
+                serialNumber: "ENG-AIR123")]);
     }
 
     public static Boat CreateBoat(
         int passengerCapacity = 8,
-        int cabinPassengerSeats = 4)
+        int cabinPassengerSeats = 4,
+        Engine? engine = null)
     {
         return BoatFactory.CreateBoat(
             "SEA123",
@@ -123,13 +141,20 @@ internal static class VehicleFixtures
             true,
             cabinPassengerSeats,
             1,
-            []);
+            [engine ?? EngineFixtures.CreateEngine(
+                serialNumber: "ENG-SEA123",
+                model: "Marine inline 6",
+                fuelType: FuelType.Diesel,
+                horsePower: 400,
+                displacementCc: 6_000,
+                cylinderCount: 6)]);
     }
 
     public static Truck CreateTruck(
         int numberOfWheels = 6,
         int numberOfAxles = 3,
-        double maximumLoadKg = 25_000)
+        double maximumLoadKg = 25_000,
+        Engine? engine = null)
     {
         return TruckFactory.CreateTruck(
             "TRK123",
@@ -145,6 +170,12 @@ internal static class VehicleFixtures
             numberOfWheels,
             numberOfAxles,
             maximumLoadKg,
-            []);
+            [engine ?? EngineFixtures.CreateEngine(
+                serialNumber: "ENG-TRK123",
+                model: "Truck inline 6",
+                fuelType: FuelType.Diesel,
+                horsePower: 600,
+                displacementCc: 16_000,
+                cylinderCount: 6)]);
     }
 }
