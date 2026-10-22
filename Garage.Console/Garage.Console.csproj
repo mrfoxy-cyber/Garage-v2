@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Garage.Tests" />
     <ProjectReference Include="..\Garage\Garage.csproj" />
   </ItemGroup>
 
