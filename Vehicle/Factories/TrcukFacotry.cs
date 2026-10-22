@@ -22,7 +22,7 @@ public static class TruckFactory
         int numberOfWheels,
         int numberOfAxles,
         double maximumLoadKg,
-        Engine[]? engines = null)
+        List<Engine> engines)
     {
         return new Truck
         {

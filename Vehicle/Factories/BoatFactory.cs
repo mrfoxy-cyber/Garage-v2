@@ -26,7 +26,7 @@ public static class BoatFactory
         bool hasCabin,
         int cabinPassengerSeatCount,
         int cabinCrewSeatCount,
-        Engine[]? engines = null)
+        List<Engine> engines)
     {
         Cabin? cabin = hasCabin
             ? new Cabin

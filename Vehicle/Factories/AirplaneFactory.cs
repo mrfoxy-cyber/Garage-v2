@@ -25,7 +25,7 @@ public static class AirplaneFactory
         int pilotSeatCount,
         bool hasDualControls,
         double maximumAltitudeMeters,
-        Engine[]? engines = null)
+        List<Engine> engines)
     {
         Cockpit? cockpit =
             pilotSeatCount > 0 || hasDualControls

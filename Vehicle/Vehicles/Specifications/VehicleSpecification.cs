@@ -12,14 +12,14 @@ public abstract class VehicleSpecification
 
     public required double WeightKg { get; init; }
     public required Dimensions Dimensions { get; init; }
-    private Engine[] engines = [];
+    private List<Engine> engines = [];
 
-    public Engine[] Engines
+    public List<Engine> Engines
     {
         get => [.. engines];
         init
         {
-            if (value.Length > MaximumNumberOfEngines)
+            if (value.Count > MaximumNumberOfEngines)
             {
                 throw new ArgumentException(
                     $"A vehicle cannot have more than " +
@@ -33,29 +33,24 @@ public abstract class VehicleSpecification
 
     public void AddEngine (Engine engine)
     {
-        if (engines.Length >= MaximumNumberOfEngines)
+        if (engines.Count >= MaximumNumberOfEngines)
         {
             throw new InvalidOperationException(
                 $"A vehicle cannot have more than " +
                 $"{MaximumNumberOfEngines} engines.");
         }
 
-        Array.Resize(ref engines, engines.Length + 1);
-        engines[^1] = engine;
+        engines.Add(engine);
     }
 
     public Engine? FindEngine(string serialNumber)
     {
-        return Array.Find(engines, engine => engine.SerialNumber.Equals(
-            serialNumber,
-            StringComparison.OrdinalIgnoreCase));
+        return engines.Find(engine => engine.SerialNumber == serialNumber);
     }
 
     public int FindEngineIndex(string serialNumber)
     {
-        return Array.FindIndex(engines, engine => engine.SerialNumber.Equals(
-            serialNumber,
-            StringComparison.OrdinalIgnoreCase));
+        return engines.FindIndex(engine => engine.SerialNumber == serialNumber);
     }
 
     public bool RemoveEngine (Engine engine)

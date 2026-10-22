@@ -24,7 +24,7 @@ public static class BusFactory
         int passengerSeatCount,
         int standingPassengerCapacity,
         int driverSeatCount,
-        Engine[]? engines = null)
+        List<Engine> engines)
     {
         return new Bus
         {
