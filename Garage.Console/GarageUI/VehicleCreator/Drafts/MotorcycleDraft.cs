@@ -11,15 +11,16 @@ internal sealed class MotorcycleDraft : VehicleDraft
     public int? PassengerCapacity { get; set; }
     public int? DriverSeats { get; set; }
 
-    public override string[] GetMissingFields()
+    public override List<string> GetMissingFields()
     {
-        string[] missing = base.GetMissingFields();
-        if (string.IsNullOrWhiteSpace(Vin)) AddMissingField(ref missing, "VIN");
-        if (MotorcycleType is null) AddMissingField(ref missing, "motorcycle type");
-        if (HasSidecar is null) AddMissingField(ref missing, "sidecar choice");
-        if (NumberOfWheels is null) AddMissingField(ref missing, "number of wheels");
-        if (PassengerCapacity is null) AddMissingField(ref missing, "passenger capacity");
-        if (DriverSeats is null) AddMissingField(ref missing, "driver seats");
+        List<string> missing = base.GetMissingFields();
+        if (string.IsNullOrWhiteSpace(Vin)) 
+            missing.Add("VIN");
+        if (MotorcycleType is null) missing.Add("motorcycle type");
+        if (HasSidecar is null) missing.Add("sidecar choice");
+        if (NumberOfWheels is null) missing.Add("number of wheels");
+        if (PassengerCapacity is null) missing.Add("passenger capacity");
+        if (DriverSeats is null) missing.Add("driver seats");
         return missing;
     }
 

@@ -406,7 +406,7 @@ public class Garage
         var engines = vehicle.SpecificationDetails.Engines;
 
         if (criteria.NumberOfEngines is not null &&
-            engines.Length != criteria.NumberOfEngines)
+            engines.Count != criteria.NumberOfEngines)
         {
             return false;
         }
@@ -415,7 +415,7 @@ public class Garage
         {
             bool hasMatchingFuelType = false;
 
-            for (int index = 0; index < engines.Length; index++)
+            for (int index = 0; index < engines.Count; index++)
             {
                 if (engines[index].FuelType == criteria.FuelType)
                 {
@@ -434,7 +434,7 @@ public class Garage
         {
             bool hasMatchingCylinderVolume = false;
 
-            for (int index = 0; index < engines.Length; index++)
+            for (int index = 0; index < engines.Count; index++)
             {
                 double? cylinderVolume =
                     engines[index].CylinderVolumeCc;

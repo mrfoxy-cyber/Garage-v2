@@ -16,16 +16,24 @@ internal sealed class AirplaneDraft : VehicleDraft
     public bool? HasDualControls { get; set; }
     public double? MaximumAltitudeMeters { get; set; }
 
-    public override string[] GetMissingFields()
+    public override List<string> GetMissingFields()
     {
-        string[] missing = base.GetMissingFields();
-        if (string.IsNullOrWhiteSpace(AirframeSerialNumber)) AddMissingField(ref missing, "airframe serial number");
-        if (NumberOfWheels is null) AddMissingField(ref missing, "number of wheels");
-        if (PassengerSeats is null) AddMissingField(ref missing, "passenger seats");
-        if (CrewSeats is null) AddMissingField(ref missing, "crew seats");
-        if (PilotSeats is null) AddMissingField(ref missing, "pilot seats");
-        if (HasDualControls is null) AddMissingField(ref missing, "dual controls choice");
-        if (MaximumAltitudeMeters is null) AddMissingField(ref missing, "maximum altitude");
+        List<string> missing = base.GetMissingFields();
+        if (string.IsNullOrWhiteSpace(AirframeSerialNumber))
+            missing.Add("airframe serial number");
+        if (NumberOfWheels is null) 
+            missing.Add("number of wheels");
+        if (PassengerSeats is null) 
+            missing.Add("passenger seats");
+        if (CrewSeats is null) 
+            missing.Add("crew seats");
+        if (PilotSeats is null) 
+            missing.Add("pilot seats");
+        if (HasDualControls is null) 
+            missing.Add("dual controls choice");
+        if (MaximumAltitudeMeters is null) 
+            missing.Add("maximum altitude");
+        
         return missing;
     }
 

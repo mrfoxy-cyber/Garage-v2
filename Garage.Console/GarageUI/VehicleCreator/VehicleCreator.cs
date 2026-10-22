@@ -222,9 +222,9 @@ internal sealed class VehicleCreator
         VehicleDraft draft,
         VehicleFactory factory)
     {
-        string[] missing = draft.GetMissingFields();
+        List<string> missing = draft.GetMissingFields();
 
-        if (missing.Length > 0)
+        if (missing.Count > 0)
         {
             Console.WriteLine(
                 VehicleCreatorResult.Failed(
@@ -265,16 +265,16 @@ internal sealed class VehicleCreator
 
     private static void ListDraftEngines(VehicleDraft draft)
     {
-        Engine[] engines = draft.Engines;
+        List<Engine> engines = draft.Engines;
 
-        if (engines.Length == 0)
+        if (engines.Count == 0)
         {
             Console.WriteLine("The vehicle draft has no engines.");
             ConsoleInput.Pause();
             return;
         }
 
-        for (int index = 0; index < engines.Length; index++)
+        for (int index = 0; index < engines.Count; index++)
         {
             Console.WriteLine($"Engine {index + 1}");
             EngineActions.PrintEngine(engines[index]);
@@ -286,16 +286,16 @@ internal sealed class VehicleCreator
 
     private static void RemoveDraftEngine(VehicleDraft draft)
     {
-        Engine[] engines = draft.Engines;
+        List<Engine> engines = draft.Engines;
 
-        if (engines.Length == 0)
+        if (engines.Count == 0)
         {
             Console.WriteLine("The vehicle draft has no engines.");
             ConsoleInput.Pause();
             return;
         }
 
-        for (int index = 0; index < engines.Length; index++)
+        for (int index = 0; index < engines.Count; index++)
         {
             Console.WriteLine(
                 $"{index + 1}. {engines[index].GetType().Name} " +
@@ -303,7 +303,7 @@ internal sealed class VehicleCreator
         }
 
         int choice = ConsoleInput.ReadInt(
-            "Engine to remove: ", 1, engines.Length);
+            "Engine to remove: ", 1, engines.Count);
         draft.RemoveEngine(engines[choice - 1]);
     }
 

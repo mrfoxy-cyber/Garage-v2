@@ -229,7 +229,7 @@ public static class SeedData
             CreateEngines(seed));
     }
 
-    private static Engine[] CreateEngines(SeedVehicleDto vehicle)
+    private static List<Engine> CreateEngines(SeedVehicleDto vehicle)
     {
         if (vehicle.Engines is null)
         {
@@ -238,7 +238,7 @@ public static class SeedData
                 nameof(vehicle.Engines));
         }
 
-        Engine[] engines = new Engine[vehicle.Engines.Length];
+        List<Engine> engines = [];
 
         for (int i = 0; i < vehicle.Engines.Length; i++)
         {
@@ -251,7 +251,7 @@ public static class SeedData
                     $"'{vehicle.RegistrationNumber}' cannot be null.");
             }
 
-            engines[i] = CreateEngine(seed);
+            engines.Add(CreateEngine(seed));
         }
 
         return engines;

@@ -9,15 +9,16 @@ internal sealed class BusDraft : VehicleDraft
     public int? StandingPassengerCapacity { get; set; }
     public int? DriverSeats { get; set; }
 
-    public override string[] GetMissingFields()
+    public override List<string> GetMissingFields()
     {
-        string[] missing = base.GetMissingFields();
-        if (string.IsNullOrWhiteSpace(Vin)) AddMissingField(ref missing, "VIN");
-        if (NumberOfDoors is null) AddMissingField(ref missing, "number of doors");
-        if (NumberOfWheels is null) AddMissingField(ref missing, "number of wheels");
-        if (PassengerSeats is null) AddMissingField(ref missing, "passenger seats");
-        if (StandingPassengerCapacity is null) AddMissingField(ref missing, "standing passenger capacity");
-        if (DriverSeats is null) AddMissingField(ref missing, "driver seats");
+        List<string>  missing = base.GetMissingFields();
+        if (string.IsNullOrWhiteSpace(Vin))
+            missing.Add("VIN");
+        if (NumberOfDoors is null) missing.Add("number of doors");
+        if (NumberOfWheels is null) missing.Add("number of wheels");
+        if (PassengerSeats is null) missing.Add("passenger seats");
+        if (StandingPassengerCapacity is null) missing.Add("standing passenger capacity");
+        if (DriverSeats is null) missing.Add("driver seats");
         return missing;
     }
 

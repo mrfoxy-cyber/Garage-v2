@@ -92,7 +92,7 @@ internal sealed class VehicleActions
         Console.WriteLine();
         Console.WriteLine("------ Engine Information ------");
 
-        if (vehicle.SpecificationDetails.Engines.Length == 0)
+        if (vehicle.SpecificationDetails.Engines.Count == 0)
         {
             Console.WriteLine("No engines.");
         }

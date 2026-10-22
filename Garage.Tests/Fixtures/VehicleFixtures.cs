@@ -25,7 +25,8 @@ internal static class VehicleFixtures
             $"VIN-{registrationNumber}",
             BodyType.Sedan,
             5,
-            5);
+            5,
+            []);
     }
 
     public static Motorcycle CreateMotorcycle(
@@ -48,7 +49,8 @@ internal static class VehicleFixtures
             false,
             numberOfWheels,
             1,
-            1);
+            1,
+            []);
     }
 
     public static Bus CreateBus(
@@ -71,7 +73,8 @@ internal static class VehicleFixtures
             6,
             passengerSeats,
             standingCapacity,
-            driverSeats);
+            driverSeats,
+            []);
     }
 
     public static Airplane CreateAirplane(
@@ -94,7 +97,8 @@ internal static class VehicleFixtures
             0,
             pilotSeats,
             hasDualControls,
-            4_200);
+            4_200,
+            []);
     }
 
     public static Boat CreateBoat(
@@ -118,7 +122,8 @@ internal static class VehicleFixtures
             1,
             true,
             cabinPassengerSeats,
-            1);
+            1,
+            []);
     }
 
     public static Truck CreateTruck(
@@ -139,6 +144,7 @@ internal static class VehicleFixtures
             "VIN-TRK123",
             numberOfWheels,
             numberOfAxles,
-            maximumLoadKg);
+            maximumLoadKg,
+            []);
     }
 }

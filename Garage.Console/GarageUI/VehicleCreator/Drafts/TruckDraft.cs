@@ -7,13 +7,13 @@ internal sealed class TruckDraft : VehicleDraft
     public int? NumberOfAxles { get; set; }
     public double? MaximumLoadKg { get; set; }
 
-    public override string[] GetMissingFields()
+    public override List<string> GetMissingFields()
     {
-        string[] missing = base.GetMissingFields();
-        if (string.IsNullOrWhiteSpace(Vin)) AddMissingField(ref missing, "VIN");
-        if (NumberOfWheels is null) AddMissingField(ref missing, "number of wheels");
-        if (NumberOfAxles is null) AddMissingField(ref missing, "number of axles");
-        if (MaximumLoadKg is null) AddMissingField(ref missing, "maximum load");
+        List<string> missing = base.GetMissingFields();
+        if (string.IsNullOrWhiteSpace(Vin)) missing.Add("VIN");
+        if (NumberOfWheels is null) missing.Add("number of wheels");
+        if (NumberOfAxles is null) missing.Add("number of axles");
+        if (MaximumLoadKg is null) missing.Add("maximum load");
         return missing;
     }
 

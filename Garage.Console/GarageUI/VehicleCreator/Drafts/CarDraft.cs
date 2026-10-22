@@ -20,21 +20,21 @@ internal sealed class CarDraft : VehicleDraft
     public string SeatsText =>
         NumberOfSeats?.ToString() ?? "Not set";
 
-    public override string[] GetMissingFields()
+    public override List<string> GetMissingFields()
     {
-        string[] missing = base.GetMissingFields();
+        List<string> missing = base.GetMissingFields();
 
         if (string.IsNullOrWhiteSpace(Vin))
-            AddMissingField(ref missing, "VIN");
+            missing.Add( "VIN");
 
         if (BodyType is null)
-            AddMissingField(ref missing, "body type");
+            missing.Add("body type");
 
         if (NumberOfDoors is null)
-            AddMissingField(ref missing, "number of doors");
+            missing.Add("number of doors");
 
         if (NumberOfSeats is null)
-            AddMissingField(ref missing, "number of seats");
+            missing.Add("number of seats");
 
         return missing;
     }

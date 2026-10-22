@@ -15,9 +15,9 @@ internal abstract class VehicleDraft
     public double? WidthMeters { get; set; }
     public double? HeightMeters { get; set; }
 
-    private Engine[] engines = [];
+    private List<Engine> engines = [];
 
-    public Engine[] Engines => [.. engines];
+    public List<Engine> Engines => [.. engines];
 
     public string RegistrationText =>
         RegistrationNumber ?? "Not set";
@@ -44,73 +44,54 @@ internal abstract class VehicleDraft
             ? "Not set"
             : $"{LengthMeters} x {WidthMeters} x {HeightMeters} m";
 
-    public string EnginesText => engines.Length == 0
+    public string EnginesText => engines.Count == 0
         ? "No engine"
-        : engines.Length == 1
+        : engines.Count == 1
             ? "1 engine"
-            : $"{engines.Length} engines";
+            : $"{engines.Count} engines";
 
-    public void AddEngines(Engine[] newEngines)
+    public void AddEngines(List<Engine> newEngines)
     {
-        engines = [.. engines, .. newEngines];
+        engines.AddRange(newEngines);
     }
 
     public bool RemoveEngine(Engine engine)
     {
-        int index = Array.IndexOf(engines, engine);
+        bool success = engines.Remove(engine);
 
-        if (index < 0)
-        {
-            return false;
-        }
-
-        engines =
-        [
-            .. engines[..index],
-            .. engines[(index + 1)..]
-        ];
-
-        return true;
+        return success;
     }
 
-    public virtual string[] GetMissingFields()
+    public virtual List<string> GetMissingFields()
     {
-        string[] missing = [];
+        List<string> missing = [];
 
         if (string.IsNullOrWhiteSpace(RegistrationNumber))
-            AddMissingField(ref missing, "registration number");
+            missing.Add("registration number");
 
         if (string.IsNullOrWhiteSpace(Manufacturer))
-            AddMissingField(ref missing, "manufacturer");
+            missing.Add("manufacturer");
 
         if (string.IsNullOrWhiteSpace(Model))
-            AddMissingField(ref missing, "model");
+            missing.Add("model");
 
         if (ManufacturingYear is null)
-            AddMissingField(ref missing, "manufacturing year");
+            missing.Add("manufacturing year");
 
         if (Color is null)
-            AddMissingField(ref missing, "color");
+            missing.Add("color");
 
         if (WeightKg is null)
-            AddMissingField(ref missing, "weight");
+            missing.Add( "weight");
 
         if (LengthMeters is null ||
             WidthMeters is null ||
             HeightMeters is null)
         {
-            AddMissingField(ref missing, "dimensions");
+            missing.Add("dimensions");
         }
 
         return missing;
-    }
-
-    protected static void AddMissingField(
-        ref string[] missing,
-        string fieldName)
-    {
-        Array.Resize(ref missing, missing.Length + 1);
-        missing[^1] = fieldName;
     }
 
     public virtual void Clear()
