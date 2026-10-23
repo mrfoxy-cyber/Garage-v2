@@ -12,17 +12,17 @@ public class GarageSearchTests
     public void Search_CombinesCriteriaWithAndLogic()
     {
         Vehicle matchingCar = VehicleFixtures.CreateCar(
-            "MATCH1",
+            "MAT001",
             VehicleColor.Black,
             manufacturer: "Volvo");
 
         Vehicle wrongColor = VehicleFixtures.CreateCar(
-            "COLOR1",
+            "COL001",
             VehicleColor.Red,
             manufacturer: "Volvo");
 
         Vehicle wrongType = VehicleFixtures.CreateMotorcycle(
-            "TYPE1",
+            "TYP001",
             VehicleColor.Black);
 
         VehicleGarage garage = new(

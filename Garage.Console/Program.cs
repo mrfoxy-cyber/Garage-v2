@@ -31,7 +31,8 @@ try
   catch (Exception exception) when (
     exception is IOException or
     System.Text.Json.JsonException or
-    ArgumentException)
+    ArgumentException or
+    NotSupportedException)
 {
     Console.WriteLine(
         $"The garage could not be started: {exception.Message}");

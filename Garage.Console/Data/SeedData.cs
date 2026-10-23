@@ -93,6 +93,7 @@ public static class SeedData
     {
         return CarFactory.CreateCar(
             seed.RegistrationNumber,
+            seed.CountryCode,
             seed.Manufacturer,
             seed.Model,
             seed.ManufacturingYear,
@@ -112,6 +113,7 @@ public static class SeedData
     {
         return MotorcycleFactory.CreateMotorcycle(
             seed.RegistrationNumber,
+            seed.CountryCode,
             seed.Manufacturer,
             seed.Model,
             seed.ManufacturingYear,
@@ -133,6 +135,7 @@ public static class SeedData
     {
         return BusFactory.CreateBus(
             seed.RegistrationNumber,
+            seed.CountryCode,
             seed.Manufacturer,
             seed.Model,
             seed.ManufacturingYear,
@@ -157,6 +160,7 @@ public static class SeedData
     {
         return TruckFactory.CreateTruck(
             seed.RegistrationNumber,
+            seed.CountryCode,
             seed.Manufacturer,
             seed.Model,
             seed.ManufacturingYear,
@@ -176,6 +180,7 @@ public static class SeedData
     {
         return BoatFactory.CreateBoat(
             seed.RegistrationNumber,
+            seed.CountryCode,
             seed.Manufacturer,
             seed.Model,
             seed.ManufacturingYear,
@@ -205,6 +210,7 @@ public static class SeedData
     {
         return AirplaneFactory.CreateAirplane(
             seed.RegistrationNumber,
+            seed.CountryCode,
             seed.Manufacturer,
             seed.Model,
             seed.ManufacturingYear,

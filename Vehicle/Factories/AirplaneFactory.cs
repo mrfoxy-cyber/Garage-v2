@@ -10,6 +10,7 @@ public static class AirplaneFactory
 {
     public static Airplane CreateAirplane(
         string registrationNumber,
+        CountryCode countryCode,
         string manufacturer,
         string model,
         int manufacturingYear,
@@ -39,6 +40,7 @@ public static class AirplaneFactory
         return new Airplane
         {
             RegistrationNumber = registrationNumber,
+            CountryCode = countryCode,
             Manufacturer = manufacturer,
             Model = model,
             ManufacturingYear = manufacturingYear,

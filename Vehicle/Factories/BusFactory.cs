@@ -10,6 +10,7 @@ public static class BusFactory
 {
     public static Bus CreateBus(
         string registrationNumber,
+        CountryCode countryCode,
         string manufacturer,
         string model,
         int manufacturingYear,
@@ -29,6 +30,7 @@ public static class BusFactory
         return new Bus
         {
             RegistrationNumber = registrationNumber,
+            CountryCode = countryCode,
             Manufacturer = manufacturer,
             Model = model,
             ManufacturingYear = manufacturingYear,

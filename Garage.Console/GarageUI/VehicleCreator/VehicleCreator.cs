@@ -199,6 +199,10 @@ internal sealed class VehicleCreator
         return
         [
             TextOption("Registration", () => draft.RegistrationNumber, value => draft.RegistrationNumber = value),
+            new MenuOption(
+                () => $"Country of registration: {ValueText(draft.CountryCode)}",
+                () => draft.CountryCode = (CountryCode)ConsoleInput.ReadEnum(
+                    typeof(CountryCode), "Country of registration:")),
             TextOption("Manufacturer", () => draft.Manufacturer, value => draft.Manufacturer = value),
             TextOption("Model", () => draft.Model, value => draft.Model = value),
             IntOption("Year", () => draft.ManufacturingYear, value => draft.ManufacturingYear = value, 1886, DateTime.Now.Year + 1),
@@ -242,7 +246,7 @@ internal sealed class VehicleCreator
         {
             vehicle = factory();
         }
-        catch (ArgumentException exception)
+        catch (Exception exception) when (exception is ArgumentException or NotSupportedException)
         {
             Console.WriteLine(
                 VehicleCreatorResult.Failed(

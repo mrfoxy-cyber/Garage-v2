@@ -2,6 +2,7 @@
   {
     "type": "Car",
     "registrationNumber": "ABC123",
+    "countryCode": "SWE",
     "manufacturer": "Volvo",
     "model": "V70",
     "manufacturingYear": 2018,
@@ -29,6 +30,7 @@
   {
     "type": "Car",
     "registrationNumber": "RED456",
+    "countryCode": "SWE",
     "manufacturer": "Saab",
     "model": "9-3",
     "manufacturingYear": 2011,
@@ -56,6 +58,7 @@
   {
     "type": "Car",
     "registrationNumber": "EVX100",
+    "countryCode": "SWE",
     "manufacturer": "Tesla",
     "model": "Model Y",
     "manufacturingYear": 2024,
@@ -81,6 +84,7 @@
   {
     "type": "Car",
     "registrationNumber": "GRN222",
+    "countryCode": "SWE",
     "manufacturer": "Toyota",
     "model": "Corolla",
     "manufacturingYear": 2022,
@@ -115,6 +119,7 @@
   {
     "type": "Car",
     "registrationNumber": "VAN333",
+    "countryCode": "SWE",
     "manufacturer": "Ford",
     "model": "Transit",
     "manufacturingYear": 2021,
@@ -142,6 +147,7 @@
   {
     "type": "Motorcycle",
     "registrationNumber": "MCY321",
+    "countryCode": "SWE",
     "manufacturer": "Honda",
     "model": "Gold Wing Trike",
     "manufacturingYear": 2022,
@@ -171,6 +177,7 @@
   {
     "type": "Bus",
     "registrationNumber": "BUS100",
+    "countryCode": "SWE",
     "manufacturer": "Scania",
     "model": "Citywide",
     "manufacturingYear": 2020,
@@ -200,6 +207,7 @@
   {
     "type": "Truck",
     "registrationNumber": "TRK500",
+    "countryCode": "SWE",
     "manufacturer": "Volvo",
     "model": "FH16",
     "manufacturingYear": 2023,
@@ -226,7 +234,8 @@
   },
   {
     "type": "Boat",
-    "registrationNumber": "SEA700",
+    "registrationNumber": "SFB-2700",
+    "countryCode": "SWE",
     "manufacturer": "Nimbus",
     "model": "T11",
     "manufacturingYear": 2021,
@@ -266,7 +275,8 @@
   },
   {
     "type": "Airplane",
-    "registrationNumber": "AIR900",
+    "registrationNumber": "SE-AIR",
+    "countryCode": "SWE",
     "manufacturer": "Cessna",
     "model": "172 Skyhawk",
     "manufacturingYear": 2019,
@@ -297,7 +307,8 @@
   },
   {
     "type": "Boat",
-    "registrationNumber": "SAIL11",
+    "registrationNumber": "SFB-2011",
+    "countryCode": "SWE",
     "manufacturer": "Hallberg-Rassy",
     "model": "340",
     "manufacturingYear": 2020,
@@ -318,7 +329,8 @@
   },
   {
     "type": "Boat",
-    "registrationNumber": "ELC012",
+    "registrationNumber": "SFB-2012",
+    "countryCode": "SWE",
     "manufacturer": "Candela",
     "model": "C-8",
     "manufacturingYear": 2024,
@@ -347,7 +359,8 @@
   },
   {
     "type": "Airplane",
-    "registrationNumber": "GLD013",
+    "registrationNumber": "SE-GLD",
+    "countryCode": "SWE",
     "manufacturer": "Schleicher",
     "model": "ASK 21",
     "manufacturingYear": 2018,
@@ -368,7 +381,8 @@
   },
   {
     "type": "Airplane",
-    "registrationNumber": "TPR014",
+    "registrationNumber": "SE-TPR",
+    "countryCode": "SWE",
     "manufacturer": "Pilatus",
     "model": "PC-12",
     "manufacturingYear": 2023,
@@ -399,6 +413,7 @@
   {
     "type": "Car",
     "registrationNumber": "BLK015",
+    "countryCode": "SWE",
     "manufacturer": "BMW",
     "model": "320i",
     "manufacturingYear": 2020,
@@ -426,6 +441,7 @@
   {
     "type": "Car",
     "registrationNumber": "BLU016",
+    "countryCode": "SWE",
     "manufacturer": "Nissan",
     "model": "Leaf",
     "manufacturingYear": 2021,
@@ -451,6 +467,7 @@
   {
     "type": "Car",
     "registrationNumber": "RED017",
+    "countryCode": "SWE",
     "manufacturer": "Mazda",
     "model": "RX-8",
     "manufacturingYear": 2010,
@@ -478,6 +495,7 @@
   {
     "type": "Car",
     "registrationNumber": "ORG018",
+    "countryCode": "SWE",
     "manufacturer": "Volkswagen",
     "model": "Caddy",
     "manufacturingYear": 2019,
@@ -495,6 +513,7 @@
   {
     "type": "Motorcycle",
     "registrationNumber": "KTM019",
+    "countryCode": "SWE",
     "manufacturer": "KTM",
     "model": "450 EXC-F",
     "manufacturingYear": 2023,
@@ -514,6 +533,7 @@
   {
     "type": "Motorcycle",
     "registrationNumber": "HDX020",
+    "countryCode": "SWE",
     "manufacturer": "Harley-Davidson",
     "model": "Street Glide",
     "manufacturingYear": 2022,
@@ -543,6 +563,7 @@
   {
     "type": "Bus",
     "registrationNumber": "AUT021",
+    "countryCode": "SWE",
     "manufacturer": "Navya",
     "model": "Autonom Shuttle",
     "manufacturingYear": 2024,
@@ -570,6 +591,7 @@
   {
     "type": "Bus",
     "registrationNumber": "SCH022",
+    "countryCode": "SWE",
     "manufacturer": "Mercedes-Benz",
     "model": "Intouro",
     "manufacturingYear": 2018,
@@ -599,6 +621,7 @@
   {
     "type": "Truck",
     "registrationNumber": "EVT023",
+    "countryCode": "SWE",
     "manufacturer": "Volvo",
     "model": "FL Electric",
     "manufacturingYear": 2024,
@@ -624,6 +647,7 @@
   {
     "type": "Truck",
     "registrationNumber": "MAN024",
+    "countryCode": "SWE",
     "manufacturer": "MAN",
     "model": "TGX",
     "manufacturingYear": 2020,
@@ -650,7 +674,8 @@
   },
   {
     "type": "Boat",
-    "registrationNumber": "FSH025",
+    "registrationNumber": "SFB-2025",
+    "countryCode": "SWE",
     "manufacturer": "Buster",
     "model": "XL",
     "manufacturingYear": 2021,
@@ -681,7 +706,8 @@
   },
   {
     "type": "Boat",
-    "registrationNumber": "FRY026",
+    "registrationNumber": "SFB-2026",
+    "countryCode": "SWE",
     "manufacturer": "Green City Ferries",
     "model": "Beluga24",
     "manufacturingYear": 2025,
@@ -717,7 +743,8 @@
   },
   {
     "type": "Boat",
-    "registrationNumber": "YHT027",
+    "registrationNumber": "SFB-2027",
+    "countryCode": "SWE",
     "manufacturer": "Princess",
     "model": "Y72",
     "manufacturingYear": 2022,
@@ -738,7 +765,8 @@
   },
   {
     "type": "Airplane",
-    "registrationNumber": "B73728",
+    "registrationNumber": "SE-B73",
+    "countryCode": "SWE",
     "manufacturer": "Boeing",
     "model": "737-800",
     "manufacturingYear": 2017,
@@ -776,7 +804,8 @@
   },
   {
     "type": "Airplane",
-    "registrationNumber": "A32029",
+    "registrationNumber": "SE-A32",
+    "countryCode": "SWE",
     "manufacturer": "Airbus",
     "model": "A320neo",
     "manufacturingYear": 2021,
@@ -797,7 +826,8 @@
   },
   {
     "type": "Airplane",
-    "registrationNumber": "SR2230",
+    "registrationNumber": "SE-SR2",
+    "countryCode": "SWE",
     "manufacturer": "Cirrus",
     "model": "SR22",
     "manufacturingYear": 2023,

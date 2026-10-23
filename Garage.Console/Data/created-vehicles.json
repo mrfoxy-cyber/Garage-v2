@@ -2,6 +2,7 @@
   {
     "type": "Car",
     "registrationNumber": "CRT101",
+    "countryCode": "SWE",
     "manufacturer": "Volvo",
     "model": "XC60",
     "manufacturingYear": 2024,
@@ -29,6 +30,7 @@
   {
     "type": "Car",
     "registrationNumber": "CRT102",
+    "countryCode": "SWE",
     "manufacturer": "Saab",
     "model": "Engine Test Car",
     "manufacturingYear": 2020,
@@ -46,6 +48,7 @@
   {
     "type": "Motorcycle",
     "registrationNumber": "MCR201",
+    "countryCode": "SWE",
     "manufacturer": "Yamaha",
     "model": "MT-07",
     "manufacturingYear": 2023,
@@ -75,6 +78,7 @@
   {
     "type": "Motorcycle",
     "registrationNumber": "MCR202",
+    "countryCode": "SWE",
     "manufacturer": "Honda",
     "model": "Engine-Free Test Bike",
     "manufacturingYear": 2022,
@@ -94,6 +98,7 @@
   {
     "type": "Bus",
     "registrationNumber": "BCR301",
+    "countryCode": "SWE",
     "manufacturer": "Volvo",
     "model": "7900 Electric",
     "manufacturingYear": 2024,
@@ -121,6 +126,7 @@
   {
     "type": "Bus",
     "registrationNumber": "BCR302",
+    "countryCode": "SWE",
     "manufacturer": "Scania",
     "model": "Engine-Free Test Bus",
     "manufacturingYear": 2020,
@@ -140,6 +146,7 @@
   {
     "type": "Truck",
     "registrationNumber": "TCR401",
+    "countryCode": "SWE",
     "manufacturer": "Scania",
     "model": "R 500",
     "manufacturingYear": 2023,
@@ -167,6 +174,7 @@
   {
     "type": "Truck",
     "registrationNumber": "TCR402",
+    "countryCode": "SWE",
     "manufacturer": "MAN",
     "model": "Engine-Free Test Truck",
     "manufacturingYear": 2021,
@@ -183,7 +191,8 @@
   },
   {
     "type": "Boat",
-    "registrationNumber": "WCR501",
+    "registrationNumber": "SFB-2501",
+    "countryCode": "SWE",
     "manufacturer": "Nimbus",
     "model": "W9",
     "manufacturingYear": 2024,
@@ -214,7 +223,8 @@
   },
   {
     "type": "Boat",
-    "registrationNumber": "WCR502",
+    "registrationNumber": "SFB-2502",
+    "countryCode": "SWE",
     "manufacturer": "Hallberg-Rassy",
     "model": "Engine-Free Test Sailboat",
     "manufacturingYear": 2019,
@@ -235,7 +245,8 @@
   },
   {
     "type": "Airplane",
-    "registrationNumber": "ACR601",
+    "registrationNumber": "SE-ACA",
+    "countryCode": "SWE",
     "manufacturer": "Cessna",
     "model": "182 Skylane",
     "manufacturingYear": 2022,
@@ -266,7 +277,8 @@
   },
   {
     "type": "Airplane",
-    "registrationNumber": "ACR602",
+    "registrationNumber": "SE-ACB",
+    "countryCode": "SWE",
     "manufacturer": "Schleicher",
     "model": "Engine-Free Test Glider",
     "manufacturingYear": 2020,

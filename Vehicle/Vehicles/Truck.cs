@@ -3,7 +3,7 @@ using Garage.Vehicles.Specifications;
 
 namespace Garage.Vehicles;
 
-public class Truck : Vehicle, IHasWheels
+public class Truck : RoadVehicle, IHasWheels
 {
     public required TruckSpecification Specification { get; init; }
     public override VehicleSpecification SpecificationDetails => Specification;

@@ -8,7 +8,8 @@ internal sealed class VehicleActions
     public Car CreateCar(CarDraft draft)
     {
         return CarFactory.CreateCar(
-            draft.RegistrationNumber!, draft.Manufacturer!, draft.Model!,
+            draft.RegistrationNumber!, draft.CountryCode!.Value,
+            draft.Manufacturer!, draft.Model!,
             draft.ManufacturingYear!.Value, draft.Color!.Value,
             draft.WeightKg!.Value, draft.LengthMeters!.Value,
             draft.WidthMeters!.Value, draft.HeightMeters!.Value,
@@ -20,7 +21,8 @@ internal sealed class VehicleActions
     public Motorcycle CreateMotorcycle(MotorcycleDraft draft)
     {
         return MotorcycleFactory.CreateMotorcycle(
-            draft.RegistrationNumber!, draft.Manufacturer!, draft.Model!,
+            draft.RegistrationNumber!, draft.CountryCode!.Value,
+            draft.Manufacturer!, draft.Model!,
             draft.ManufacturingYear!.Value, draft.Color!.Value,
             draft.WeightKg!.Value, draft.LengthMeters!.Value,
             draft.WidthMeters!.Value, draft.HeightMeters!.Value,
@@ -33,7 +35,8 @@ internal sealed class VehicleActions
     public Airplane CreateAirplane(AirplaneDraft draft)
     {
         return AirplaneFactory.CreateAirplane(
-            draft.RegistrationNumber!, draft.Manufacturer!, draft.Model!,
+            draft.RegistrationNumber!, draft.CountryCode!.Value,
+            draft.Manufacturer!, draft.Model!,
             draft.ManufacturingYear!.Value, draft.Color!.Value,
             draft.WeightKg!.Value, draft.NumberOfWheels!.Value,
             draft.LengthMeters!.Value, draft.WingspanMeters!.Value,
@@ -46,7 +49,8 @@ internal sealed class VehicleActions
     public Bus CreateBus(BusDraft draft)
     {
         return BusFactory.CreateBus(
-            draft.RegistrationNumber!, draft.Manufacturer!, draft.Model!,
+            draft.RegistrationNumber!, draft.CountryCode!.Value,
+            draft.Manufacturer!, draft.Model!,
             draft.ManufacturingYear!.Value, draft.Color!.Value,
             draft.WeightKg!.Value, draft.LengthMeters!.Value,
             draft.WidthMeters!.Value, draft.HeightMeters!.Value,
@@ -59,7 +63,8 @@ internal sealed class VehicleActions
     public Boat CreateBoat(BoatDraft draft)
     {
         return BoatFactory.CreateBoat(
-            draft.RegistrationNumber!, draft.Manufacturer!, draft.Model!,
+            draft.RegistrationNumber!, draft.CountryCode!.Value,
+            draft.Manufacturer!, draft.Model!,
             draft.ManufacturingYear!.Value, draft.Color!.Value,
             draft.WeightKg!.Value, draft.LengthMeters!.Value,
             draft.WidthMeters!.Value, draft.HeightMeters!.Value,
@@ -72,7 +77,8 @@ internal sealed class VehicleActions
     public Truck CreateTruck(TruckDraft draft)
     {
         return TruckFactory.CreateTruck(
-            draft.RegistrationNumber!, draft.Manufacturer!, draft.Model!,
+            draft.RegistrationNumber!, draft.CountryCode!.Value,
+            draft.Manufacturer!, draft.Model!,
             draft.ManufacturingYear!.Value, draft.Color!.Value,
             draft.WeightKg!.Value, draft.LengthMeters!.Value,
             draft.WidthMeters!.Value, draft.HeightMeters!.Value,
@@ -86,6 +92,7 @@ internal sealed class VehicleActions
         Console.WriteLine($"Spot: {spotNumber}");
         Console.WriteLine($"Type: {vehicle.GetType().Name}");
         Console.WriteLine($"Registration number: {vehicle.RegistrationNumber}");
+        Console.WriteLine($"Country of registration: {vehicle.CountryCode}");
         Console.WriteLine($"Vehicle: {vehicle.Manufacturer} {vehicle.Model}");
         Console.WriteLine($"Year: {vehicle.ManufacturingYear}");
         Console.WriteLine($"Color: {vehicle.Color}");

@@ -6,7 +6,7 @@ using Garage.Vehicles.Specifications;
 
 namespace Garage.Vehicles;
 
-public class Motorcycle : Vehicle, IPassengerCarrier, IHasWheels, IHasSeats
+public class Motorcycle : RoadVehicle, IPassengerCarrier, IHasWheels, IHasSeats
 {
     public required MotorcycleSpecification Specification { get; init; }
     public override VehicleSpecification SpecificationDetails => Specification;

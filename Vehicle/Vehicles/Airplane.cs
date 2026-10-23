@@ -9,6 +9,9 @@ namespace Garage.Vehicles
 {
     public class Airplane : Vehicle, IPassengerCarrier, IHasWheels, IHasSeats
     {
+        protected override bool IsValidRegistration(string number, CountryCode countryCode) =>
+            Validation.IsValidAircraftRegistration(number, countryCode);
+
         public required AirplaneSpecification Specification { get; init; }
         public override VehicleSpecification SpecificationDetails => Specification;
         public required string AirframeSerialNumber { get; init; }

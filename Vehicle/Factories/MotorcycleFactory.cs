@@ -10,6 +10,7 @@ public static class MotorcycleFactory
 {
     public static Motorcycle CreateMotorcycle(
         string registrationNumber,
+        CountryCode countryCode,
         string manufacturer,
         string model,
         int manufacturingYear,
@@ -29,6 +30,7 @@ public static class MotorcycleFactory
         return new Motorcycle
         {
             RegistrationNumber = registrationNumber,
+            CountryCode = countryCode,
             Manufacturer = manufacturer,
             Model = model,
             ManufacturingYear = manufacturingYear,

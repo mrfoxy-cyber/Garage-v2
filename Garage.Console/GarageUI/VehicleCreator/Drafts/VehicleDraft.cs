@@ -1,4 +1,5 @@
 using Garage.Engines;
+using Garage.Vehicles;
 using Garage.Vehicles.Types;
 
 namespace Garage.ConsoleApp.GarageUI;
@@ -6,6 +7,7 @@ namespace Garage.ConsoleApp.GarageUI;
 internal abstract class VehicleDraft
 {
     public string? RegistrationNumber { get; set; }
+    public CountryCode? CountryCode { get; set; }
     public string? Manufacturer { get; set; }
     public string? Model { get; set; }
     public int? ManufacturingYear { get; set; }
@@ -69,6 +71,9 @@ internal abstract class VehicleDraft
         if (string.IsNullOrWhiteSpace(RegistrationNumber))
             missing.Add("registration number");
 
+        if (CountryCode is null or global::Garage.Vehicles.CountryCode.Unspecified)
+            missing.Add("country of registration");
+
         if (string.IsNullOrWhiteSpace(Manufacturer))
             missing.Add("manufacturer");
 
@@ -97,6 +102,7 @@ internal abstract class VehicleDraft
     public virtual void Clear()
     {
         RegistrationNumber = null;
+        CountryCode = null;
         Manufacturer = null;
         Model = null;
         ManufacturingYear = null;

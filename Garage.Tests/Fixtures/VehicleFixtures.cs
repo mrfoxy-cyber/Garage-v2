@@ -12,10 +12,12 @@ internal static class VehicleFixtures
         VehicleColor color = VehicleColor.Black,
         string manufacturer = "Volvo",
         int manufacturingYear = 2020,
-        Engine? engine = null)
+        Engine? engine = null,
+        CountryCode countryCode = CountryCode.SWE)
     {
         return CarFactory.CreateCar(
             registrationNumber,
+            countryCode,
             manufacturer,
             "V70",
             manufacturingYear,
@@ -39,6 +41,7 @@ internal static class VehicleFixtures
     {
         return MotorcycleFactory.CreateMotorcycle(
             registrationNumber,
+            CountryCode.SWE,
             "Honda",
             "Gold Wing",
             2022,
@@ -69,6 +72,7 @@ internal static class VehicleFixtures
     {
         return BusFactory.CreateBus(
             "BUS123",
+            CountryCode.SWE,
             "Scania",
             "Citywide",
             2023,
@@ -95,10 +99,13 @@ internal static class VehicleFixtures
     public static Airplane CreateAirplane(
         int pilotSeats = 2,
         bool hasDualControls = true,
-        Engine? engine = null)
+        Engine? engine = null,
+        string registrationNumber = "SE-ABC",
+        CountryCode countryCode = CountryCode.SWE)
     {
         return AirplaneFactory.CreateAirplane(
-            "AIR123",
+            registrationNumber,
+            countryCode,
             "Cessna",
             "172",
             2021,
@@ -121,10 +128,13 @@ internal static class VehicleFixtures
     public static Boat CreateBoat(
         int passengerCapacity = 8,
         int cabinPassengerSeats = 4,
-        Engine? engine = null)
+        Engine? engine = null,
+        string registrationNumber = "SFB-2345",
+        CountryCode countryCode = CountryCode.SWE)
     {
         return BoatFactory.CreateBoat(
-            "SEA123",
+            registrationNumber,
+            countryCode,
             "Nimbus",
             "T11",
             2022,
@@ -158,6 +168,7 @@ internal static class VehicleFixtures
     {
         return TruckFactory.CreateTruck(
             "TRK123",
+            CountryCode.SWE,
             "Volvo",
             "FH16",
             2023,

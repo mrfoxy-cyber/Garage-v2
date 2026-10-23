@@ -1,3 +1,4 @@
+using Garage.Vehicles;
 using Garage.Vehicles.Types;
 
 namespace Garage.ConsoleApp.Data;
@@ -6,6 +7,7 @@ internal sealed class SeedVehicleDto
 {
     public required string Type { get; init; }
     public required string RegistrationNumber { get; init; }
+    public required CountryCode CountryCode { get; init; }
     public required string Manufacturer { get; init; }
     public required string Model { get; init; }
     public required int ManufacturingYear { get; init; }

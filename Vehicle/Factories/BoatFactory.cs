@@ -10,6 +10,7 @@ public static class BoatFactory
 {
     public static Boat CreateBoat(
         string registrationNumber,
+        CountryCode countryCode,
         string manufacturer,
         string model,
         int manufacturingYear,
@@ -39,6 +40,7 @@ public static class BoatFactory
         return new Boat
         {
             RegistrationNumber = registrationNumber,
+            CountryCode = countryCode,
             Manufacturer = manufacturer,
             Model = model,
             ManufacturingYear = manufacturingYear,
