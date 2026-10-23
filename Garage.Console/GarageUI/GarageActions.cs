@@ -240,6 +240,10 @@ internal sealed class GarageActions
                     criteriaCreator.ChooseManufacturingYear),
 
                 new MenuOption(
+                    "Vehicle-specific filters",
+                    () => ShowVehicleSpecificFilters(criteriaCreator)),
+
+                new MenuOption(
                     "Run search",
                     () => ShowSearchResults(criteriaCreator.Create())),
 
@@ -249,6 +253,47 @@ internal sealed class GarageActions
             ]);
 
         searchMenu.Show();
+    }
+
+    private static void ShowVehicleSpecificFilters(SearchCriteriaCreator criteriaCreator)
+    {
+        ConsoleMenu menu = new(
+            title: "Vehicle-specific filters",
+            options:
+            [
+                new MenuOption(
+                    () => $"Car body type: {criteriaCreator.BodyTypeText}",
+                    criteriaCreator.ChooseBodyType),
+                new MenuOption(
+                    () => $"Motorcycle type: {criteriaCreator.MotorcycleTypeText}",
+                    criteriaCreator.ChooseMotorcycleType),
+                new MenuOption(
+                    () => $"Motorcycle has sidecar: {criteriaCreator.HasSidecarText}",
+                    criteriaCreator.ChooseHasSidecar),
+                new MenuOption(
+                    () => $"Boat type: {criteriaCreator.BoatTypeText}",
+                    criteriaCreator.ChooseBoatType),
+                new MenuOption(
+                    () => $"Boat draft (m): {criteriaCreator.DraftText}",
+                    criteriaCreator.ChooseDraft),
+                new MenuOption(
+                    () => $"Aircraft wingspan (m): {criteriaCreator.WingspanText}",
+                    criteriaCreator.ChooseWingspan),
+                new MenuOption(
+                    () => $"Aircraft maximum altitude (m): {criteriaCreator.MaximumAltitudeText}",
+                    criteriaCreator.ChooseMaximumAltitude),
+                new MenuOption(
+                    () => $"Bus standing capacity: {criteriaCreator.StandingPassengerCapacityText}",
+                    criteriaCreator.ChooseStandingPassengerCapacity),
+                new MenuOption(
+                    () => $"Truck axles: {criteriaCreator.NumberOfAxlesText}",
+                    criteriaCreator.ChooseNumberOfAxles),
+                new MenuOption(
+                    () => $"Truck maximum load (kg): {criteriaCreator.MaximumLoadText}",
+                    criteriaCreator.ChooseMaximumLoad)
+            ]);
+
+        menu.Show();
     }
 
     private void ShowSearchResults(VehicleSearchCriteria criteria)

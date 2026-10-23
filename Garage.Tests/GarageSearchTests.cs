@@ -81,4 +81,54 @@ public class GarageSearchTests
         Assert.Equal(2, carGroup.Vehicles.Count());
         Assert.Single(motorcycleGroup.Vehicles);
     }
+
+    [Fact]
+    public void Search_FiltersOnVehicleSpecificProperties()
+    {
+        Vehicle car = VehicleFixtures.CreateCar();
+        Vehicle motorcycle = VehicleFixtures.CreateMotorcycle();
+        Vehicle airplane = VehicleFixtures.CreateAirplane();
+        Vehicle bus = VehicleFixtures.CreateBus();
+        Vehicle boat = VehicleFixtures.CreateBoat();
+        Vehicle truck = VehicleFixtures.CreateTruck();
+        VehicleGarage garage = new(
+            "Test garage", 6, [car, motorcycle, airplane, bus, boat, truck]);
+
+        (VehicleSearchCriteria Criteria, Vehicle Expected)[] cases =
+        [
+            (new() { BodyType = BodyType.Sedan }, car),
+            (new() { MotorcycleType = MotorcycleType.Touring }, motorcycle),
+            (new() { HasSidecar = false }, motorcycle),
+            (new() { BoatType = BoatType.Motorboat }, boat),
+            (new() { DraftMeters = 0.9 }, boat),
+            (new() { WingspanMeters = 11 }, airplane),
+            (new() { MaximumAltitudeMeters = 4_200 }, airplane),
+            (new() { StandingPassengerCapacity = 20 }, bus),
+            (new() { NumberOfAxles = 3 }, truck),
+            (new() { MaximumLoadKg = 25_000 }, truck)
+        ];
+
+        foreach (var (criteria, expected) in cases)
+            Assert.Same(expected, Assert.Single(garage.Search(criteria)));
+
+        Assert.Empty(garage.Search(new VehicleSearchCriteria { HasSidecar = true }));
+        Assert.Empty(garage.Search(new VehicleSearchCriteria { WingspanMeters = 12 }));
+    }
+
+    [Fact]
+    public void Search_CombinesAircraftAndGeneralFilters()
+    {
+        Vehicle airplane = VehicleFixtures.CreateAirplane();
+        VehicleGarage garage = new("Test garage", 1, [airplane]);
+
+        List<Vehicle> matches = garage.Search(new VehicleSearchCriteria
+        {
+            VehicleTypes = [typeof(Airplane)],
+            Color = VehicleColor.White,
+            WingspanMeters = 11,
+            MaximumAltitudeMeters = 4_200
+        });
+
+        Assert.Same(airplane, Assert.Single(matches));
+    }
 }

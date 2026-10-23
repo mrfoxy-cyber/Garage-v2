@@ -19,4 +19,15 @@ public class VehicleSearchCriteria
     public Garage.Engines.FuelType? FuelType { get; init; }
     public int? NumberOfSeats { get; init; }
     public double? LengthMeters { get; init; }
+
+    public BodyType? BodyType { get; init; }
+    public MotorcycleType? MotorcycleType { get; init; }
+    public bool? HasSidecar { get; init; }
+    public BoatType? BoatType { get; init; }
+    public double? DraftMeters { get; init; }
+    public double? WingspanMeters { get; init; }
+    public double? MaximumAltitudeMeters { get; init; }
+    public int? StandingPassengerCapacity { get; init; }
+    public int? NumberOfAxles { get; init; }
+    public double? MaximumLoadKg { get; init; }
 }

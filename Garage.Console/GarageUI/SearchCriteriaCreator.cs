@@ -32,6 +32,16 @@ internal sealed class SearchCriteriaCreator
     private string? manufacturer;
     private string? model;
     private int? manufacturingYear;
+    private BodyType? bodyType;
+    private MotorcycleType? motorcycleType;
+    private bool? hasSidecar;
+    private BoatType? boatType;
+    private double? draftMeters;
+    private double? wingspanMeters;
+    private double? maximumAltitudeMeters;
+    private int? standingPassengerCapacity;
+    private int? numberOfAxles;
+    private double? maximumLoadKg;
 
     public string VehicleTypesText
     {
@@ -61,6 +71,22 @@ internal sealed class SearchCriteriaCreator
     public string ModelText => model ?? "Any";
     public string ManufacturingYearText =>
         manufacturingYear?.ToString() ?? "Any";
+    public string BodyTypeText => bodyType?.ToString() ?? "Any";
+    public string MotorcycleTypeText => motorcycleType?.ToString() ?? "Any";
+    public string HasSidecarText => hasSidecar switch
+    {
+        true => "Yes",
+        false => "No",
+        null => "Any"
+    };
+    public string BoatTypeText => boatType?.ToString() ?? "Any";
+    public string DraftText => draftMeters?.ToString() ?? "Any";
+    public string WingspanText => wingspanMeters?.ToString() ?? "Any";
+    public string MaximumAltitudeText => maximumAltitudeMeters?.ToString() ?? "Any";
+    public string StandingPassengerCapacityText =>
+        standingPassengerCapacity?.ToString() ?? "Any";
+    public string NumberOfAxlesText => numberOfAxles?.ToString() ?? "Any";
+    public string MaximumLoadText => maximumLoadKg?.ToString() ?? "Any";
 
     public VehicleSearchCriteria Create()
     {
@@ -77,7 +103,17 @@ internal sealed class SearchCriteriaCreator
             RegistrationNumber = registrationNumber,
             Manufacturer = manufacturer,
             Model = model,
-            ManufacturingYear = manufacturingYear
+            ManufacturingYear = manufacturingYear,
+            BodyType = bodyType,
+            MotorcycleType = motorcycleType,
+            HasSidecar = hasSidecar,
+            BoatType = boatType,
+            DraftMeters = draftMeters,
+            WingspanMeters = wingspanMeters,
+            MaximumAltitudeMeters = maximumAltitudeMeters,
+            StandingPassengerCapacity = standingPassengerCapacity,
+            NumberOfAxles = numberOfAxles,
+            MaximumLoadKg = maximumLoadKg
         };
     }
 
@@ -196,6 +232,56 @@ internal sealed class SearchCriteriaCreator
             maximum: DateTime.Now.Year + 1);
     }
 
+    public void ChooseBodyType() =>
+        bodyType = (BodyType?)ConsoleInput.ReadOptionalEnum(
+            typeof(BodyType), "Car body type:");
+
+    public void ChooseMotorcycleType() =>
+        motorcycleType = (MotorcycleType?)ConsoleInput.ReadOptionalEnum(
+            typeof(MotorcycleType), "Motorcycle type:");
+
+    public void ChooseHasSidecar()
+    {
+        Console.WriteLine("0. Any");
+        Console.WriteLine("1. Yes");
+        Console.WriteLine("2. No");
+
+        hasSidecar = ConsoleInput.ReadInt("Has sidecar: ", 0, 2) switch
+        {
+            1 => true,
+            2 => false,
+            _ => null
+        };
+    }
+
+    public void ChooseBoatType() =>
+        boatType = (BoatType?)ConsoleInput.ReadOptionalEnum(
+            typeof(BoatType), "Boat type:");
+
+    public void ChooseDraft() =>
+        draftMeters = ConsoleInput.ReadOptionalDouble(
+            "Boat draft in meters (empty = Any): ", 0, 100);
+
+    public void ChooseWingspan() =>
+        wingspanMeters = ConsoleInput.ReadOptionalDouble(
+            "Aircraft wingspan in meters (empty = Any): ", 0, 1_000);
+
+    public void ChooseMaximumAltitude() =>
+        maximumAltitudeMeters = ConsoleInput.ReadOptionalDouble(
+            "Aircraft maximum altitude in meters (empty = Any): ", 0, 100_000);
+
+    public void ChooseStandingPassengerCapacity() =>
+        standingPassengerCapacity = ConsoleInput.ReadOptionalInt(
+            "Bus standing passenger capacity (empty = Any): ", 0, 500);
+
+    public void ChooseNumberOfAxles() =>
+        numberOfAxles = ConsoleInput.ReadOptionalInt(
+            "Truck number of axles (empty = Any): ", 1, 20);
+
+    public void ChooseMaximumLoad() =>
+        maximumLoadKg = ConsoleInput.ReadOptionalDouble(
+            "Truck maximum load in kg (empty = Any): ", 0, 1_000_000);
+
     public void Clear()
     {
         for (int index = 0;
@@ -216,6 +302,16 @@ internal sealed class SearchCriteriaCreator
         manufacturer = null;
         model = null;
         manufacturingYear = null;
+        bodyType = null;
+        motorcycleType = null;
+        hasSidecar = null;
+        boatType = null;
+        draftMeters = null;
+        wingspanMeters = null;
+        maximumAltitudeMeters = null;
+        standingPassengerCapacity = null;
+        numberOfAxles = null;
+        maximumLoadKg = null;
     }
 
     private List<Type> CreateSelectedVehicleTypes()
