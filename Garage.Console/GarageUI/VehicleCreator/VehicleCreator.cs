@@ -1,8 +1,10 @@
 using Garage.ConsoleApp.ConsoleFramework;
 using Garage.Engines;
+using Garage.Results;
 using Garage.Vehicles;
 using Garage.Vehicles.Specifications;
 using Garage.Vehicles.Types;
+using VehicleGarage = Garage.Parking.Garage;
 
 namespace Garage.ConsoleApp.GarageUI;
 
@@ -12,6 +14,8 @@ internal sealed class VehicleCreator
     private readonly GarageProvider garageProvider;
     private readonly VehicleActions vehicleActions = new();
     private readonly EngineCreator engineCreator = new();
+    private VehicleGarage? targetGarage;
+    private int? targetSpotNumber;
 
     private readonly CarDraft carDraft = new();
     private readonly MotorcycleDraft motorcycleDraft = new();
@@ -30,8 +34,56 @@ internal sealed class VehicleCreator
 
     public void ShowMenu()
     {
+        ShowMenuCore(null, null);
+    }
+
+    public void ShowMenuForGarage(VehicleGarage garage)
+    {
+        if (garage.AvailableSpaces == 0)
+        {
+            Console.WriteLine("The garage is full.");
+            ConsoleInput.Pause();
+            return;
+        }
+
+        ShowMenuCore(garage, null);
+    }
+
+    public void ShowMenuForGarageAtSpot(VehicleGarage garage)
+    {
+        if (garage.AvailableSpaces == 0)
+        {
+            Console.WriteLine("The garage is full.");
+            ConsoleInput.Pause();
+            return;
+        }
+
+        int spotNumber = ConsoleInput.ReadInt(
+            "Choose parking spot: ",
+            minimum: 1,
+            maximum: garage.Capacity);
+
+        if (garage.ParkedVehicles.Any(spot => spot.SpotNumber == spotNumber))
+        {
+            Console.WriteLine($"Parking spot {spotNumber} is occupied.");
+            ConsoleInput.Pause();
+            return;
+        }
+
+        ShowMenuCore(garage, spotNumber);
+    }
+
+    private void ShowMenuCore(VehicleGarage? garage, int? spotNumber)
+    {
+        targetGarage = garage;
+        targetSpotNumber = spotNumber;
+
         ConsoleMenu menu = new(
-            title: "Vehicle creator",
+            title: garage is null
+                ? "Vehicle creator"
+                : spotNumber is null
+                    ? $"Create and park vehicle in {garage.GarageName}"
+                    : $"Create and park vehicle in {garage.GarageName} at spot {spotNumber}",
             options:
             [
                 new MenuOption("Create car", ShowCarMenu),
@@ -45,7 +97,15 @@ internal sealed class VehicleCreator
                     ListCreatedVehicles)
             ]);
 
-        menu.Show();
+        try
+        {
+            menu.Show();
+        }
+        finally
+        {
+            targetGarage = null;
+            targetSpotNumber = null;
+        }
     }
 
     private void ShowCarMenu()
@@ -255,8 +315,31 @@ internal sealed class VehicleCreator
             return;
         }
 
-        createdVehicles.Add(vehicle);
-        Console.WriteLine(VehicleCreatorResult.Completed(vehicle).Message);
+        if (targetGarage is not null)
+        {
+            GarageOperationResult result = targetSpotNumber is int spotNumber
+                ? targetGarage.Park(vehicle, spotNumber)
+                : targetGarage.Park(vehicle);
+
+            if (!result.Success)
+            {
+                Console.WriteLine(VehicleCreatorResult.Failed(result.Message).Message);
+                ConsoleInput.Pause();
+                return;
+            }
+
+            createdVehicles.Add(vehicle);
+            Console.WriteLine(
+                $"Created {vehicle.GetType().Name} " +
+                $"({vehicle.RegistrationNumber}) and parked it in " +
+                $"{targetGarage.GarageName} at spot {result.SpotIndex!.Value + 1}.");
+        }
+        else
+        {
+            createdVehicles.Add(vehicle);
+            Console.WriteLine(VehicleCreatorResult.Completed(vehicle).Message);
+        }
+
         draft.Clear();
         ConsoleInput.Pause();
     }

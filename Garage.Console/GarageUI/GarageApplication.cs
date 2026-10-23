@@ -143,6 +143,14 @@ internal sealed class GarageApplication
             options:
             [
                 new MenuOption(
+                    "Create and park vehicle",
+                    () => vehicleCreator.ShowMenuForGarage(garage)),
+
+                new MenuOption(
+                    "Create and park vehicle at a specific spot",
+                    () => vehicleCreator.ShowMenuForGarageAtSpot(garage)),
+
+                new MenuOption(
                     "Park a created vehicle",
                     actions.ParkVehicle),
 
