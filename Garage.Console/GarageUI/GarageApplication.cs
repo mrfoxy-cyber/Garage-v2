@@ -1,6 +1,7 @@
 using Garage.ConsoleApp.ConsoleFramework;
 using Garage.Parking;
 using Garage.Vehicles;
+using Garage.Vehicles.Components;
 using VehicleGarage = Garage.Parking.Garage;
 
 namespace Garage.ConsoleApp.GarageUI;
@@ -52,8 +53,12 @@ internal sealed class GarageApplication
                     ChooseGarage),
 
                 new MenuOption(
-                    "Create garage",
-                    CreateGarage)
+                    "Create garage (unrestricted spots)",
+                    CreateGarage),
+
+                new MenuOption(
+                    "Create garage with sized parking spots",
+                    CreateGarageWithSizedSpots)
             ],
             backOptionText: "Exit");
 
@@ -94,6 +99,16 @@ internal sealed class GarageApplication
 
     private void CreateGarage()
     {
+        CreateGarage(useSpotDimensions: false);
+    }
+
+    private void CreateGarageWithSizedSpots()
+    {
+        CreateGarage(useSpotDimensions: true);
+    }
+
+    private void CreateGarage(bool useSpotDimensions)
+    {
         string name = ConsoleInput.ReadRequiredString(
             "Garage name: ");
 
@@ -123,13 +138,47 @@ internal sealed class GarageApplication
             minimum: 1,
             maximum: VehicleGarage.MaximumGarageCapacity);
 
-        VehicleGarage garage = new(
-            garageName: name,
-            capacity: capacity);
+        VehicleGarage garage;
+
+        if (useSpotDimensions)
+        {
+            Console.WriteLine("Enter the size used by most parking spots:");
+            Dimensions defaultSize = ReadSpotDimensions();
+            List<Dimensions> sizes = Enumerable.Repeat(defaultSize, capacity).ToList();
+
+            int customCount = ConsoleInput.ReadInt(
+                "Number of spots with a different size: ",
+                minimum: 0,
+                maximum: capacity);
+
+            for (int i = 0; i < customCount; i++)
+            {
+                int spotNumber = ConsoleInput.ReadInt(
+                    "Spot number to customize: ",
+                    minimum: 1,
+                    maximum: capacity);
+
+                Console.WriteLine($"Size for parking spot {spotNumber}:");
+                sizes[spotNumber - 1] = ReadSpotDimensions();
+            }
+
+            garage = new VehicleGarage(name, sizes);
+        }
+        else
+        {
+            garage = new VehicleGarage(
+                garageName: name,
+                capacity: capacity);
+        }
 
         AddGarage(garage);
         OpenGarage(garage);
     }
+
+    private static Dimensions ReadSpotDimensions() => new(
+        ConsoleInput.ReadDouble("Length in meters: ", 0.01, 1_000),
+        ConsoleInput.ReadDouble("Width in meters: ", 0.01, 1_000),
+        ConsoleInput.ReadDouble("Height in meters: ", 0.01, 1_000));
 
     private void OpenGarage(VehicleGarage garage)
     {
@@ -157,6 +206,10 @@ internal sealed class GarageApplication
                 new MenuOption(
                     "Park a created vehicle to a specific spot",
                     actions.ParkVehicleAtSpot),
+
+                new MenuOption(
+                    "List parking spots and sizes",
+                    actions.ListParkingSpots),
 
                 new MenuOption(
                     "List all parked vehicles",

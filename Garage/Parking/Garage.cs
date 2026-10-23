@@ -1,15 +1,14 @@
 using Garage.Results;
 using Garage.Search;
 using Garage.Vehicles;
+using Garage.Vehicles.Components;
 using Garage.Vehicles.Interfaces;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 
 namespace Garage.Parking;
 
 public class Garage
 {
-    private readonly List<(int SpotNumber,Vehicle? Vehicle)> parkingSpots;
+    private readonly List<ParkingSpot> parkingSpots;
     public const int MaximumGarageCapacity = 100_000;
 
     public string GarageName { get; }
@@ -38,11 +37,19 @@ public class Garage
 
     public int AvailableSpaces => Capacity - OccupiedSpaces;
 
+    public List<(int SpotNumber, Dimensions? Dimensions, bool IsOccupied)> SpotDetails =>
+        parkingSpots
+            .Select(spot => (spot.Number, spot.Dimensions, spot.Vehicle is not null))
+            .ToList();
+
     public List<(int SpotNumber, Vehicle? Vehicle)> ParkedVehicles
     {
         get
         {
-            return parkingSpots.Where(spot => spot.Vehicle is not null).ToList();
+            return parkingSpots
+                .Where(spot => spot.Vehicle is not null)
+                .Select(spot => (SpotNumber: spot.Number, spot.Vehicle))
+                .ToList();
         }
     }
 
@@ -67,7 +74,7 @@ public class Garage
                                     (
                                         spot => 
                                             (
-                                            SpotNumber: spot.SpotNumber,
+                                            SpotNumber: spot.Number,
                                             Vehicle: spot.Vehicle!
                                             )
                                     ).ToList()
@@ -117,6 +124,27 @@ public class Garage
     string garageName,
     int capacity,
     List<Vehicle> initialVehicles)
+        : this(garageName, capacity, initialVehicles, null)
+    {
+    }
+
+    public Garage(
+        string garageName,
+        IReadOnlyList<Dimensions> spotDimensions,
+        List<Vehicle>? initialVehicles = null)
+        : this(
+            garageName,
+            spotDimensions?.Count ?? throw new ArgumentNullException(nameof(spotDimensions)),
+            initialVehicles ?? [],
+            spotDimensions)
+    {
+    }
+
+    private Garage(
+        string garageName,
+        int capacity,
+        List<Vehicle> initialVehicles,
+        IReadOnlyList<Dimensions>? spotDimensions)
     {
         if (string.IsNullOrWhiteSpace(garageName))
         {
@@ -144,6 +172,17 @@ public class Garage
                 nameof(initialVehicles));
         }
 
+        if (spotDimensions is not null)
+        {
+            for (int i = 0; i < spotDimensions.Count; i++)
+            {
+                if (spotDimensions[i] is null)
+                    throw new ArgumentException(
+                        $"Parking spot {i + 1} has no dimensions.",
+                        nameof(spotDimensions));
+            }
+        }
+
         if(startingVehicles.Any(vehicle => vehicle is null))
             throw new ArgumentException(
                     "Inital Vehicles should not contain null vehicles",
@@ -165,31 +204,71 @@ public class Garage
 
         this.GarageName = garageName;
         this.Capacity = capacity;
-        this.parkingSpots = new List<(int SpotNumber, Vehicle? Vehicle)>();
+        this.parkingSpots = new List<ParkingSpot>(capacity);
 
         for (int i = 0; i < capacity; i++)
         {
-            parkingSpots.Add((SpotNumber: i + 1, Vehicle: null));
+            parkingSpots.Add(new ParkingSpot
+            {
+                Number = i + 1,
+                Dimensions = spotDimensions?[i]
+            });
         }
 
         for (int i = 0; i < startingVehicles.Count; i++)
         {
-            parkingSpots[i] = (i + 1, startingVehicles[i]);
+            GarageOperationResult result = Park(startingVehicles[i]);
+
+            if (!result.Success)
+            {
+                throw new ArgumentException(
+                    $"Initial vehicle {startingVehicles[i].RegistrationNumber} " +
+                    $"could not be parked: {result.Message}",
+                    nameof(initialVehicles));
+            }
         }
+    }
+
+    public List<int> AvailableSpotsFor(Vehicle vehicle)
+    {
+        ArgumentNullException.ThrowIfNull(vehicle);
+
+        if (RegistrationExists(vehicle.RegistrationNumber))
+            return [];
+
+        return parkingSpots
+            .Where(spot => spot.Vehicle is null && Fits(vehicle, spot))
+            .Select(spot => spot.Number)
+            .ToList();
+    }
+
+    private static bool Fits(Vehicle vehicle, ParkingSpot spot)
+    {
+        if (spot.Dimensions is not Dimensions space)
+            return true;
+
+        Dimensions size = vehicle.SpecificationDetails.Dimensions;
+
+        return size.LengthMeters <= space.LengthMeters &&
+               size.WidthMeters <= space.WidthMeters &&
+               size.HeightMeters <= space.HeightMeters;
     }
 
     public GarageOperationResult Park(Vehicle vehicle)
     {
         ArgumentNullException.ThrowIfNull(vehicle);
 
-        int availableSpotIndex = NextOpenSpace(this.parkingSpots);
+        int availableSpotIndex = parkingSpots.FindIndex(
+            spot => spot.Vehicle is null && Fits(vehicle, spot));
 
         if (availableSpotIndex == -1)
         {
             return new GarageOperationResult(
                 false,
                 null,
-                "The garage is full.");
+                AvailableSpaces == 0
+                    ? "The garage is full."
+                    : "No available parking spot is large enough for this vehicle.");
         }
 
         return Park(vehicle, availableSpotIndex+1);
@@ -215,6 +294,14 @@ public class Garage
                         $"I am sorry, The spot {spot} is occupied"
                     );
 
+        if (!Fits(vehicle, parkingSpots[spot - 1]))
+        {
+            return new GarageOperationResult(
+                false,
+                null,
+                $"Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.");
+        }
+
         if (RegistrationExists(vehicle.RegistrationNumber))
         {
             return new GarageOperationResult(
@@ -224,17 +311,12 @@ public class Garage
                 $"{vehicle.RegistrationNumber} is already parked.");
         }
 
-        parkingSpots[spot - 1] = (SpotNumber: spot, Vehicle: vehicle);
+        parkingSpots[spot - 1].Vehicle = vehicle;
         return new GarageOperationResult(
             true,
             spot-1,
             $"Vehcile {vehicle.RegistrationNumber} parked at spot {spot}"
             );
-    }
-
-    private static int NextOpenSpace(List<(int Spot,Vehicle? Vehicle)> parkingSpots)
-    {
-        return parkingSpots.FindIndex(spot => spot.Vehicle is null);
     }
 
     public GarageOperationResult Remove(string registrationNumber)
@@ -251,7 +333,7 @@ public class Garage
         }
 
         int index = match.Value.SpotIndex;
-        parkingSpots[index] = (parkingSpots[index].SpotNumber, null);
+        parkingSpots[index].Vehicle = null;
 
         return new GarageOperationResult(
             true,

@@ -46,12 +46,21 @@ internal sealed class GarageActions
             return;
         }
 
+        ShowOpenSpots();
+
         int spot = ConsoleInput.ReadInt(
             "Choose parking spot: ",
             minimum: 1,
             maximum: garage.Capacity);
 
-        Vehicle? vehicle = SelectCreatedVehicle();
+        if (garage.ParkedVehicles.Any(parked => parked.SpotNumber == spot))
+        {
+            Console.WriteLine($"Parking spot {spot} is occupied.");
+            ConsoleInput.Pause();
+            return;
+        }
+
+        Vehicle? vehicle = SelectCreatedVehicle(spot);
 
         if (vehicle is not null)
             Park(vehicle, spot);
@@ -83,6 +92,40 @@ internal sealed class GarageActions
         }
 
         ConsoleInput.Pause();
+    }
+
+    public void ListParkingSpots()
+    {
+        foreach (var spot in garage.SpotDetails)
+        {
+            string size = spot.Dimensions is null
+                ? "no size limit"
+                : $"{spot.Dimensions.LengthMeters} x " +
+                  $"{spot.Dimensions.WidthMeters} x " +
+                  $"{spot.Dimensions.HeightMeters} m";
+
+            Console.WriteLine(
+                $"Spot {spot.SpotNumber}: " +
+                $"{(spot.IsOccupied ? "occupied" : "open")}, {size}");
+        }
+
+        ConsoleInput.Pause();
+    }
+
+    private void ShowOpenSpots()
+    {
+        Console.WriteLine("Open parking spots:");
+
+        foreach (var spot in garage.SpotDetails.Where(spot => !spot.IsOccupied))
+        {
+            string size = spot.Dimensions is null
+                ? "no size limit"
+                : $"{spot.Dimensions.LengthMeters} x " +
+                  $"{spot.Dimensions.WidthMeters} x " +
+                  $"{spot.Dimensions.HeightMeters} m";
+
+            Console.WriteLine($"{spot.SpotNumber}. {size}");
+        }
     }
 
     public void ListVehicleTypes()
@@ -251,25 +294,16 @@ internal sealed class GarageActions
         ConsoleInput.Pause();
     }
 
-    private Vehicle? SelectCreatedVehicle()
+    private Vehicle? SelectCreatedVehicle(int? spotNumber = null)
     {
-        List<Vehicle> created = createdVehicles.Vehicles;
-        List<global::Garage.Parking.Garage> garages = garageProvider();
-
-        List<Vehicle> vehicles = [];
-
-        for (int index = 0; index < created.Count; index++)
-        {
-            if (!VehicleParkingStatus.IsParked(created[index], garages))
-            {
-                vehicles.Add(created[index]);
-            }
-        }
+        List<Vehicle> vehicles = GetParkableCreatedVehicles(spotNumber);
 
         if (vehicles.Count == 0)
         {
             Console.WriteLine(
-                "There are no available created vehicles to park.");
+                spotNumber is int requestedSpot
+                    ? $"No available created vehicles fit in parking spot {requestedSpot}."
+                    : "No available created vehicles fit in an open parking spot.");
             ConsoleInput.Pause();
             return null;
         }
@@ -292,6 +326,20 @@ internal sealed class GarageActions
         return choice == 0
             ? null
             : vehicles[choice - 1];
+    }
+
+    internal List<Vehicle> GetParkableCreatedVehicles(int? spotNumber = null)
+    {
+        List<Vehicle> created = createdVehicles.Vehicles;
+        List<global::Garage.Parking.Garage> garages = garageProvider();
+
+        return created
+            .Where(vehicle =>
+                !VehicleParkingStatus.IsParked(vehicle, garages) &&
+                (spotNumber is int requestedSpot
+                    ? garage.AvailableSpotsFor(vehicle).Contains(requestedSpot)
+                    : garage.AvailableSpotsFor(vehicle).Count > 0))
+            .ToList();
     }
 
 }

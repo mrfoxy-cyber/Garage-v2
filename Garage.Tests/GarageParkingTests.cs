@@ -1,5 +1,7 @@
+using Garage.ConsoleApp.GarageUI;
 using Garage.Tests.Fixtures;
 using Garage.Vehicles;
+using Garage.Vehicles.Components;
 using VehicleGarage = Garage.Parking.Garage;
 
 namespace Garage.Tests;
@@ -98,5 +100,105 @@ public class GarageParkingTests
 
         Assert.Contains("vehicle", exception.Message);
         Assert.Empty(garage.Vehicles);
+    }
+
+    [Fact]
+    public void Park_SkipsOpenSpotThatIsTooSmall()
+    {
+        VehicleGarage garage = new("Sized garage",
+        [
+            new Dimensions(4, 2, 2),
+            new Dimensions(5, 2, 2)
+        ]);
+        Vehicle car = VehicleFixtures.CreateCar();
+
+        Assert.Equal([2], garage.AvailableSpotsFor(car));
+
+        var result = garage.Park(car);
+
+        Assert.True(result.Success);
+        Assert.Equal(1, result.SpotIndex);
+        Assert.Equal(2, Assert.Single(garage.ParkedVehicles).SpotNumber);
+        Assert.Empty(garage.AvailableSpotsFor(car));
+    }
+
+    [Fact]
+    public void ParkAtSpot_RejectsVehicleThatDoesNotFitAndKeepsSpotFree()
+    {
+        VehicleGarage garage = new("Sized garage",
+        [
+            new Dimensions(2, 5, 2),
+            new Dimensions(4.8, 1.8, 1.5)
+        ]);
+        Vehicle car = VehicleFixtures.CreateCar();
+
+        var tooSmall = garage.Park(car, spot: 1);
+        var exactFit = garage.Park(car, spot: 2);
+
+        Assert.False(tooSmall.Success);
+        Assert.Contains("does not fit", tooSmall.Message);
+        Assert.True(exactFit.Success);
+        Assert.Equal(1, garage.OccupiedSpaces);
+        Assert.Equal(2, Assert.Single(garage.ParkedVehicles).SpotNumber);
+    }
+
+    [Fact]
+    public void Remove_MakesSizedSpotAvailableAgain()
+    {
+        VehicleGarage garage = new("Sized garage", [new Dimensions(5, 2, 2)]);
+        Vehicle first = VehicleFixtures.CreateCar("ONE123");
+        Vehicle second = VehicleFixtures.CreateCar("TWO123");
+
+        Assert.True(garage.Park(first).Success);
+        Assert.True(garage.Remove(first.RegistrationNumber).Success);
+
+        Assert.Equal([1], garage.AvailableSpotsFor(second));
+        Assert.True(garage.Park(second).Success);
+        Assert.Equal(new Dimensions(5, 2, 2), Assert.Single(garage.SpotDetails).Dimensions);
+    }
+
+    [Theory]
+    [InlineData(0, 2, 2)]
+    [InlineData(-1, 2, 2)]
+    [InlineData(double.NaN, 2, 2)]
+    [InlineData(2, double.PositiveInfinity, 2)]
+    [InlineData(2, 2, double.NegativeInfinity)]
+    public void Dimensions_RejectsInvalidMeasurements(
+        double lengthMeters,
+        double widthMeters,
+        double heightMeters)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new Dimensions(lengthMeters, widthMeters, heightMeters));
+    }
+
+    [Fact]
+    public void Constructor_RejectsMissingSpotDimensions()
+    {
+        IReadOnlyList<Dimensions> sizes = [null!];
+
+        Assert.Throws<ArgumentException>(() =>
+            new VehicleGarage("Sized garage", sizes));
+    }
+
+    [Fact]
+    public void ParkingMenu_OnlyOffersVehiclesThatFitTheChosenSpot()
+    {
+        VehicleGarage garage = new("Sized garage",
+        [
+            new Dimensions(5, 2, 2),
+            new Dimensions(15, 4, 4)
+        ]);
+        Vehicle car = VehicleFixtures.CreateCar();
+        Vehicle boat = VehicleFixtures.CreateBoat();
+        CreatedVehicleStore created = new([car, boat]);
+        GarageActions actions = new(garage, created, () => [garage]);
+
+        Assert.Equal([car], actions.GetParkableCreatedVehicles(spotNumber: 1));
+        Assert.Equal([car, boat], actions.GetParkableCreatedVehicles());
+
+        garage.Park(car, spot: 1);
+
+        Assert.Equal([boat], actions.GetParkableCreatedVehicles());
     }
 }
