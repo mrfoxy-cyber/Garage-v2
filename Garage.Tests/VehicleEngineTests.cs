@@ -1,4 +1,4 @@
-using Garage.ConsoleApp.GarageUI;
+using Garage.ConsoleApp.Display;
 using Garage.Tests.Fixtures;
 using Garage.Vehicles;
 using Garage.Vehicles.Specifications;
@@ -118,7 +118,7 @@ public class VehicleEngineTests
         try
         {
             Console.SetOut(output);
-            VehicleActions.PrintVehicle(3, vehicle);
+            VehicleDisplay.PrintVehicle(3, vehicle);
             return output.ToString();
         }
         finally

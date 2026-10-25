@@ -1,6 +1,6 @@
 using Garage.Tests.Fixtures;
 using Garage.Vehicles;
-using VehicleGarage = Garage.Parking.Garage;
+using VehicleGarage = Garage.Models.Garage;
 
 namespace Garage.Tests;
 
@@ -57,6 +57,6 @@ public class GarageConstructionTests
                 capacity: 5,
                 initialVehicles: initialVehicles));
 
-        Assert.Contains("Inital Vehicles should not contain null vehicles", exception.Message);
+        Assert.Contains("Initial vehicles must not contain null vehicles", exception.Message);
     }
 }

@@ -1,5 +1,5 @@
-using Garage.ConsoleApp.Data;
-using Garage.ConsoleApp.GarageUI;
+using Garage.ConsoleApp.Drafts;
+using Garage.Persistence.Json;
 using Garage.Tests.Fixtures;
 using Garage.Vehicles;
 
@@ -103,7 +103,7 @@ public class RegistrationValidationTests
     [InlineData("created-vehicles.json", 12)]
     public void SampleData_LoadsWithValidRegistrations(string fileName, int expectedCount)
     {
-        var vehicles = SeedData.LoadVehicles(fileName);
+        var vehicles = VehicleJsonLoader.LoadVehicles(fileName);
 
         Assert.Equal(expectedCount, vehicles.Count);
         Assert.All(vehicles, vehicle => Assert.Equal(CountryCode.SWE, vehicle.CountryCode));

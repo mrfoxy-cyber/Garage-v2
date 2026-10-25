@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Vehicle\Vehicle.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

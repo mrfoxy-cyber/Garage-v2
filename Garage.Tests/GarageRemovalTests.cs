@@ -1,6 +1,6 @@
 using Garage.Tests.Fixtures;
 using Garage.Vehicles;
-using VehicleGarage = Garage.Parking.Garage;
+using VehicleGarage = Garage.Models.Garage;
 
 namespace Garage.Tests;
 
@@ -15,7 +15,7 @@ public class GarageRemovalTests
         var match = garage.FindVehicleByRegistration("AbC123");
 
         Assert.NotNull(match);
-        Assert.Same(car, match.Value.Vehicle);
+        Assert.Same(car, match.Vehicle);
     }
 
     [Fact]

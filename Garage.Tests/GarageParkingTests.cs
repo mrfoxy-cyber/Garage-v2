@@ -1,8 +1,9 @@
-using Garage.ConsoleApp.GarageUI;
+using Garage.Models;
+using Garage.Services;
 using Garage.Tests.Fixtures;
 using Garage.Vehicles;
 using Garage.Vehicles.Components;
-using VehicleGarage = Garage.Parking.Garage;
+using VehicleGarage = Garage.Models.Garage;
 
 namespace Garage.Tests;
 
@@ -117,7 +118,7 @@ public class GarageParkingTests
         var result = garage.Park(car);
 
         Assert.True(result.Success);
-        Assert.Equal(1, result.SpotIndex);
+        Assert.Equal(2, result.SpotNumber);
         Assert.Equal(2, Assert.Single(garage.ParkedVehicles).SpotNumber);
         Assert.Empty(garage.AvailableSpotsFor(car));
     }
@@ -191,14 +192,13 @@ public class GarageParkingTests
         ]);
         Vehicle car = VehicleFixtures.CreateCar();
         Vehicle boat = VehicleFixtures.CreateBoat();
-        CreatedVehicleStore created = new([car, boat]);
-        GarageActions actions = new(garage, created, () => [garage]);
+        GarageService service = new([garage], [car, boat]);
 
-        Assert.Equal([car], actions.GetParkableCreatedVehicles(spotNumber: 1));
-        Assert.Equal([car, boat], actions.GetParkableCreatedVehicles());
+        Assert.Equal([car], service.GetParkableVehicles(garage, spotNumber: 1));
+        Assert.Equal([car, boat], service.GetParkableVehicles(garage));
 
         garage.Park(car, spot: 1);
 
-        Assert.Equal([boat], actions.GetParkableCreatedVehicles());
+        Assert.Equal([boat], service.GetParkableVehicles(garage));
     }
 }

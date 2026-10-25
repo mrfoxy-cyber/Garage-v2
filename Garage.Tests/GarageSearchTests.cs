@@ -1,8 +1,8 @@
-using Garage.Search;
+using Garage.Queries;
 using Garage.Tests.Fixtures;
 using Garage.Vehicles;
 using Garage.Vehicles.Types;
-using VehicleGarage = Garage.Parking.Garage;
+using VehicleGarage = Garage.Models.Garage;
 
 namespace Garage.Tests;
 
@@ -38,7 +38,7 @@ public class GarageSearchTests
             NumberOfWheels = 4
         };
 
-        List<Vehicle> matches = garage.Search(criteria);
+        IReadOnlyList<Vehicle> matches = garage.Search(criteria);
 
         Assert.Same(matchingCar, Assert.Single(matches));
     }
@@ -51,7 +51,7 @@ public class GarageSearchTests
             2,
             [VehicleFixtures.CreateCar()]);
 
-        List<Vehicle> matches = garage.Search(
+        IReadOnlyList<Vehicle> matches = garage.Search(
             new VehicleSearchCriteria
             {
                 Color = VehicleColor.Pink
@@ -121,7 +121,7 @@ public class GarageSearchTests
         Vehicle airplane = VehicleFixtures.CreateAirplane();
         VehicleGarage garage = new("Test garage", 1, [airplane]);
 
-        List<Vehicle> matches = garage.Search(new VehicleSearchCriteria
+        IReadOnlyList<Vehicle> matches = garage.Search(new VehicleSearchCriteria
         {
             VehicleTypes = [typeof(Airplane)],
             Color = VehicleColor.White,

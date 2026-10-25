@@ -1,26 +1,26 @@
-using Garage.ConsoleApp.Data;
-using Garage.ConsoleApp.GarageUI;
-using Garage.ConsoleApp.Logging;
+using Garage.ConsoleApp.Menus;
+using Garage.Services;
+using Garage.Persistence.Json;
+using Garage.Diagnostics;
 using Garage.Vehicles;
-using VehicleGarage = Garage.Parking.Garage;
+using VehicleGarage = Garage.Models.Garage;
 
 
 try
 {
     List<Vehicle> parkedVehicles =
-        SeedData.LoadVehicles("vehicles.json");
+        VehicleJsonLoader.LoadVehicles("vehicles.json");
 
     List<Vehicle> createdVehicles =
-        SeedData.LoadVehicles("created-vehicles.json");
+        VehicleJsonLoader.LoadVehicles("created-vehicles.json");
 
     VehicleGarage startingGarage = new(
        garageName: "Lexicon Garage",
        capacity: 100,
         initialVehicles: parkedVehicles);
 
-    GarageApplication application = new(
-        initialGarages: [startingGarage],
-        initialCreatedVehicles: createdVehicles);
+    GarageService service = new([startingGarage], createdVehicles);
+    GarageApplication application = new(service);
 
 
     application.Run();
