@@ -1,18 +1,22 @@
 # Garage
 
-A console application with three projects and one dependency direction:
+The new **Garage.Terminal** workspace adds a Terminal.Gui dashboard, guided forms, and JSON file browsing alongside the original console. Run `dotnet run --project Garage.Terminal`. See [the terminal app guide](Garage.Terminal/README.md).
+
+Two console interfaces share the same application and vehicle models:
 
 ```text
-Garage.Console -> Garage -> Vehicle
+Garage.Console  -> Garage -> Vehicle
+Garage.Terminal -> Garage -> Vehicle
 ```
 
 ## Responsibilities
 
 - **Garage.Console** collects input, holds unfinished drafts, maps input into factory arguments, and displays results.
+- **Garage.Terminal** provides the Terminal.Gui dashboard, forms, keyboard navigation, and file pickers.
 - **Garage** owns valid garage state, parking rules, the vehicle catalog, application operations, queries, JSON persistence, and diagnostics.
 - **Vehicle** defines vehicle and engine models, specifications, validation, and factories.
 
-The Garage and Vehicle projects do not reference the console or use console input/output. Application startup wires the projects together in `Garage.Console/Program.cs`.
+The Garage and Vehicle projects do not reference either console or use console input/output. Each console's `Program.cs` wires the projects together.
 
 ```text
 Garage/
