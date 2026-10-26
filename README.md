@@ -51,6 +51,14 @@ The `Garage` model controls what occupies each spot. It can find a suitable free
 
 **Garage.Terminal** is a full-screen terminal UI. Its overview shows garages and occupancy; the vehicle catalog shows where each vehicle is parked. Parking and search have their own views, while forms guide vehicle and engine creation. It also provides a JSON file browser and keyboard shortcuts. The [terminal guide](Garage.Terminal/README.md) explains the screens and controls.
 
+## How the terminal is built
+
+The terminal app uses **Terminal.Gui** to draw windows, buttons, lists, tables, and dialogs inside the terminal. `Program.cs` loads the starting data, creates the shared `GarageService`, and starts the Terminal.Gui event loop with `GarageWorkspace` as its main window.
+
+The workspace connects several small parts: a layout class creates the controls, a button class groups dashboard actions, and a state class tracks the selected garage, page, and filters. User actions call the shared garage services; rendering code then updates the visible table and details from the resulting state. The terminal project contains the screen behavior, while parking and vehicle rules stay in `Garage` and `Vehicle`.
+
+See [how the terminal is built](Garage.Terminal/README.md#how-the-terminal-is-built) for the startup flow, file responsibilities, and where to make UI changes.
+
 ## JSON files
 
 JSON lets you bring data into a running session. The sample files are in [Garage/Data](Garage/Data):
