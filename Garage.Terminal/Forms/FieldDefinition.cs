@@ -30,7 +30,7 @@ internal sealed record FieldDefinition(string Name, string Label, Type Type, boo
              double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out measurement)) && double.IsFinite(measurement))
         {
             if (measurement < 0) throw new ArgumentException($"{Label} must be zero or greater.");
-            if (measurement == 0 && new[] { "weightKg", "length", "width", "height", "lengthMeters", "widthMeters", "heightMeters", "wingspanMeters" }.Contains(Name, StringComparer.OrdinalIgnoreCase))
+            if (measurement == 0 && new List<string> { "weightKg", "length", "width", "height", "lengthMeters", "widthMeters", "heightMeters", "wingspanMeters" }.Contains(Name, StringComparer.OrdinalIgnoreCase))
                 throw new ArgumentException($"{Label} must be greater than zero.");
             return measurement;
         }

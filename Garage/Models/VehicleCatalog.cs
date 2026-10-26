@@ -6,7 +6,7 @@ public sealed class VehicleCatalog
 {
     private readonly List<Vehicle> vehicles = [];
 
-    public VehicleCatalog(IEnumerable<Vehicle>? initialVehicles = null)
+    public VehicleCatalog(List<Vehicle>? initialVehicles = null)
     {
         foreach (Vehicle vehicle in initialVehicles ?? [])
             Add(vehicle);

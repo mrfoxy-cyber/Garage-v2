@@ -28,11 +28,37 @@ internal static class Theme
         Disabled = new Attribute(new Color("#71849c"), new Color(background))
     };
 
-    public static T Apply<T>(T view, Scheme? scheme = null) where T : View
+    private static void ApplyScheme(View view, Scheme? scheme)
     {
         view.SetScheme(scheme ?? Surface);
-        return view;
     }
+
+    public static View Apply(View view, Scheme? scheme = null)
+    { ApplyScheme(view, scheme); return view; }
+
+    public static Button Apply(Button view, Scheme? scheme = null)
+    { ApplyScheme(view, scheme); return view; }
+
+    public static Label Apply(Label view, Scheme? scheme = null)
+    { ApplyScheme(view, scheme); return view; }
+
+    public static Window Apply(Window view, Scheme? scheme = null)
+    { ApplyScheme(view, scheme); return view; }
+
+    public static OpenDialog Apply(OpenDialog view, Scheme? scheme = null)
+    { ApplyScheme(view, scheme); return view; }
+
+    public static FrameView Apply(FrameView view, Scheme? scheme = null)
+    { ApplyScheme(view, scheme); return view; }
+
+    public static ListView Apply(ListView view, Scheme? scheme = null)
+    { ApplyScheme(view, scheme); return view; }
+
+    public static TextField Apply(TextField view, Scheme? scheme = null)
+    { ApplyScheme(view, scheme); return view; }
+
+    public static TableView Apply(TableView view, Scheme? scheme = null)
+    { ApplyScheme(view, scheme); return view; }
 
     public static Button Button(string text, Action action)
     {

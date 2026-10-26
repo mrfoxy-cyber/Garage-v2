@@ -12,7 +12,7 @@ public sealed class GarageService
 {
     private readonly List<VehicleGarage> garages = [];
 
-    public GarageService(IEnumerable<VehicleGarage> initialGarages, IEnumerable<Vehicle> initialVehicles)
+    public GarageService(List<VehicleGarage> initialGarages, List<Vehicle> initialVehicles)
     {
         ArgumentNullException.ThrowIfNull(initialGarages);
         ArgumentNullException.ThrowIfNull(initialVehicles);
@@ -48,7 +48,7 @@ public sealed class GarageService
     public IReadOnlyList<Vehicle> GetParkableVehicles(VehicleGarage garage, int? spotNumber = null)
     {
         if (!garages.Contains(garage))
-            return Array.Empty<Vehicle>();
+            return new List<Vehicle>().AsReadOnly();
         return Catalog.Vehicles.Where(vehicle => !IsParked(vehicle) &&
             (spotNumber is int spot
                 ? garage.AvailableSpotsFor(vehicle).Contains(spot)

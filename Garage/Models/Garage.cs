@@ -83,7 +83,7 @@ public sealed class Garage
     {
         ArgumentNullException.ThrowIfNull(vehicle);
         if (RegistrationExists(vehicle.RegistrationNumber))
-            return Array.Empty<int>();
+            return new List<int>().AsReadOnly();
         return parkingSpots.Where(spot => spot.Vehicle is null && spot.Fits(vehicle))
             .Select(spot => spot.Number).ToList().AsReadOnly();
     }

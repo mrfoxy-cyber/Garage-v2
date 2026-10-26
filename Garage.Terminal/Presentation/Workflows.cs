@@ -12,7 +12,7 @@ internal sealed class Workflows(Dialogs dialogs, GarageService service)
 {
     public VehicleCreationResult? CreateVehicle(VehicleGarage? garage = null, int? spotNumber = null)
     {
-        int? type = dialogs.Choose("Create a vehicle / Choose type", FactoryDefinition.Vehicles.Select(f => f.Name).ToArray());
+        int? type = dialogs.Choose("Create a vehicle / Choose type", FactoryDefinition.Vehicles.Select(f => f.Name).ToList());
         if (type is null) return null;
         FactoryDefinition factory = FactoryDefinition.Vehicles[type.Value];
         Dictionary<string, object?>? values = null;
@@ -35,7 +35,7 @@ internal sealed class Workflows(Dialogs dialogs, GarageService service)
                 else if (action == 1) dialogs.Message("Draft engines", VehicleDetails.Engines(engines));
                 else if (action == 2)
                 {
-                    int? remove = dialogs.Choose("Remove draft engine", engines.Select(e => $"{e.GetType().Name} / {e.Model} / {e.SerialNumber}").ToArray());
+                    int? remove = dialogs.Choose("Remove draft engine", engines.Select(e => $"{e.GetType().Name} / {e.Model} / {e.SerialNumber}").ToList());
                     if (remove is int index) engines.RemoveAt(index);
                 }
                 else if (action == 3)
@@ -50,7 +50,7 @@ internal sealed class Workflows(Dialogs dialogs, GarageService service)
 
     private Engine? CreateEngine()
     {
-        int? kind = dialogs.Choose("Add an engine / Choose type", FactoryDefinition.Engines.Select(f => f.Name).ToArray());
+        int? kind = dialogs.Choose("Add an engine / Choose type", FactoryDefinition.Engines.Select(f => f.Name).ToList());
         if (kind is null) return null;
         FactoryDefinition factory = FactoryDefinition.Engines[kind.Value];
         Dictionary<string, object?>? values = null;
@@ -66,11 +66,11 @@ internal sealed class Workflows(Dialogs dialogs, GarageService service)
 
     public GarageCreationResult? CreateGarage()
     {
-        var fields = new FieldDefinition[]
-        {
+        List<FieldDefinition> fields =
+        [
             new("name", "Garage name", typeof(string)),
             new("capacity", "Number of parking spots", typeof(int), Initial: "20")
-        };
+        ];
         Dictionary<string, object?>? values = dialogs.Form("New garage", fields);
         if (values is null) return null;
         string name = (string)values["name"]!;

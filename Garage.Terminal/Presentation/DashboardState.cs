@@ -17,7 +17,7 @@ internal sealed class DashboardState(GarageService service)
 
     public IReadOnlyList<Vehicle> VisibleVehicles()
     {
-        IEnumerable<Vehicle> vehicles = Page switch
+        IReadOnlyList<Vehicle> vehicles = Page switch
         {
             WorkspacePage.Vehicles => Service.Catalog.Vehicles,
             WorkspacePage.Search => Garage?.Search(Criteria) ?? [],
@@ -26,7 +26,7 @@ internal sealed class DashboardState(GarageService service)
         string query = QuickFilter.Trim();
         return vehicles.Where(vehicle => query.Length == 0 ||
             $"{vehicle.RegistrationNumber} {vehicle.GetType().Name} {vehicle.Manufacturer} {vehicle.Model} {vehicle.Color} {vehicle.ManufacturingYear}"
-                .Contains(query, StringComparison.OrdinalIgnoreCase)).ToArray();
+                .Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 
     public VehicleGarage? Location(Vehicle vehicle) => Service.Garages.FirstOrDefault(garage =>

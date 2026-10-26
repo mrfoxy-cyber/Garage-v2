@@ -4,6 +4,7 @@ using Garage.Terminal.Presentation;
 using Garage.Tests.Fixtures;
 using Garage.Vehicles;
 using Garage.Engines;
+using Garage.Vehicles.Types;
 using VehicleGarage = Garage.Models.Garage;
 
 namespace Garage.Tests;
@@ -62,6 +63,46 @@ public class TerminalWorkspaceTests
         Assert.Single(vehicle.SpecificationDetails.Engines);
         values["length"] = -1d;
         Assert.ThrowsAny<ArgumentException>(() => car.Create(values));
+    }
+
+    [Fact]
+    public void VehicleForms_CreateEverySupportedVehicleType()
+    {
+        Dictionary<string, object?> values = new()
+        {
+            ["registrationNumber"] = "ABC123", ["countryCode"] = CountryCode.SWE,
+            ["manufacturer"] = "Test", ["model"] = "Model", ["manufacturingYear"] = 2020,
+            ["color"] = VehicleColor.Black, ["weightKg"] = 1500d,
+            ["length"] = 4.8d, ["width"] = 1.8d, ["height"] = 1.5d,
+            ["lengthMeters"] = 4.8d, ["widthMeters"] = 1.8d, ["heightMeters"] = 1.5d,
+            ["vin"] = "TEST-VIN", ["hin"] = "TEST-HIN",
+            ["airframeSerialNumber"] = "TEST-AIRFRAME",
+            ["bodyType"] = BodyType.Sedan, ["motorcycleType"] = MotorcycleType.Touring,
+            ["boatType"] = BoatType.Motorboat, ["numberOfDoors"] = 4,
+            ["numberOfSeats"] = 4, ["numberOfWheels"] = 4, ["numberOfAxles"] = 2,
+            ["hasSidecar"] = false, ["passengerCapacity"] = 2, ["driverSeats"] = 1,
+            ["passengerSeatCount"] = 2, ["standingPassengerCapacity"] = 10,
+            ["driverSeatCount"] = 1, ["draftMeters"] = 0.5d, ["hasCabin"] = false,
+            ["cabinPassengerSeatCount"] = 0, ["cabinCrewSeatCount"] = 0,
+            ["wingspanMeters"] = 10d, ["crewSeatCount"] = 0,
+            ["pilotSeatCount"] = 1, ["hasDualControls"] = false,
+            ["maximumAltitudeMeters"] = 4200d, ["maximumLoadKg"] = 1000d
+        };
+
+        foreach (FactoryDefinition factory in FactoryDefinition.Vehicles)
+        {
+            values["registrationNumber"] = factory.Name switch
+            {
+                "Boat" => "SFB-2700",
+                "Airplane" => "SE-AIR",
+                _ => "ABC123"
+            };
+            values["numberOfWheels"] = factory.Name == "Motorcycle" ? 2 : 4;
+
+            Vehicle vehicle = Assert.IsAssignableFrom<Vehicle>(
+                factory.Create(values, [EngineFixtures.CreateEngine()]));
+            Assert.Equal(factory.Name, vehicle.GetType().Name);
+        }
     }
 
     [Fact]

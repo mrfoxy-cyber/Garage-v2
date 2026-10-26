@@ -22,13 +22,14 @@ internal sealed class Dialogs(IApplication app)
     public void Message(string title, string message)
     {
         using Window window = Modal(title, 15);
+        int contentHeight = Math.Max(8, message.Count(character => character == '\n') + 3);
         View scroll = Theme.Apply(new View
         {
             X = 2, Y = 1, Width = Dim.Fill(2), Height = Dim.Fill(4),
             CanFocus = true, ViewportSettings = ViewportSettingsFlags.HasScrollBars
         });
-        scroll.SetContentSize(new System.Drawing.Size(100, Math.Max(8, message.Split('\n').Length + 2)));
-        scroll.Add(Theme.Apply(new Label { Text = message, Width = 100, Height = Math.Max(8, message.Split('\n').Length + 2) }));
+        scroll.SetContentSize(new System.Drawing.Size(100, contentHeight));
+        scroll.Add(Theme.Apply(new Label { Text = message, Width = 100, Height = contentHeight }));
         window.Add(scroll);
         Button close = Theme.Button("_Close", () => app.RequestStop(window));
         close.X = Pos.Center(); close.Y = Pos.AnchorEnd(2);
@@ -83,7 +84,7 @@ internal sealed class Dialogs(IApplication app)
         return dialog.Canceled ? null : dialog.FilePaths.FirstOrDefault();
     }
 
-    public IReadOnlyList<int>? ChooseMany(string title, IReadOnlyList<string> choices, IEnumerable<int>? selected = null)
+    public IReadOnlyList<int>? ChooseMany(string title, IReadOnlyList<string> choices, List<int>? selected = null)
     {
         IReadOnlyList<int>? result = null;
         using Window window = Modal(title);
@@ -91,7 +92,7 @@ internal sealed class Dialogs(IApplication app)
         ListView list = Theme.Apply(new ListView { X = 1, Y = 2, Width = Dim.Fill(1), Height = Dim.Fill(4), ShowMarks = true, MarkMultiple = true, CanFocus = true });
         list.SetSource(new ObservableCollection<string>(choices));
         foreach (int index in selected ?? []) list.Source?.SetMark(index, true);
-        Button apply = Theme.Button("_Apply", () => { result = list.GetAllMarkedItems().ToArray(); app.RequestStop(window); });
+        Button apply = Theme.Button("_Apply", () => { result = list.GetAllMarkedItems().ToList(); app.RequestStop(window); });
         apply.X = 2; apply.Y = Pos.AnchorEnd(2);
         Button cancel = Theme.Button("_Cancel", () => app.RequestStop(window));
         cancel.X = Pos.Right(apply) + 2; cancel.Y = apply.Y;
@@ -116,9 +117,9 @@ internal sealed class Dialogs(IApplication app)
                 X = 2, Y = 0, Width = Dim.Fill(2), Height = 2,
                 Text = "Tab moves between fields. Enter opens choices. Esc cancels.",
             }, Theme.Muted));
-            FieldDefinition[] current = fields.Skip(page * 6).Take(6).ToArray();
+            List<FieldDefinition> current = fields.Skip(page * 6).Take(6).ToList();
             Dictionary<string, View> controls = [];
-            for (int index = 0; index < current.Length; index++)
+            for (int index = 0; index < current.Count; index++)
             {
                 FieldDefinition field = current[index];
                 int y = 3 + index * 2;
@@ -130,9 +131,11 @@ internal sealed class Dialogs(IApplication app)
                     Button choice = Theme.Button(text[field.Name].Length == 0 ? "Any" : text[field.Name], () => { });
                     choice.Accepted += (_, _) =>
                     {
-                        string[] options = type == typeof(bool) ? ["Yes", "No"] : Enum.GetNames(type).Where(n => n != "Unspecified").ToArray();
+                        List<string> options = type == typeof(bool)
+                            ? ["Yes", "No"]
+                            : Enum.GetNames(type).Where(n => n != "Unspecified").ToList();
                         if (!field.Required) options = ["Any", .. options];
-                        int? selected = Choose(field.Label, options, Math.Max(0, Array.IndexOf(options, text[field.Name])));
+                        int? selected = Choose(field.Label, options, Math.Max(0, options.IndexOf(text[field.Name])));
                         if (selected is int pick)
                         {
                             text[field.Name] = options[pick] == "Any" ? "" : options[pick];

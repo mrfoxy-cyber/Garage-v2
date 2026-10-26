@@ -15,19 +15,20 @@ internal static class VehicleDetails
         $"{vehicle.SpecificationDetails.WeightKg:0.##} kg  |  {vehicle.SpecificationDetails.Engines.Count} engine(s)";
 
     public static string Full(Vehicle vehicle) => Summary(vehicle) + "\n\nVEHICLE SPECIFICATION\n" +
-        Properties(vehicle.SpecificationDetails, "Dimensions", "Engines") +
+        Properties(vehicle.SpecificationDetails, ["Dimensions", "Engines"]) +
         "\n\nENGINES\n" + Engines(vehicle.SpecificationDetails.Engines);
 
-    public static string Engines(IEnumerable<Engine> engines)
+    public static string Engines(List<Engine> engines)
     {
-        string[] descriptions = engines.Select((engine, index) =>
-            $"{index + 1}. {engine.GetType().Name}\n{Properties(engine)}").ToArray();
-        return descriptions.Length == 0 ? "No engines added." : string.Join("\n\n", descriptions);
+        List<string> descriptions = engines.Select((engine, index) =>
+            $"{index + 1}. {engine.GetType().Name}\n{Properties(engine)}").ToList();
+        return descriptions.Count == 0 ? "No engines added." : string.Join("\n\n", descriptions);
     }
 
-    private static string Properties(object value, params string[] excluded) => string.Join("\n",
+    private static string Properties(object value, List<string>? excluded = null) => string.Join("\n",
         value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            .Where(property => property.GetIndexParameters().Length == 0 && !excluded.Contains(property.Name))
+            .Where(property => property.GetIndexParameters().Length == 0 &&
+                (excluded is null || !excluded.Contains(property.Name)))
             .Select(property => (property.Name, Value: property.GetValue(value)))
             .Where(property => property.Value is not null)
             .Select(property => $"{Forms.FieldDefinition.FriendlyLabel(property.Name)}: {property.Value}"));
