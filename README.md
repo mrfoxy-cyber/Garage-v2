@@ -49,6 +49,8 @@ The `Garage` model controls what occupies each spot. It can find a suitable free
 
 **Garage.Console** is the straightforward, numbered-menu UI. From the main menu you can create or choose a garage and create or list vehicles. Inside a garage you can park at the first fitting spot or a chosen spot, inspect spots and parked vehicles, search by registration or other properties, and remove a vehicle. Vehicle and engine creation use guided prompts.
 
+See the [console guide](Garage.Console/README.md) for menu instructions, JSON field reference tables, and complete import examples.
+
 **Garage.Terminal** is a full-screen terminal UI. Its overview shows garages and occupancy; the vehicle catalog shows where each vehicle is parked. Parking and search have their own views, while forms guide vehicle and engine creation. It also provides a JSON file browser and keyboard shortcuts. The [terminal guide](Garage.Terminal/README.md) explains the screens and controls.
 
 ## How the terminal is built

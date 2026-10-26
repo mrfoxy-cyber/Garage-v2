@@ -44,6 +44,8 @@ Import actions open a file browser filtered to JSON, starting in the bundled Dat
 - The formats and samples are the same as the original console.
 - Successful vehicle imports select the new record in the catalog.
 
+The [console guide's JSON section](../Garage.Console/README.md#import-json) contains complete examples and required-field tables for these shared formats.
+
 ## Keyboard and mouse
 
 | Key | Action |
