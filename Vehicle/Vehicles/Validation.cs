@@ -109,7 +109,7 @@ public static class Validation
             "SVK" => @"[A-Z]{2}[0-9]{3}[A-Z]{2}",       // Slovakia
             "SVN" => @"[A-Z]{2}[A-Z0-9]{3,6}",          // Slovenia; broad shape only
             "ESP" => @"[0-9]{4}[BCDFGHJKLMNPRSTVWXYZ]{3}", // Spain
-            "SWE" => @"\A[A-HJ-PR-UW-Z]{3}[0-9]{2}[A-HJ-NPR-UW-Z0-9]\z",      // Sweden
+            "SWE" => @"\A[A-Z]{3}[0-9]{2}[A-Z0-9]\z", ,      // Sweden
 
             _ => null
         };
