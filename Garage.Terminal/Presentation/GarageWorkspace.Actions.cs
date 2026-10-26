@@ -26,13 +26,13 @@ internal sealed partial class GarageWorkspace
     {
         if (state.Page == WorkspacePage.Overview)
         {
-            int row = table.Value?.SelectedCell.Y ?? -1;
+            int row = layout.Table.Value?.SelectedCell.Y ?? -1;
             if (row >= 0 && row < displayedGarages.Count)
             {
                 state.Garage = displayedGarages[row];
-                navigation.SelectedItem = 2;
+                layout.Navigation.SelectedItem = 2;
                 state.Page = WorkspacePage.Parking;
-                query.Text = "";
+                layout.Query.Text = "";
                 RefreshRows();
             }
         }
@@ -221,7 +221,7 @@ internal sealed partial class GarageWorkspace
 
         state.Criteria = criteria;
         state.Page = WorkspacePage.Search;
-        navigation.SelectedItem = 3;
+        layout.Navigation.SelectedItem = 3;
         RefreshRows();
         SetStatus("Search updated. Use Find to narrow the results further.");
     }
@@ -234,8 +234,8 @@ internal sealed partial class GarageWorkspace
         {
             state.Garage = result.Garage;
             state.Page = WorkspacePage.Parking;
-            navigation.SelectedItem = 2;
-            query.Text = "";
+            layout.Navigation.SelectedItem = 2;
+            layout.Query.Text = "";
         }
         else dialogs.Message("Could not create garage", result.Message);
         RefreshRows();
@@ -245,15 +245,15 @@ internal sealed partial class GarageWorkspace
     {
         state.Page = WorkspacePage.Vehicles;
         state.QuickFilter = "";
-        query.Text = "";
-        navigation.SelectedItem = 1;
+        layout.Query.Text = "";
+        layout.Navigation.SelectedItem = 1;
         RefreshRows();
         int row = displayedVehicles.ToList().FindIndex(item => ReferenceEquals(item, vehicle));
-        if (row >= 0) table.SetSelection(0, row, false);
-        table.SetFocus();
+        if (row >= 0) layout.Table.SetSelection(0, row, false);
+        layout.Table.SetFocus();
     }
 
-    private void SetStatus(string message) => status.Text = message;
+    private void SetStatus(string message) => layout.Status.Text = message;
     private void Help() => dialogs.Message("Welcome to Garage Workspace",
         "NAVIGATION\nTab / Shift+Tab: move between controls across panels\nArrow keys: select rows and sidebar pages\nEnter: open a choice or inspect a row\nEsc: close the current dialog\n\nSHORTCUTS\nF1 Help  /  F2 New vehicle  /  F3 Search\nF4 New garage  /  F5 Refresh\nCtrl+F Find  /  Ctrl+Q Quit\n\nWORKING WITH FILES\nImport buttons open a file browser filtered to JSON.\nVehicle files contain one vehicle object; garage imports use a layout and optional placements.\n\nYour work stays in this session. Imported files are never changed.");
 

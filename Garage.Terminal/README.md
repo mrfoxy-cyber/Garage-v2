@@ -69,6 +69,20 @@ Like the original console, changes stay in the running session. Imports never ov
 
 ## Structure
 
-`Forms` describes each vehicle and engine form and calls the matching domain factory directly. The field definitions and factory calls are kept in separate files. In `Presentation`, `GarageWorkspace.cs` builds and refreshes the dashboard, `WorkspaceButtons.cs` groups its persistent buttons, and `GarageWorkspace.Actions.cs` handles their workflows. `Dialogs.cs` owns temporary dialogs and their buttons. `Theme.cs` keeps colours and shared control styling in one place. Garage business rules remain in Garage; this project does not reference Garage.Console.
+`Forms` describes each vehicle and engine form and calls the matching domain factory directly. The field definitions and factory calls are kept in separate files.
+
+The dashboard files in `Presentation` each have one responsibility:
+
+| File | Responsibility |
+| --- | --- |
+| `GarageWorkspace.cs` | Connect state, layout, events, keyboard shortcuts, and commands. |
+| `GarageWorkspaceLayout.cs` | Create and place controls, expose their named references, and adapt to terminal height. |
+| `GarageWorkspace.Rendering.cs` | Refresh the table, statistics, details, and button availability. |
+| `GarageWorkspace.Actions.cs` | Handle user workflows such as creating, importing, parking, and searching. |
+| `WorkspaceButtons.cs` | Group persistent dashboard buttons and their placement. |
+| `Dialogs.cs` | Build temporary dialogs and their buttons. |
+| `Theme.cs` | Define colours and shared control styling. |
+
+Garage business rules remain in Garage; this project does not reference Garage.Console.
 
 The Terminal.Gui dependency is pinned to 2.4.17. See the [Terminal.Gui documentation](https://tui-cs.github.io/Terminal.Gui/docs/getting-started.html).
