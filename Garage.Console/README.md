@@ -231,6 +231,6 @@ The bundled [example-placements.json](../Garage/Data/example-placements.json) us
 
 ## How the console is organized
 
-[Program.cs](Program.cs) loads startup data and creates `GarageService`. [Menus](Menus) handles navigation and user actions, [Prompts](Prompts) reads and validates input, [Drafts](Drafts) holds unfinished creation input, [Mapping](Mapping) passes completed drafts to the factories, and [Display](Display) formats output. The shared `Garage` and `Vehicle` projects enforce the domain rules.
+[Program.cs](Program.cs) loads startup data and creates `GarageService`. [Menus](Menus) handles navigation and user actions, [Prompts](Prompts) reads and validates input, [Drafts](Drafts) holds unfinished creation input, [Mapping](Mapping) passes completed drafts to the factories, and [Display](Display) formats output. The shared `Garage` and `Vehicle` projects enforce the domain rules. The [Garage structure guide](../Garage/README.md) explains the services, queries, and results used by these menus.
 
 All changes stay in memory for the current session. Imports do not overwrite their files, and quitting does not save garages or vehicles to JSON.

@@ -31,6 +31,8 @@ Garage.Terminal ─┘
 
 The **domain** is the part that decides what a valid vehicle or parking operation means. It lives in `Vehicle` and `Garage`; neither project depends on a user interface. Both interfaces call the same garage services, so parking a vehicle follows the same rules whichever screen you use.
 
+The [Garage structure guide](Garage/README.md) explains how models, services, queries, results, and JSON loading connect, with a small example of the complete flow.
+
 ## Vehicles and the domain
 
 Every vehicle has shared information such as a registration number, country of registration, manufacturer, model, year, and colour. Cars, motorcycles, buses, trucks, boats, and airplanes add their own specifications. A vehicle can also have engines, dimensions, and details specific to its type.

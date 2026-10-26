@@ -117,6 +117,8 @@ Park button
 
 `GarageService` coordinates the catalog and garages; the garage model checks occupancy, registration uniqueness, and vehicle dimensions. The UI displays the returned result. `RefreshRows` reads the current state again, rebuilds the visible table, updates the details, and enables the appropriate buttons.
 
+The [Garage structure guide](../Garage/README.md) explains how those shared models, services, queries, and results connect.
+
 Sidebar navigation and the Find field change `DashboardState` and refresh the view. They do not change which vehicles are parked. Expected operation failures appear as result messages, while unexpected dashboard action errors are logged and shown in a dialog.
 
 ### Forms and factories
