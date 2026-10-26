@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path="README.md" />
+    <File Path="Vehicle-Creation-Review.md" />
   </Folder>
   <Project Path="Garage.Console/Garage.Console.csproj" />
   <Project Path="Garage.Terminal/Garage.Terminal.csproj" />
