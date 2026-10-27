@@ -214,6 +214,11 @@ static class Uml
     {
         var output = new SortedDictionary<string, string>(StringComparer.Ordinal);
         output["docs/uml/model.generated.json"] = Serialize(new { version = 1, projects = model.Projects, types = model.Types });
+        var graphData = new { version = 2, diagrams = manifest.Diagrams.Select(d => new {
+            d.Id, d.Type, d.Title, d.Maintenance, d.Status, d.Related,
+            source = d.File["docs/uml/".Length..], svg = Path.ChangeExtension(d.File["docs/uml/".Length..], ".svg").Replace('\\', '/')
+        }), views = GraphData.Create(manifest, model) };
+        output["docs/uml/diagrams.generated.js"] = "globalThis.GARAGE_UML_DATA = " + Serialize(graphData).TrimEnd() + ";\n";
         foreach (var d in manifest.Diagrams.Where(d => d.Maintenance == "generated"))
         {
             var lines = new List<string> { "@startuml", "' diagram-id: " + d.Id, "' Generated. Run the UML generate command; do not edit by hand.", "hide empty members", "skinparam classAttributeIconSize 0", "title " + d.Title };
@@ -300,25 +305,8 @@ static class Uml
             lines.Add("@enduml");
             output[d.File] = string.Join("\n", lines) + "\n";
         }
-        output["docs/uml/index.html"] = Gallery(manifest);
+        output["docs/uml/index.html"] = GraphGallery.Generate(manifest, SymbolGuide());
         return output;
-    }
-
-    static string Gallery(Manifest manifest)
-    {
-        static string H(string value) => System.Net.WebUtility.HtmlEncode(value);
-        var html = new StringBuilder("<!doctype html>\n<html lang=\"en\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Garage UML diagrams</title>\n<style>body{font:16px system-ui;margin:0;background:#f3f5f8;color:#182437}main{max-width:1200px;margin:auto;padding:36px}h1{margin-bottom:8px}nav{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}input,select{padding:10px;border:1px solid #b6c2d3;border-radius:6px;font:inherit}details{background:white;border:1px solid #d3dbe5;border-radius:8px;margin:14px 0;padding:18px}summary{cursor:pointer;font-weight:600}small{font-weight:400;color:#53647c}img{max-width:100%;height:auto;display:block;margin:20px auto}a{color:#155ca8}p{line-height:1.5}.diagram{overflow:auto}.links{font-size:14px}footer{margin-top:28px;color:#53647c}</style>\n<main><h1>Garage UML diagrams</h1><p>Connected views of the Garage code and parking workflows. Expand a diagram to view it. Templates are starting points and do not claim to describe the implementation.</p><p><a href=\"README.md\">Maintenance guide</a> · <a href=\"manifest.json\">Manifest</a> · <a href=\"registry.json\">Shared identities</a> · <a href=\"reports/check.md\">Latest local check</a></p><nav><input id=\"search\" aria-label=\"Find diagram\" placeholder=\"Find diagram…\"><select id=\"mode\" aria-label=\"Maintenance mode\"><option value=\"\">All maintenance modes</option><option>generated</option><option>reviewed</option><option>manual</option></select></nav>\n");
-        html.Append(SymbolGuide());
-        foreach (var d in manifest.Diagrams)
-        {
-            var source = d.File["docs/uml/".Length..];
-            var svg = Path.ChangeExtension(source, ".svg").Replace('\\', '/');
-            html.Append($"<details data-mode=\"{H(d.Maintenance)}\" data-search=\"{H(d.Title + " " + d.Type + " " + d.Id)}\"{(d.Id == "garage-components" ? " open" : "")}><summary>{H(d.Title)} <small>— {H(d.Type)} · {H(d.Maintenance)} · {H(d.Status)}</small></summary><p class=\"links\"><a href=\"{H(source)}\">Diagram source</a> · <a href=\"{H(svg)}\">Full-size SVG</a></p><div class=\"diagram\"><img loading=\"lazy\" src=\"{H(svg)}\" alt=\"{H(d.Title)}\"></div><p class=\"links\">Related: ");
-            html.Append(string.Join(" · ", d.Related.Select(id => $"<a href=\"#{H(id)}\">{H(manifest.Diagrams.Single(x => x.Id == id).Title)}</a>")));
-            html.Append($"</p><span id=\"{H(d.Id)}\"></span></details>\n");
-        }
-        html.Append("<footer>Run the render command in the maintenance guide to create SVG previews. Source diagrams and tracking state are versioned; rendered images and check reports are local build outputs.</footer></main><script>const search=document.querySelector('#search'),mode=document.querySelector('#mode');function filter(){for(const d of document.querySelectorAll('details[data-mode]'))d.hidden=!(d.dataset.search.toLowerCase().includes(search.value.toLowerCase())&&(!mode.value||d.dataset.mode===mode.value))}search.addEventListener('input',filter);mode.addEventListener('change',filter);function reveal(){const target=document.getElementById(location.hash.slice(1));if(target){const d=target.closest('details');d.hidden=false;d.open=true;d.scrollIntoView({block:'start'})}}window.addEventListener('hashchange',reveal);reveal();</script></html>\n");
-        return html.ToString();
     }
 
     static string SymbolGuide() => """

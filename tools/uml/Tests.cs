@@ -96,6 +96,7 @@ static class Tests
             Throws(() => Uml.At(root, "../escape.puml"), "repository path traversal is rejected");
             File.Delete(Uml.At(root, project));
             Throws(() => Uml.Extract(root, manifest), "missing projects fail instead of disappearing silently");
+            count += GraphDataTests.Run();
             Console.WriteLine($"{count} UML self-tests passed.");
             return 0;
         }

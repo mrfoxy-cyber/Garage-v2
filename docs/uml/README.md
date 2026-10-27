@@ -6,6 +6,12 @@ Start with the [diagram browser](index.html), [components](structural/component/
 
 The browser's **How to read UML** guide illustrates inheritance, interface implementation, association, dependencies, composition and aggregation, along with visibility, multiplicity and flow symbols. Generated class diagrams also include a compact legend; component and package views explain their project-reference arrows. Legends are regenerated with the diagrams.
 
+The explorer displays **live class, component and package graphs** using HTML cards and SVG relationship edges. Click a card to expand its members inside the graph; opening another card collapses the previous one. ELK.js recalculates positions and edge routes. Expanded member lists scroll inside their card, and source links remain available. Namespace panels group independent classes. Connected components that span namespaces retain namespace badges.
+
+Use the sidebar to choose a diagram, **Find a class** to locate a type, and **Focus selection** to show that type with its direct neighbors. Large class views initially select a useful namespace so names remain readable; the type count shows how many of the project's types are visible. Filter by namespace to explore another area; **Show all** clears the filters. Search always covers the entire project. **Fit view**, **+ / −**, and **1:1** control the camera. Drag the background to pan, scroll to zoom, or use touch pinch. The fullscreen control enlarges the workbench. Keyboard users can tab to cards and press Enter to open them; on the focused canvas use +, −, 0 or F (fit), and arrow keys to pan. Member-list scrolling is independent of canvas zoom.
+
+`diagrams.generated.js` includes explicit graph nodes and edges from the same C# model as the PlantUML sources. The locally bundled [ELK.js layout engine](https://github.com/kieler/elkjs) computes geometry; it does not infer UML relationships. Generated class views draw only unambiguous in-project inheritance and interface relationships. Other declared bases appear in the expanded card. Component and package arrows represent exact project references; package cards expand to list namespaces. The remaining authored diagrams use their SVG previews with the same pan/zoom controls. See [vendor provenance and license](vendor/README.md). No CDN, account, build step or server is required to use the page.
+
 In Visual Studio, open `GarageArrays.slnx` and expand **UML Diagrams** in Solution Explorer. All 18 diagram sources are grouped by category and type; the browser, guide and tracking files are at the top, with tooling under **Automation**. Reload the solution if it was already open when these folders were added. Open `index.html` in a web browser to view the rendered diagrams.
 
 ## Layout
@@ -15,7 +21,11 @@ docs/uml/
   manifest.json              Diagram policies, source scopes, entities and links
   registry.json              Stable logical IDs pointing to extracted code IDs
   model.generated.json       Projects, types, methods and source locations
-  index.html                 Generated, searchable local diagram browser
+  index.html                 Generated architecture explorer
+  diagrams.generated.js      Explicit graph nodes, edges and diagram metadata
+  viewer.js / viewer.css      Interactive cards, camera, filters and navigation
+  graph-layout.js             ELK layout and namespace/component packing
+  vendor/                    Pinned local ELK browser bundle and license
   structural/
     class/                   One generated class view per project
     object/                  Template: an example object snapshot
@@ -63,7 +73,7 @@ pwsh -File tools/uml/render.ps1
 
 The renderer downloads the official PlantUML **1.2026.8** release into the ignored `tools/uml/.cache` folder and verifies its SHA-256 checksum. Windows x64 uses a portable native executable. Other platforms require Java 21 or newer. After the first download rendering works offline. Smetana provides layout without installing Graphviz. Diagram source stays on your machine. See the [PlantUML command-line documentation](https://plantuml.com/command-line), [Smetana documentation](https://plantuml.com/smetana02), and [pinned release](https://github.com/plantuml/plantuml/releases/tag/v1.2026.8).
 
-Open `docs/uml/index.html` in a browser after rendering. The same folder is uploaded as a CI artifact, including SVGs and the check report. Download and extract the artifact, then open its `index.html` locally.
+Open `docs/uml/index.html` directly in a browser. Generated structural views are interactive as soon as `generate` has run; rendering creates the authored SVG previews and static exports. The same folder is uploaded as a CI artifact. Download and extract the artifact, then open its `index.html` locally. Run `node tools/uml/graph-layout-tests.js` to test the live layout with the pinned ELK engine.
 
 ## How change detection works
 

@@ -25,6 +25,11 @@ jobs:
         run: dotnet build tools/uml/Uml.csproj --configuration Release
       - name: Test change detection
         run: dotnet run --no-build --configuration Release --project tools/uml -- self-test
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test interactive graph layout
+        run: node tools/uml/graph-layout-tests.js
       - name: Check diagrams and review status
         # Generated drift fails. Review flags are advisory; add --strict to require acknowledgements.
         run: dotnet run --no-build --configuration Release --project tools/uml -- check
