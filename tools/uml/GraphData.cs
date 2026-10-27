@@ -67,6 +67,13 @@ static class GraphData
         new("edge:" + Uml.Hash(kind + "\n" + source + "\n" + target), source, target, kind, label);
 }
 
-record GraphView(string Id, string Title, string Type, GraphNode[] Nodes, GraphEdge[] Edges);
-record GraphNode(string Id, string Name, string Kind, string Group, string[] Members, string[] Files, string Declaration, string[] Bases);
+record GraphView(string Id, string Title, string Type, GraphNode[] Nodes, GraphEdge[] Edges,
+    SequenceSpec? Sequence = null, TimingSpec? Timing = null, string[]? Notes = null);
+record GraphNode(string Id, string Name, string Kind, string Group, string[] Members, string[] Files, string Declaration, string[] Bases, string? Parent = null);
 record GraphEdge(string Id, string Source, string Target, string Kind, string Label);
+record SequenceSpec(string[] Participants, SequenceItem[] Items);
+record SequenceItem(string Id, string Kind, string Label, string? Source, string? Target, bool Reply, SequenceBranch[] Branches);
+record SequenceBranch(string Label, SequenceItem[] Items);
+record TimingSpec(TimingLane[] Lanes);
+record TimingLane(string Id, string Name, TimingSample[] Samples);
+record TimingSample(string Id, double Time, string State);

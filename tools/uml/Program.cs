@@ -214,11 +214,12 @@ static class Uml
     {
         var output = new SortedDictionary<string, string>(StringComparer.Ordinal);
         output["docs/uml/model.generated.json"] = Serialize(new { version = 1, projects = model.Projects, types = model.Types });
-        var graphData = new { version = 2, diagrams = manifest.Diagrams.Select(d => new {
-            d.Id, d.Type, d.Title, d.Maintenance, d.Status, d.Related,
-            source = d.File["docs/uml/".Length..], svg = Path.ChangeExtension(d.File["docs/uml/".Length..], ".svg").Replace('\\', '/')
-        }), views = GraphData.Create(manifest, model) };
-        output["docs/uml/diagrams.generated.js"] = "globalThis.GARAGE_UML_DATA = " + Serialize(graphData).TrimEnd() + ";\n";
+        var views = GraphData.Create(manifest, model);
+        // Capture authored sources once: interactive metadata, PUML text and previews share this snapshot.
+        var authoredSources = manifest.Diagrams.Where(d => d.Maintenance != "generated")
+            .ToDictionary(d => d.File, d => File.ReadAllText(At(root, d.File)).Replace("\r\n", "\n"), StringComparer.Ordinal);
+        foreach (var diagram in manifest.Diagrams.Where(d => d.Maintenance != "generated"))
+            views.Add(diagram.Id, AuthoredData.Parse(diagram, authoredSources[diagram.File]));
         foreach (var d in manifest.Diagrams.Where(d => d.Maintenance == "generated"))
         {
             var lines = new List<string> { "@startuml", "' diagram-id: " + d.Id, "' Generated. Run the UML generate command; do not edit by hand.", "hide empty members", "skinparam classAttributeIconSize 0", "title " + d.Title };
@@ -305,6 +306,13 @@ static class Uml
             lines.Add("@enduml");
             output[d.File] = string.Join("\n", lines) + "\n";
         }
+        var graphData = new { version = 4, diagrams = manifest.Diagrams.Select(d => {
+            var puml = output.TryGetValue(d.File, out var generated) ? generated : authoredSources[d.File];
+            return new { d.Id, d.Type, d.Title, d.Maintenance, d.Status, d.Related,
+                source = d.File["docs/uml/".Length..], svg = Path.ChangeExtension(d.File["docs/uml/".Length..], ".svg").Replace('\\', '/'),
+                puml, pumlHash = Hash(puml) };
+        }).ToArray(), views };
+        output["docs/uml/diagrams.generated.js"] = "globalThis.GARAGE_UML_DATA = " + Serialize(graphData).TrimEnd() + ";\n";
         output["docs/uml/index.html"] = GraphGallery.Generate(manifest, SymbolGuide());
         return output;
     }

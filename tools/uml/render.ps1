@@ -2,6 +2,11 @@ param([switch]$CheckOnly)
 
 $ErrorActionPreference = 'Stop'
 $repository = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
+if (-not $CheckOnly) {
+    # One refresh updates the interactive data and the exact PUML that will be rendered below.
+    & dotnet run --project (Join-Path $PSScriptRoot 'Uml.csproj') -- generate --root $repository
+    if ($LASTEXITCODE -ne 0) { throw 'Diagram generation failed; no new previews were rendered.' }
+}
 $version = '1.2026.8'
 $cache = Join-Path $PSScriptRoot ".cache/plantuml-$version"
 [IO.Directory]::CreateDirectory($cache) | Out-Null
@@ -34,6 +39,17 @@ else {
 $manifest = Get-Content -LiteralPath (Join-Path $repository 'docs/uml/manifest.json') -Raw | ConvertFrom-Json
 $sources = @($manifest.diagrams | ForEach-Object { Join-Path $repository $_.file })
 if ($sources.Count -eq 0) { throw 'The UML manifest contains no diagrams.' }
+if (-not $CheckOnly) {
+    $dataScript = [IO.File]::ReadAllText((Join-Path $repository 'docs/uml/diagrams.generated.js'))
+    $snapshot = $dataScript.Substring($dataScript.IndexOf('=') + 1).Trim().TrimEnd(';') | ConvertFrom-Json
+    $snapshotRoot = Join-Path $cache 'snapshot'
+    $sources = @($snapshot.diagrams | ForEach-Object {
+        $snapshotPath = Join-Path $snapshotRoot $_.source
+        [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($snapshotPath)) | Out-Null
+        [IO.File]::WriteAllText($snapshotPath, $_.puml, [Text.UTF8Encoding]::new($false))
+        $snapshotPath
+    })
+}
 if ($CheckOnly) { $renderArguments = @('--check-syntax', '--charset', 'UTF-8') }
 else { $renderArguments = @('--format', 'svg', '--pragma', 'layout=smetana', '--check-before-run', '--charset', 'UTF-8') }
 & $renderer @prefixArguments @renderArguments @sources
@@ -43,6 +59,15 @@ if (-not $CheckOnly) {
     foreach ($source in $sources) {
         if (-not (Test-Path -LiteralPath ([IO.Path]::ChangeExtension($source, '.svg')))) { throw "Missing SVG output for $source" }
     }
-    Write-Output "Rendered $($sources.Count) diagrams. Open docs/uml/index.html."
+    $previewHashes = [ordered]@{}
+    foreach ($diagram in $snapshot.diagrams) {
+        $rendered = [IO.Path]::ChangeExtension((Join-Path $snapshotRoot $diagram.source), '.svg')
+        $destination = Join-Path $repository ('docs/uml/' + $diagram.svg)
+        Copy-Item -LiteralPath $rendered -Destination $destination -Force
+        $previewHashes[$diagram.id] = $diagram.pumlHash
+    }
+    $stamp = 'globalThis.GARAGE_UML_PREVIEWS = ' + ($previewHashes | ConvertTo-Json) + ';' + "`n"
+    [IO.File]::WriteAllText((Join-Path $repository 'docs/uml/previews.generated.js'), $stamp, [Text.UTF8Encoding]::new($false))
+    Write-Output "Updated interactive data and $($sources.Count) PlantUML previews from the same source snapshot. Open docs/uml/index.html."
 }
 else { Write-Output "Validated PlantUML syntax for $($sources.Count) diagrams." }

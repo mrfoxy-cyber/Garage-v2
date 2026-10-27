@@ -6,11 +6,29 @@ Start with the [diagram browser](index.html), [components](structural/component/
 
 The browser's **How to read UML** guide illustrates inheritance, interface implementation, association, dependencies, composition and aggregation, along with visibility, multiplicity and flow symbols. Generated class diagrams also include a compact legend; component and package views explain their project-reference arrows. Legends are regenerated with the diagrams.
 
-The explorer displays **live class, component and package graphs** using HTML cards and SVG relationship edges. Click a card to expand its members inside the graph; opening another card collapses the previous one. ELK.js recalculates positions and edge routes. Expanded member lists scroll inside their card, and source links remain available. Namespace panels group independent classes. Connected components that span namespaces retain namespace badges.
+The explorer displays **all 18 diagrams as live views**, covering all 14 UML types. Generated structural graphs use HTML cards and SVG relationship edges. Click a card to expand its members inside the graph; opening another card collapses the previous one. ELK.js recalculates positions and edge routes. Expanded member lists scroll inside their card, and source links remain available. Namespace panels group independent classes. Connected components that span namespaces retain namespace badges.
+
+The **Interactive / PlantUML / PUML source** switch chooses the presentation for the selected diagram. Interactive and PlantUML previews have their own pan/zoom positions; returning to Interactive keeps its expanded element. PUML source displays the exact shared definition as read-only text. The selection stays in effect when navigating between diagrams.
+
+These are presentations of one definition. Authored diagrams are edited in their `.puml` source; class/component/package sources are generated from the code model. `generate` captures the source text and its SHA-256 alongside the interactive data. The render command automatically runs generation, renders that exact captured PUML snapshot, and writes matching preview fingerprints. If a preview has not been refreshed against the current source, PlantUML mode shows a refresh message instead of displaying stale output.
 
 Use the sidebar to choose a diagram, **Find a class** to locate a type, and **Focus selection** to show that type with its direct neighbors. Large class views initially select a useful namespace so names remain readable; the type count shows how many of the project's types are visible. Filter by namespace to explore another area; **Show all** clears the filters. Search always covers the entire project. **Fit view**, **+ / −**, and **1:1** control the camera. Drag the background to pan, scroll to zoom, or use touch pinch. The fullscreen control enlarges the workbench. Keyboard users can tab to cards and press Enter to open them; on the focused canvas use +, −, 0 or F (fit), and arrow keys to pan. Member-list scrolling is independent of canvas zoom.
 
-`diagrams.generated.js` includes explicit graph nodes and edges from the same C# model as the PlantUML sources. The locally bundled [ELK.js layout engine](https://github.com/kieler/elkjs) computes geometry; it does not infer UML relationships. Generated class views draw only unambiguous in-project inheritance and interface relationships. Other declared bases appear in the expanded card. Component and package arrows represent exact project references; package cards expand to list namespaces. The remaining authored diagrams use their SVG previews with the same pan/zoom controls. See [vendor provenance and license](vendor/README.md). No CDN, account, build step or server is required to use the page.
+`diagrams.generated.js` includes explicit graph nodes and edges from the C# model and the authored PlantUML sources. The locally bundled [ELK.js layout engine](https://github.com/kieler/elkjs) computes geometry; it does not infer UML relationships. Generated class views draw only unambiguous in-project inheritance and interface relationships. Other declared bases appear in the expanded card. Component and package arrows represent exact project references; package cards expand to list namespaces. Authored diagrams preserve their own notation and meaning:
+
+| View | Interaction and notation |
+| --- | --- |
+| Sequence | Lifelines, call/reply arrows, notes and nested alternative frames. Open an `alt` frame to reveal its guarded branches; nested expansion keeps the outer context. |
+| Activity / interaction overview | Actions, reference nodes, decision/merge diamonds, guard labels and independent termination points. Large flows initially focus on a decision neighborhood; **Show all** displays the complete flow. |
+| State machine | Initial symbol, states and transitions, including self-loops and trigger/guard/action labels. Open a state for its source notes. |
+| Use case | Actor symbols outside a system boundary, with elliptical use cases and associations. |
+| Deployment | Nested device/runtime frames, artifacts, files and dependency connectors. Container headers open details while children remain inside their frames. |
+| Object / composite structure / profile / communication | Instance values, owning diamonds, contained parts, metaclass/stereotype roles and numbered messages are retained. |
+| Timing | Explicit time coordinates, state levels and a step trace. Click a time point to open its state/time details below the trace. |
+
+The six illustrative templates remain labeled **Template**. Their interactive presentation does not promote them to reviewed descriptions of the implementation. **Diagram notes** exposes source annotations. Static SVG exports remain available through **SVG export**. See [vendor provenance and license](vendor/README.md). No CDN, account, build step or server is required to use the page.
+
+`AuthoredData.cs` reads the bounded PlantUML notation used by the current diagrams: entity declarations, containment, member values, notes, labeled connections, activities with `if`/`else`/`endif`, sequence messages and nested `alt` frames, and robust timing signals with increasing sample times. It is not a general PlantUML interpreter. Unsupported statements or unresolved endpoints fail generation with a source location, so new notation must be supported explicitly before it can appear in the live viewer. Edit the `.puml` source and run `generate`; no second hand-maintained diagram model is required.
 
 In Visual Studio, open `GarageArrays.slnx` and expand **UML Diagrams** in Solution Explorer. All 18 diagram sources are grouped by category and type; the browser, guide and tracking files are at the top, with tooling under **Automation**. Reload the solution if it was already open when these folders were added. Open `index.html` in a web browser to view the rendered diagrams.
 
@@ -25,6 +43,7 @@ docs/uml/
   diagrams.generated.js      Explicit graph nodes, edges and diagram metadata
   viewer.js / viewer.css      Interactive cards, camera, filters and navigation
   graph-layout.js             ELK layout and namespace/component packing
+  semantic-layout.js          Sequence, timing and nested containment geometry
   vendor/                    Pinned local ELK browser bundle and license
   structural/
     class/                   One generated class view per project
@@ -71,9 +90,9 @@ pwsh -File tools/uml/render.ps1 -CheckOnly
 pwsh -File tools/uml/render.ps1
 ```
 
-The renderer downloads the official PlantUML **1.2026.8** release into the ignored `tools/uml/.cache` folder and verifies its SHA-256 checksum. Windows x64 uses a portable native executable. Other platforms require Java 21 or newer. After the first download rendering works offline. Smetana provides layout without installing Graphviz. Diagram source stays on your machine. See the [PlantUML command-line documentation](https://plantuml.com/command-line), [Smetana documentation](https://plantuml.com/smetana02), and [pinned release](https://github.com/plantuml/plantuml/releases/tag/v1.2026.8).
+Running `pwsh -File tools/uml/render.ps1` refreshes **both presentations together** from a shared source snapshot. Reload the browser afterward. `-CheckOnly` validates current source syntax without regenerating files. The renderer downloads the official PlantUML **1.2026.8** release into the ignored `tools/uml/.cache` folder and verifies its SHA-256 checksum. Windows x64 uses a portable native executable. Other platforms require Java 21 or newer. After the first download rendering works offline. Smetana provides layout without installing Graphviz. Diagram source stays on your machine. See the [PlantUML command-line documentation](https://plantuml.com/command-line), [Smetana documentation](https://plantuml.com/smetana02), and [pinned release](https://github.com/plantuml/plantuml/releases/tag/v1.2026.8).
 
-Open `docs/uml/index.html` directly in a browser. Generated structural views are interactive as soon as `generate` has run; rendering creates the authored SVG previews and static exports. The same folder is uploaded as a CI artifact. Download and extract the artifact, then open its `index.html` locally. Run `node tools/uml/graph-layout-tests.js` to test the live layout with the pinned ELK engine.
+Open `docs/uml/index.html` directly in a browser. All live views are ready as soon as `generate` has run; rendering creates the static SVG exports. The same folder is uploaded as a CI artifact. Download and extract the artifact, then open its `index.html` locally. Run `node tools/uml/graph-layout-tests.js` and `node tools/uml/semantic-layout-tests.js` to test the layouts with the pinned ELK engine.
 
 ## How change detection works
 
@@ -128,4 +147,4 @@ Keep source scopes broad enough to include new collaborators and error/result ty
 
 The workflow builds and tests the UML tool, checks committed diagrams, validates full syntax, renders SVG previews, writes a job summary, and uploads the diagram folder. It does not post comments, edit the pull request, or publish anything externally. It starts with advisory reviews; add `--strict` to the workflow's check command when the team wants review acknowledgements to block that job. Requiring the job before merging is a repository branch-protection setting.
 
-Local reports, SVG images, renderer downloads, and normal .NET build outputs are ignored. Commit diagram sources, manifest, registry, generated model/browser, and review acknowledgements together.
+Local reports, SVG images, `previews.generated.js`, renderer downloads, and normal .NET build outputs are ignored. Commit diagram sources, manifest, registry, generated model/browser, and review acknowledgements together.

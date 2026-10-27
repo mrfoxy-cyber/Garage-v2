@@ -8,3 +8,4 @@ obj/
 tools/uml/.cache/
 docs/uml/reports/
 docs/uml/**/*.svg
+docs/uml/previews.generated.js

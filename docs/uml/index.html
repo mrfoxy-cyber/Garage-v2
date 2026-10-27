@@ -7,7 +7,9 @@
   <link rel="stylesheet" href="viewer.css">
   <script defer src="vendor/elk.bundled.js"></script>
   <script defer src="graph-layout.js"></script>
+  <script defer src="semantic-layout.js"></script>
   <script defer src="diagrams.generated.js"></script>
+  <script defer src="previews.generated.js"></script>
   <script defer src="viewer.js"></script>
 </head>
 <body>
@@ -25,17 +27,19 @@
     <main class="workspace" id="workspace">
       <div class="workspace-title"><div><p id="view-kind" class="eyebrow">STRUCTURAL / COMPONENT</p><h1 id="view-title">Garage project components</h1><p id="view-description" class="view-description">Explore the application structure.</p></div><div class="view-links"><a id="source-link" href="structural/component/garage-components.puml">Source</a><a id="export-link" href="structural/component/garage-components.svg" target="_blank" rel="noopener">SVG export ↗</a></div></div>
       <section class="diagram-workbench" aria-label="Interactive diagram">
-        <div class="workbench-topbar"><div class="workbench-name"><span class="canvas-dot"></span><strong id="canvas-label">Project dependencies</strong><span id="graph-count" class="graph-count"></span></div><div class="workbench-actions"><button id="collapse-all" type="button" class="quiet-button">Collapse all</button><button id="fullscreen" type="button" class="quiet-button" aria-label="Toggle fullscreen diagram">⛶ <span>Fullscreen</span></button></div></div>
+        <div class="workbench-topbar"><div class="workbench-name"><span class="canvas-dot"></span><strong id="canvas-label">Project dependencies</strong><span id="graph-count" class="graph-count"></span></div><div class="workbench-actions"><div class="presentation-toggle" role="group" aria-label="Diagram presentation"><button id="view-interactive" type="button" aria-pressed="true">Interactive</button><button id="view-plantuml" type="button" aria-pressed="false">PlantUML</button><button id="view-puml" type="button" aria-pressed="false">PUML source</button></div><button id="collapse-all" type="button" class="quiet-button">Collapse all</button><button id="fullscreen" type="button" class="quiet-button" aria-label="Toggle fullscreen diagram">⛶ <span>Fullscreen</span></button></div></div>
         <div class="graph-filters" id="graph-filters"><label><span class="field-label">Find a class</span><input id="node-search" type="search" placeholder="Type a class name…" autocomplete="off" aria-label="Find a class or project" list="node-options"><datalist id="node-options"></datalist></label><label id="namespace-field"><span class="field-label">Namespace</span><select id="namespace-filter" aria-label="Filter namespace"><option value="">All namespaces</option></select></label><button id="focus-node" type="button" class="secondary-button">Focus selection</button><button id="show-all" type="button" class="quiet-button" hidden>Show all</button></div>
         <div id="graph-viewport" class="graph-viewport" tabindex="0" role="region" aria-label="Diagram canvas. Drag background to pan, scroll to zoom. Tab to a class and press Enter to expand.">
           <div id="graph-world" class="graph-world"><svg id="graph-edges" class="graph-edges" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg><div id="graph-groups"></div><div id="graph-nodes"></div></div>
           <div id="static-world" class="static-world" hidden><img id="static-diagram" alt=""></div>
+          <div id="puml-source-view" class="puml-source-view" hidden><div class="puml-source-heading"><strong>Shared PUML source</strong><span id="puml-source-path"></span></div><pre tabindex="0" aria-label="PlantUML source"><code id="puml-source"></code></pre></div>
           <div id="canvas-empty" class="canvas-empty" hidden>No matching classes.<button type="button" id="clear-filter">Clear filters</button></div>
           <div id="layout-status" class="layout-status" role="status" aria-live="polite">Arranging diagram…</div>
         </div>
         <div class="canvas-bottom"><div class="canvas-hint"><span aria-hidden="true">↔</span><span id="interaction-hint">Click a card to expand · Drag background to pan · Scroll to zoom</span></div><div class="zoom-controls" role="group" aria-label="Diagram zoom"><button id="zoom-out" type="button" aria-label="Zoom out">−</button><output id="zoom-level" aria-label="Zoom level">100%</output><button id="zoom-in" type="button" aria-label="Zoom in">+</button><span class="control-divider"></span><button id="fit-view" type="button">Fit view</button><button id="actual-size" type="button" aria-label="Actual size">1:1</button></div></div>
       </section>
       <div class="diagram-caption"><p id="view-caption"></p><span id="maintenance-badge" class="maintenance-badge"></span></div>
+      <details id="view-notes" class="view-notes" hidden><summary>Diagram notes</summary><div id="view-notes-content"></div></details>
       <div class="mini-legend"><span><i class="legend-inheritance"></i>Inherits</span><span><i class="legend-realization"></i>Implements</span><span><i class="legend-reference"></i>References</span><button type="button" id="legend-button">All symbols →</button></div>
       <div id="related-views" class="related-views"></div>
       <noscript>This explorer requires JavaScript. Diagram source and SVG exports remain available in the structural, behavioral and interaction folders.</noscript>

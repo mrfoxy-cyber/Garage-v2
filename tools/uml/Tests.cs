@@ -31,12 +31,27 @@ static class Tests
             Uml.Write(Uml.At(root, "docs/uml/manifest.json"), Uml.Serialize(manifest));
             Uml.Write(Uml.At(root, "docs/uml/registry.json"), Uml.Serialize(new Registry([])));
             foreach (var d in diagrams.Where(d => d.Maintenance != "generated"))
-                Uml.Write(Uml.At(root, d.File), $"@startuml\n' diagram-id: {d.Id}\nclass Example\n@enduml\n");
+            {
+                var content = d.Type switch {
+                    "sequence" => "participant Example\nExample -> Example : Message",
+                    "activity" or "interaction-overview" => "start\n:Example;\nstop",
+                    "state-machine" => "[*] --> Example",
+                    "timing" => "robust \"Example\" as Example\n@0\nExample is Empty",
+                    _ => "class Example"
+                };
+                Uml.Write(Uml.At(root, d.File), $"@startuml\n' diagram-id: {d.Id}\n{content}\n@enduml\n");
+            }
             var model = Uml.Extract(root, manifest);
             Uml.Validate(root, manifest, model);
             Assert(model.Types.Single().Id == "type:App/App.csproj:Demo.Car", "stable qualified type identity");
             Assert(Uml.Glob("App/**/*.cs", "App/Car.cs") && Uml.Glob("App/**/*.cs", "App/Sub/Car.cs") && !Uml.Glob("App/*.cs", "App/Sub/Car.cs"), "recursive and direct glob scopes");
             var generated = Uml.Outputs(root, manifest, model);
+            using (var browserData = System.Text.Json.JsonDocument.Parse(generated["docs/uml/diagrams.generated.js"].Split('=', 2)[1].Trim().TrimEnd(';')))
+            {
+                var snapshots = browserData.RootElement.GetProperty("diagrams").EnumerateArray().ToArray();
+                Assert(snapshots.All(d => d.GetProperty("pumlHash").GetString() == Uml.Hash(d.GetProperty("puml").GetString()!)), "every diagram presentation shares a source fingerprint");
+                Assert(snapshots.Single(d => d.GetProperty("id").GetString() == "class").GetProperty("puml").GetString() == generated["docs/uml/class.puml"], "PUML source view uses freshly generated text instead of an older file");
+            }
             Assert(generated.SequenceEqual(Uml.Outputs(root, manifest, Uml.Extract(root, manifest))), "generation is deterministic");
             foreach (var (path, content) in generated) Uml.Write(Uml.At(root, path), content);
             Assert(Uml.Run(["approve", "--root", root, "--id", "sequence", "--note", "Fixture matches source"]) == 0, "review acknowledgement command");
@@ -45,7 +60,7 @@ static class Tests
             var sequenceSource = File.ReadAllText(sequencePath);
             Uml.Write(sequencePath, sequenceSource.Replace("\n", "\r\n"));
             Assert(Uml.Check(root, manifest, model, true) == 0, "review baselines survive CRLF checkout conversion");
-            Uml.Write(sequencePath, sequenceSource.Replace("class Example", "title Changed\nclass Example"));
+            Uml.Write(sequencePath, sequenceSource.Replace("@startuml", "@startuml\ntitle Changed"));
             Assert(Uml.Check(root, manifest, model, true) == 1, "diagram edits require a fresh review");
             Uml.Write(sequencePath, sequenceSource);
 
@@ -62,6 +77,9 @@ static class Tests
 
             Uml.Write(source, original.Replace("int Park", "long Park"));
             var api = Uml.Extract(root, manifest);
+            var apiOutput = Uml.Outputs(root, manifest, api);
+            using (var browserData = System.Text.Json.JsonDocument.Parse(apiOutput["docs/uml/diagrams.generated.js"].Split('=', 2)[1].Trim().TrimEnd(';')))
+                Assert(browserData.RootElement.GetProperty("diagrams").EnumerateArray().Single(d => d.GetProperty("id").GetString() == "class").GetProperty("puml").GetString() == apiOutput["docs/uml/class.puml"], "code changes update the PUML snapshot and interactive graph together");
             Assert(generated["docs/uml/class.puml"] != Uml.Outputs(root, manifest, api)["docs/uml/class.puml"], "signature changes update class diagrams");
             Assert(Uml.Check(root, manifest, api, false) == 1, "stale generated output fails even in advisory mode");
             Uml.Write(source, original);
@@ -97,6 +115,7 @@ static class Tests
             File.Delete(Uml.At(root, project));
             Throws(() => Uml.Extract(root, manifest), "missing projects fail instead of disappearing silently");
             count += GraphDataTests.Run();
+            count += AuthoredDataTests.Run();
             Console.WriteLine($"{count} UML self-tests passed.");
             return 0;
         }

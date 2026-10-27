@@ -83,7 +83,7 @@ function validGeometry(scene, original) {
   pass('many namespace panels pack to the viewport aspect without a hard world-width cap');
 
   require('../../docs/uml/diagrams.generated.js');
-  const realViews = Object.values(globalThis.GARAGE_UML_DATA.views);
+  const realViews = Object.values(globalThis.GARAGE_UML_DATA.views).filter(view => ['class','component','package'].includes(view.type));
   assert(realViews.some(view => view.nodes.length > 28), 'Real-data coverage must include the large Vehicle graph.');
   for (const view of realViews) {
     const scene = await layout(view, { elk, width: 1100, aspectRatio: 1100 / 600, direction: 'AUTO' });

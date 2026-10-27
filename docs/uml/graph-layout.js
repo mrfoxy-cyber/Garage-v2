@@ -12,6 +12,12 @@
   const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
 
   function nodeSize(node, expandedId) {
+    if (node.kind === 'initial' || node.kind === 'final') return { width: 38, height: 38 };
+    if (node.kind === 'merge') return { width: 28, height: 28 };
+    if (node.id !== expandedId && node.kind === 'decision') return { width: 208, height: 116 };
+    if (node.id !== expandedId && node.kind === 'actor') return { width: 112, height: 126 };
+    if (node.id !== expandedId && node.kind === 'use-case') return { width: 244, height: 86 };
+    if (node.id !== expandedId && ['action','interaction','state'].includes(node.kind)) return { width: 252, height: Math.max(76, 36 + Math.ceil(node.name.length / 28) * 17) };
     if (node.id !== expandedId) return { width: 248, height: 86 };
     const lines = (node.members || []).reduce((count, member) => count + Math.max(1, Math.ceil(String(member).length / 49)), 0);
     return { width: 400, height: Math.min(480, Math.max(180, 132 + lines * 22)) };
@@ -156,7 +162,7 @@
         id: edge.id,
         sources: [edge.source],
         targets: [edge.target],
-        ...(options.edgeLabels && edge.label ? { labels: [{ id: `${edge.id}:label`, text: edge.label, width: Math.min(160, edge.label.length * 6.5 + 8), height: 16 }] } : {})
+        ...(options.edgeLabels && edge.label ? { labels: [{ id: `${edge.id}:label`, text: edge.label, width: Math.min(220, edge.label.length * 6.5 + 8), height: Math.max(16, Math.ceil(edge.label.length / 32) * 14) }] } : {})
       }))
     };
     const laidOut = await elk.layout(graph);

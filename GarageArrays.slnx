@@ -8,6 +8,7 @@
     <File Path="docs/uml/viewer.js" />
     <File Path="docs/uml/diagrams.generated.js" />
     <File Path="docs/uml/graph-layout.js" />
+    <File Path="docs/uml/semantic-layout.js" />
     <File Path="docs/uml/viewer.css" />
     <File Path="docs/uml/README.md" />
     <File Path="docs/uml/manifest.json" />
@@ -65,8 +66,11 @@
     <File Path="tools/uml/Program.cs" />
     <File Path="tools/uml/GraphData.cs" />
     <File Path="tools/uml/GraphDataTests.cs" />
+    <File Path="tools/uml/AuthoredData.cs" />
+    <File Path="tools/uml/AuthoredDataTests.cs" />
     <File Path="tools/uml/GraphGallery.cs" />
     <File Path="tools/uml/graph-layout-tests.js" />
+    <File Path="tools/uml/semantic-layout-tests.js" />
     <File Path="tools/uml/Tests.cs" />
     <File Path="tools/uml/render.ps1" />
     <File Path="docs/uml/state/reviews.json" />
