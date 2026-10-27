@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path="README.md" />
+    <File Path="Vehicle-Creation-Review.md" />
   </Folder>
   <Folder Name="/UML Diagrams/">
     <File Path="docs/uml/index.html" />
