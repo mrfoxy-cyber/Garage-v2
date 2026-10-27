@@ -1,54 +1,274 @@
 @startuml
 ' diagram-id: parking-sequence
-' entities: service:garage, model:garage, model:parking-spot, operation:park
+' Generated from code annotations and source. Run generate; do not edit by hand.
 title Park an existing catalog vehicle
-actor User
-participant "Console or Terminal UI" as UI
-participant "GarageService" as Service
-participant "Garage" as Garage
-participant "ParkingSpot" as Spot
-User -> UI : Choose vehicle and garage
-UI -> Service : Park(vehicle, garage, spotNumber?)
-note over UI, Service
-  Scope: non-null arguments. Result branches are summarized;
-  this is not a complete call trace.
+actor "Garage operator" as Actor
+participant "Garage.Services.GarageService" as p_753cfee6aae6
+participant "Garage.Results.ParkingResult" as p_426dd07c2e3a
+participant "Garage.Models.Garage" as p_50a211325908
+participant "Garage.Models.ParkingSpot" as p_b323161f1e5c
+note over p_753cfee6aae6
+Static source view; MaxDepth=3. Lifelines group calls by declared type, not runtime instance.
+Alternatives are possible source paths, not a recorded execution. Guards may be infeasible together.
+Property getters and implicit/external exceptions are not expanded. Framework calls and callbacks are boundaries.
+Caller continuation assumes the callee returns normally. Async scheduling is not modeled.
+Expand bodies in: Garage.Models, Garage.Services. Other calls remain visible as boundaries.
 end note
-alt Vehicle is outside catalog
-  Service --> UI : Failed(VehicleNotFound)
-else Garage is unregistered
-  Service --> UI : Failed(ValidationFailed)
-else Vehicle registration is already parked
-  Service --> UI : Failed(VehicleAlreadyParked)
-else Eligible to park
-  alt A spot number is supplied
-    Service -> Garage : Park(vehicle, spotNumber)
-  else Find first suitable spot
-    Service -> Garage : Park(vehicle)
-    Garage -> Spot : Fits(vehicle) for candidate empty spots
-    Spot --> Garage : fits / does not fit
-    note right of Garage
-      No suitable spot returns GarageFull
-      or VehicleDoesNotFit.
-      A match delegates to Park(vehicle, spot).
-    end note
-  end
-  note right of Garage
-    The numbered operation checks range,
-    occupancy, dimensions, and duplicate registration.
-  end note
-  alt Numbered spot passes validation
-    Garage -> Spot : Park(vehicle)
-    Spot --> Garage : Vehicle assigned
-    Garage --> Service : ParkingResult.Completed(spot, message)
-  else No suitable spot or validation failed
-    Garage --> Service : ParkingResult.Failed(message, error)
-  end
-  Service --> UI : ParkingResult
+Actor -> p_753cfee6aae6 : Park(vehicle, garage, spotNumber)
+note over p_753cfee6aae6
+External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)
+end note
+note over p_753cfee6aae6
+External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(garage)
+end note
+note over p_753cfee6aae6
+External/delegate call boundary (not expanded): Catalog.Vehicles.Contains(vehicle)
+end note
+alt !Catalog.Vehicles.Contains(vehicle)
+p_753cfee6aae6 -> p_426dd07c2e3a : Failed(&quot;Choose a vehicle from this application's catalog.&quot;, OperationError.VehicleNotFound)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_753cfee6aae6 : Garage.Results.ParkingResult (if call returns)
+p_753cfee6aae6 --> Actor : ParkingResult.Failed(&quot;Choose a vehicle from this application's catalog.&quot;, OperationError.VehicleNotFound)
+else otherwise
+p_753cfee6aae6 -> p_753cfee6aae6 : ParkNewVehicle(vehicle, garage, spotNumber)
+note over p_753cfee6aae6
+External/delegate call boundary (not expanded): garages.Contains(garage)
+end note
+alt !garages.Contains(garage)
+p_753cfee6aae6 -> p_426dd07c2e3a : Failed(&quot;Choose a garage registered with this application.&quot;, OperationError.ValidationFailed)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_753cfee6aae6 : Garage.Results.ParkingResult (if call returns)
+p_753cfee6aae6 --> p_753cfee6aae6 : ParkingResult.Failed(&quot;Choose a garage registered with this application.&quot;, OperationError.ValidationFailed)
+else otherwise
+p_753cfee6aae6 -> p_753cfee6aae6 : IsParked(vehicle)
+note over p_753cfee6aae6
+Callback boundary (not executed by this analysis): garage =&gt; garage.Vehicles.Any(parked =&gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase))
+end note
+note over p_753cfee6aae6
+External/delegate call boundary (not expanded): garages.Any(garage =&gt; garage.Vehicles.Any(parked =&gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))
+end note
+p_753cfee6aae6 --> p_753cfee6aae6 : garages.Any(garage =&gt; garage.Vehicles.Any(parked =&gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))
+alt IsParked(vehicle)
+p_753cfee6aae6 -> p_426dd07c2e3a : Failed($&quot;Vehicle {vehicle.RegistrationNumber} is already parked in a garage.&quot;, OperationError.VehicleAlreadyParked)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_753cfee6aae6 : Garage.Results.ParkingResult (if call returns)
+p_753cfee6aae6 --> p_753cfee6aae6 : ParkingResult.Failed($&quot;Vehicle {vehicle.RegistrationNumber} is already parked in a garage.&quot;, OperationError.VehicleAlreadyParked)
+else otherwise
+alt spotNumber is int spot
+p_753cfee6aae6 -> p_50a211325908 : Park(vehicle, spot)
+note over p_50a211325908
+External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)
+end note
+alt spot &lt; 1 || spot &gt; Capacity
+p_50a211325908 -> p_426dd07c2e3a : Failed($&quot;Parking spot must be between 1 and {Capacity}.&quot;, OperationError.SpotOutOfRange)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_753cfee6aae6 : ParkingResult.Failed($&quot;Parking spot must be between 1 and {Capacity}.&quot;, OperationError.SpotOutOfRange)
+else otherwise
+alt parkingSpot.Vehicle is not null
+p_50a211325908 -> p_426dd07c2e3a : Failed($&quot;Parking spot {spot} is occupied.&quot;, OperationError.SpotOccupied)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_753cfee6aae6 : ParkingResult.Failed($&quot;Parking spot {spot} is occupied.&quot;, OperationError.SpotOccupied)
+else otherwise
+p_50a211325908 -> p_b323161f1e5c : Fits(vehicle)
+note over p_b323161f1e5c
+External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)
+end note
+alt Dimensions is null
+p_b323161f1e5c --> p_50a211325908 : true
+else otherwise
+p_b323161f1e5c --> p_50a211325908 : size.LengthMeters &lt;= Dimensions.LengthMeters &amp;&amp; size.WidthMeters &lt;= Dimensions.WidthMeters &amp;&amp; size.HeightMeters &lt;= Dimensions.HeightMeters
 end
-UI --> User : Display result message
+alt !parkingSpot.Fits(vehicle)
+p_50a211325908 -> p_426dd07c2e3a : Failed($&quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.&quot;, OperationError.VehicleDoesNotFit)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_753cfee6aae6 : ParkingResult.Failed($&quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.&quot;, OperationError.VehicleDoesNotFit)
+else otherwise
+p_50a211325908 -> p_50a211325908 : RegistrationExists(vehicle.RegistrationNumber)
+note over p_50a211325908
+Callback boundary (not executed by this analysis): spot =&gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)
+end note
+note over p_50a211325908
+External/delegate call boundary (not expanded): parkingSpots.Any(spot =&gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))
+end note
+p_50a211325908 --> p_50a211325908 : parkingSpots.Any(spot =&gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))
+alt RegistrationExists(vehicle.RegistrationNumber)
+p_50a211325908 -> p_50a211325908 : DuplicateRegistration(vehicle)
+p_50a211325908 -> p_426dd07c2e3a : Failed($&quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.&quot;, OperationError.DuplicateRegistration)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_50a211325908 : ParkingResult.Failed($&quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.&quot;, OperationError.DuplicateRegistration)
+p_50a211325908 --> p_753cfee6aae6 : DuplicateRegistration(vehicle)
+else otherwise
+p_50a211325908 -> p_b323161f1e5c : Park(vehicle)
+note over p_b323161f1e5c
+External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)
+end note
+alt Vehicle is not null is false
+p_b323161f1e5c -> p_b323161f1e5c : Fits(vehicle)
+note over p_b323161f1e5c
+Depth boundary: method body not expanded.
+end note
+p_b323161f1e5c --> p_b323161f1e5c : bool (if call returns)
+else short-circuit
+end
+alt Vehicle is not null || !Fits(vehicle)
+note over p_b323161f1e5c
+Constructor/initializer boundary (not expanded): new InvalidOperationException(&quot;The spot must be empty and large enough for the vehicle.&quot;)
+end note
+note over p_b323161f1e5c
+Throws: new InvalidOperationException(&quot;The spot must be empty and large enough for the vehicle.&quot;); this path terminates here.
+end note
+else otherwise
+p_b323161f1e5c --> p_50a211325908 : complete
+end
+p_50a211325908 -> p_426dd07c2e3a : Completed(spot, $&quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.&quot;)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_753cfee6aae6 : ParkingResult.Completed(spot, $&quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.&quot;)
+end
+end
+end
+end
+p_753cfee6aae6 --> p_753cfee6aae6 : garage.Park(vehicle, spot)
+else otherwise
+p_753cfee6aae6 -> p_50a211325908 : Park(vehicle)
+note over p_50a211325908
+External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)
+end note
+p_50a211325908 -> p_50a211325908 : RegistrationExists(vehicle.RegistrationNumber)
+note over p_50a211325908
+Callback boundary (not executed by this analysis): spot =&gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)
+end note
+note over p_50a211325908
+External/delegate call boundary (not expanded): parkingSpots.Any(spot =&gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))
+end note
+p_50a211325908 --> p_50a211325908 : parkingSpots.Any(spot =&gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))
+alt RegistrationExists(vehicle.RegistrationNumber)
+p_50a211325908 -> p_50a211325908 : DuplicateRegistration(vehicle)
+p_50a211325908 -> p_426dd07c2e3a : Failed($&quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.&quot;, OperationError.DuplicateRegistration)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_50a211325908 : ParkingResult.Failed($&quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.&quot;, OperationError.DuplicateRegistration)
+p_50a211325908 --> p_753cfee6aae6 : DuplicateRegistration(vehicle)
+else otherwise
+note over p_50a211325908
+Callback boundary (not executed by this analysis): spot =&gt; spot.Vehicle is null &amp;&amp; spot.Fits(vehicle)
+end note
+note over p_50a211325908
+External/delegate call boundary (not expanded): parkingSpots.FirstOrDefault(spot =&gt; spot.Vehicle is null &amp;&amp; spot.Fits(vehicle))
+end note
+alt availableSpot is null
+alt AvailableSpaces == 0
+p_50a211325908 -> p_426dd07c2e3a : Failed(&quot;The garage is full.&quot;, OperationError.GarageFull)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_753cfee6aae6 : ParkingResult.Failed(&quot;The garage is full.&quot;, OperationError.GarageFull)
+else otherwise
+p_50a211325908 -> p_426dd07c2e3a : Failed(&quot;No available parking spot is large enough for this vehicle.&quot;, OperationError.VehicleDoesNotFit)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_753cfee6aae6 : ParkingResult.Failed(&quot;No available parking spot is large enough for this vehicle.&quot;, OperationError.VehicleDoesNotFit)
+end
+else otherwise
+p_50a211325908 -> p_50a211325908 : Park(vehicle, availableSpot.Number)
+note over p_50a211325908
+External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)
+end note
+alt spot &lt; 1 || spot &gt; Capacity
+p_50a211325908 -> p_426dd07c2e3a : Failed($&quot;Parking spot must be between 1 and {Capacity}.&quot;, OperationError.SpotOutOfRange)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_50a211325908 : ParkingResult.Failed($&quot;Parking spot must be between 1 and {Capacity}.&quot;, OperationError.SpotOutOfRange)
+else otherwise
+alt parkingSpot.Vehicle is not null
+p_50a211325908 -> p_426dd07c2e3a : Failed($&quot;Parking spot {spot} is occupied.&quot;, OperationError.SpotOccupied)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_50a211325908 : ParkingResult.Failed($&quot;Parking spot {spot} is occupied.&quot;, OperationError.SpotOccupied)
+else otherwise
+p_50a211325908 -> p_b323161f1e5c : Fits(vehicle)
+note over p_b323161f1e5c
+Depth boundary: method body not expanded.
+end note
+p_b323161f1e5c --> p_50a211325908 : bool (if call returns)
+alt !parkingSpot.Fits(vehicle)
+p_50a211325908 -> p_426dd07c2e3a : Failed($&quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.&quot;, OperationError.VehicleDoesNotFit)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_50a211325908 : ParkingResult.Failed($&quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.&quot;, OperationError.VehicleDoesNotFit)
+else otherwise
+p_50a211325908 -> p_50a211325908 : RegistrationExists(vehicle.RegistrationNumber)
+note over p_50a211325908
+Depth boundary: method body not expanded.
+end note
+p_50a211325908 --> p_50a211325908 : bool (if call returns)
+alt RegistrationExists(vehicle.RegistrationNumber)
+p_50a211325908 -> p_50a211325908 : DuplicateRegistration(vehicle)
+note over p_50a211325908
+Depth boundary: method body not expanded.
+end note
+p_50a211325908 --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_50a211325908 : DuplicateRegistration(vehicle)
+else otherwise
+p_50a211325908 -> p_b323161f1e5c : Park(vehicle)
+note over p_b323161f1e5c
+Depth boundary: method body not expanded.
+end note
+p_b323161f1e5c --> p_50a211325908 : complete (if call returns)
+p_50a211325908 -> p_426dd07c2e3a : Completed(spot, $&quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.&quot;)
+note over p_426dd07c2e3a
+Scope boundary: method body not expanded.
+end note
+p_426dd07c2e3a --> p_50a211325908 : Garage.Results.ParkingResult (if call returns)
+p_50a211325908 --> p_50a211325908 : ParkingResult.Completed(spot, $&quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.&quot;)
+end
+end
+end
+end
+p_50a211325908 --> p_753cfee6aae6 : Park(vehicle, availableSpot.Number)
+end
+end
+p_753cfee6aae6 --> p_753cfee6aae6 : garage.Park(vehicle)
+end
+end
+end
+p_753cfee6aae6 --> Actor : ParkNewVehicle(vehicle, garage, spotNumber)
+end
 legend bottom
+  [[../../structural/component/garage-components.puml Garage project components]]
   [[../../structural/class/garage-classes.puml Garage classes]]
-  [[../../behavioral/activity/parking-activity.puml Parking activity]]
-  [[../../behavioral/state-machine/parking-spot-state.puml Spot state]]
+  [[../../behavioral/activity/parking-activity.puml Parking validation and assignment]]
+  [[../../behavioral/state-machine/parking-spot-state.puml Parking spot occupancy]]
 endlegend
 @enduml

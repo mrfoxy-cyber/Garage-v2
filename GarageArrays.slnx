@@ -64,6 +64,8 @@
   <Folder Name="/UML Diagrams/Automation/">
     <File Path="tools/uml/Uml.csproj" />
     <File Path="tools/uml/Program.cs" />
+    <File Path="tools/uml/CodeDiagrams.cs" />
+    <File Path="tools/uml/CodeDiagramTests.cs" />
     <File Path="tools/uml/GraphData.cs" />
     <File Path="tools/uml/GraphDataTests.cs" />
     <File Path="tools/uml/AuthoredData.cs" />

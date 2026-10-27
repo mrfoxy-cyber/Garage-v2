@@ -13,8 +13,8 @@ globalThis.GARAGE_UML_DATA = {
       ],
       "source": "structural/class/garage-classes.puml",
       "svg": "structural/class/garage-classes.svg",
-      "puml": "@startuml\n\u0027 diagram-id: garage-classes\n\u0027 Generated. Run the UML generate command; do not edit by hand.\nhide empty members\nskinparam classAttributeIconSize 0\ntitle Garage classes\npackage \u0022Garage.Diagnostics\u0022 as e_dbf42b10f0c8e363433c {\nclass \u0022ErrorLogger\u0022 as e_da6e02197dc94806bac4 {\n  private const int LabelWidth\n  private static string LogField(string label, object? value)\n  public static bool TryLog(Exception exception, string? operation = null, object? relatedObject = null)\n}\n}\npackage \u0022Garage.Models\u0022 as e_b9ddcf58f7305c147c98 {\nclass \u0022Garage\u0022 as e_7dfee8d41ffeed65ee04 {\n  private Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles, IReadOnlyList\u003CDimensions\u003E? spotDimensions)\n  private bool RegistrationExists(string registrationNumber)\n  private readonly List\u003CParkingSpot\u003E parkingSpots\n  private static ParkingResult DuplicateRegistration(Vehicle vehicle)\n  public Garage(string garageName, IReadOnlyList\u003CDimensions\u003E spotDimensions, List\u003CVehicle\u003E? initialVehicles = null)\n  public Garage(string garageName, List\u003CVehicle\u003E vehicles)\n  public Garage(string garageName, int capacity)\n  public Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles)\n  public GarageOperationResult Remove(string registrationNumber)\n  public GarageOperationResult RemoveAtSpot(int spotNumber)\n  public IReadOnlyList\u003CParkedVehicleInfo\u003E ParkedVehicles \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003CParkingSpotInfo\u003E SpotDetails \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)\n  public IReadOnlyList\u003CVehicle\u003E Vehicles \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003CVehicleTypeGroup\u003E VehiclesByType \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003Cint\u003E AvailableSpotsFor(Vehicle vehicle)\n  public ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber)\n  public ParkingResult Park(Vehicle vehicle)\n  public ParkingResult Park(Vehicle vehicle, int spot)\n  public const int MaximumGarageCapacity\n  public int AvailableSpaces \u0026#123; get; \u0026#125;\n  public int Capacity \u0026#123;  get; \u0026#125;\n  public int OccupiedSpaces \u0026#123; get; \u0026#125;\n  public string GarageName \u0026#123;  get; \u0026#125;\n}\nclass \u0022ParkingSpot\u0022 as e_811191dd1ddf83d5085a {\n  public Dimensions? Dimensions \u0026#123;  get; \u0026#125;\n  public ParkingSpot(int number, Dimensions? dimensions)\n  public Vehicle? Vehicle \u0026#123;  get; private set; \u0026#125;\n  public bool Fits(Vehicle vehicle)\n  public int Number \u0026#123;  get; \u0026#125;\n  public void Clear()\n  public void Park(Vehicle vehicle)\n}\nclass \u0022VehicleCatalog\u0022 as e_8007237a91b460f18c21 {\n  internal void Add(Vehicle vehicle)\n  private readonly List\u003CVehicle\u003E vehicles\n  public IReadOnlyList\u003CVehicle\u003E Vehicles \u0026#123; get; \u0026#125;\n  public VehicleCatalog(List\u003CVehicle\u003E? initialVehicles = null)\n  public bool ContainsRegistration(string registrationNumber)\n}\n}\npackage \u0022Garage.Persistence.Json\u0022 as e_476c3ab7c0020fdf9044 {\nclass \u0022GarageJsonLoader\u0022 as e_903b8aec249a8f7a706d {\n  private static Dimensions ToDimensions(SpotSizeSpecification size, string location)\n  private static GaragePlacementSpecification ReadPlacementSpecification(string path)\n  private static GarageSpecification ReadGarageSpecification(string path)\n  private static string ReadJson(string path)\n  private static void ApplyPlacements(VehicleGarage garage, string placementPath)\n  public static VehicleGarage Load(string configurationPath, string? placementPath = null)\n}\nclass \u0022JsonSettings\u0022 as e_4ee1080be52a7f58e2dc {\n  private static JsonSerializerOptions Create()\n  public static JsonSerializerOptions Options \u0026#123;  get; \u0026#125;\n}\nclass \u0022VehicleJsonLoader\u0022 as e_4562483796623659cd4a {\n  public static List\u003CVehicle\u003E LoadVehicles(string? filePath = null)\n  public static Vehicle LoadVehicle(string filePath)\n}\nclass \u0022VehicleJsonMapper\u0022 as e_7166fdfe73ef51bfec0f {\n  private static Airplane CreateAirplane(VehicleJsonContract seed)\n  private static Boat CreateBoat(VehicleJsonContract seed)\n  private static BoatType Require(BoatType? value, VehicleJsonContract seed, string propertyName)\n  private static BodyType Require(BodyType? value, VehicleJsonContract seed, string propertyName)\n  private static Bus CreateBus(VehicleJsonContract seed)\n  private static Car CreateCar(VehicleJsonContract seed)\n  private static Engine CreateEngine(EngineJsonContract seed)\n  private static FuelType Require(FuelType? value, EngineJsonContract seed, string propertyName)\n  private static InvalidDataException MissingProperty(VehicleJsonContract seed, string propertyName)\n  private static List\u003CEngine\u003E CreateEngines(VehicleJsonContract vehicle)\n  private static Motorcycle CreateMotorcycle(VehicleJsonContract seed)\n  private static MotorcycleType Require(MotorcycleType? value, VehicleJsonContract seed, string propertyName)\n  private static Truck CreateTruck(VehicleJsonContract seed)\n  private static bool Require(bool? value, VehicleJsonContract seed, string propertyName)\n  private static double Require(double? value, EngineJsonContract seed, string propertyName)\n  private static double Require(double? value, VehicleJsonContract seed, string propertyName)\n  private static int Require(int? value, EngineJsonContract seed, string propertyName)\n  private static int Require(int? value, VehicleJsonContract seed, string propertyName)\n  private static string Require(string? value, EngineJsonContract seed, string propertyName)\n  private static string Require(string? value, VehicleJsonContract seed, string propertyName)\n  public static Vehicle Create(VehicleJsonContract seed)\n}\ne_903b8aec249a8f7a706d -[hidden]down-\u003E e_7166fdfe73ef51bfec0f\n}\npackage \u0022Garage.Persistence.Json.Contracts\u0022 as e_8204406925242146cdfc {\nclass \u0022EngineJsonContract\u0022 as e_ed20c6e09ee59dfe8f2b {\n  public FuelType? FuelType \u0026#123;  get;  init; \u0026#125;\n  public double? BoilerPressureBar \u0026#123;  get;  init; \u0026#125;\n  public double? BypassRatio \u0026#123;  get;  init; \u0026#125;\n  public double? PowerKw \u0026#123;  get;  init; \u0026#125;\n  public double? ThrustKn \u0026#123;  get;  init; \u0026#125;\n  public double? Voltage \u0026#123;  get;  init; \u0026#125;\n  public int? CylinderCount \u0026#123;  get;  init; \u0026#125;\n  public int? DisplacementCc \u0026#123;  get;  init; \u0026#125;\n  public int? HorsePower \u0026#123;  get;  init; \u0026#125;\n  public int? RotorCount \u0026#123;  get;  init; \u0026#125;\n  public int? ShaftHorsePower \u0026#123;  get;  init; \u0026#125;\n  public required string Model \u0026#123;  get;  init; \u0026#125;\n  public required string SerialNumber \u0026#123;  get;  init; \u0026#125;\n  public required string Type \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022VehicleJsonContract\u0022 as e_4dcd30dc05bd52c59667 {\n  public BoatType? BoatType \u0026#123;  get;  init; \u0026#125;\n  public BodyType? BodyType \u0026#123;  get;  init; \u0026#125;\n  public List\u003CEngineJsonContract\u003E Engines \u0026#123;  get;  init; \u0026#125;\n  public MotorcycleType? MotorcycleType \u0026#123;  get;  init; \u0026#125;\n  public bool? HasCabin \u0026#123;  get;  init; \u0026#125;\n  public bool? HasDualControls \u0026#123;  get;  init; \u0026#125;\n  public bool? HasSidecar \u0026#123;  get;  init; \u0026#125;\n  public double? DraftMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumAltitudeMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumLoadKg \u0026#123;  get;  init; \u0026#125;\n  public double? WingspanMeters \u0026#123;  get;  init; \u0026#125;\n  public int? CabinCrewSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? CabinPassengerSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? CrewSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? DriverSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? DriverSeats \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfAxles \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfDoors \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfSeats \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfWheels \u0026#123;  get;  init; \u0026#125;\n  public int? PassengerCapacity \u0026#123;  get;  init; \u0026#125;\n  public int? PassengerSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? PilotSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? StandingPassengerCapacity \u0026#123;  get;  init; \u0026#125;\n  public required CountryCode CountryCode \u0026#123;  get;  init; \u0026#125;\n  public required VehicleColor Color \u0026#123;  get;  init; \u0026#125;\n  public required double HeightMeters \u0026#123;  get;  init; \u0026#125;\n  public required double LengthMeters \u0026#123;  get;  init; \u0026#125;\n  public required double WeightKg \u0026#123;  get;  init; \u0026#125;\n  public required double WidthMeters \u0026#123;  get;  init; \u0026#125;\n  public required int ManufacturingYear \u0026#123;  get;  init; \u0026#125;\n  public required string Manufacturer \u0026#123;  get;  init; \u0026#125;\n  public required string Model \u0026#123;  get;  init; \u0026#125;\n  public required string RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n  public required string Type \u0026#123;  get;  init; \u0026#125;\n  public string? AirframeSerialNumber \u0026#123;  get;  init; \u0026#125;\n  public string? Hin \u0026#123;  get;  init; \u0026#125;\n  public string? Vin \u0026#123;  get;  init; \u0026#125;\n}\n}\npackage \u0022Garage.Queries\u0022 as e_2fd8126a30ec979b387a {\nclass \u0022ParkedVehicleInfo\u0022 as e_a63aa2e3b7d62db15b04 {\n  primary constructor ParkedVehicleInfo(int SpotNumber, Vehicle Vehicle)\n}\nclass \u0022ParkingSpotInfo\u0022 as e_7ebc156d8765fc753f71 {\n  primary constructor ParkingSpotInfo(int SpotNumber, Dimensions? Dimensions, bool IsOccupied)\n}\nclass \u0022VehicleSearch\u0022 as e_786fb28f30ca0563d04e {\n  private static bool MatchesMeasurement(double actual, double expected)\n  public static bool Matches(Vehicle vehicle, VehicleSearchCriteria criteria)\n}\nclass \u0022VehicleSearchCriteria\u0022 as e_c0c4dd04000b12cbf930 {\n  public BoatType? BoatType \u0026#123;  get;  init; \u0026#125;\n  public BodyType? BodyType \u0026#123;  get;  init; \u0026#125;\n  public Garage.Engines.FuelType? FuelType \u0026#123;  get;  init; \u0026#125;\n  public IReadOnlyList\u003CType\u003E VehicleTypes \u0026#123;  get;  init; \u0026#125;\n  public MotorcycleType? MotorcycleType \u0026#123;  get;  init; \u0026#125;\n  public VehicleColor? Color \u0026#123;  get;  init; \u0026#125;\n  public bool? HasSidecar \u0026#123;  get;  init; \u0026#125;\n  public double? CylinderVolumeCc \u0026#123;  get;  init; \u0026#125;\n  public double? DraftMeters \u0026#123;  get;  init; \u0026#125;\n  public double? LengthMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumAltitudeMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumLoadKg \u0026#123;  get;  init; \u0026#125;\n  public double? WingspanMeters \u0026#123;  get;  init; \u0026#125;\n  public int? ManufacturingYear \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfAxles \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfEngines \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfSeats \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfWheels \u0026#123;  get;  init; \u0026#125;\n  public int? StandingPassengerCapacity \u0026#123;  get;  init; \u0026#125;\n  public string? Manufacturer \u0026#123;  get;  init; \u0026#125;\n  public string? Model \u0026#123;  get;  init; \u0026#125;\n  public string? RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022VehicleTypeGroup\u0022 as e_35e800f198b950258c82 {\n  primary constructor VehicleTypeGroup(string VehicleType, IReadOnlyList\u003CParkedVehicleInfo\u003E Vehicles)\n}\ne_a63aa2e3b7d62db15b04 -[hidden]down-\u003E e_c0c4dd04000b12cbf930\ne_7ebc156d8765fc753f71 -[hidden]down-\u003E e_35e800f198b950258c82\n}\npackage \u0022Garage.Results\u0022 as e_42481b28c8686aad515e {\nclass \u0022GarageCreationResult\u0022 as e_7a8fe0cab2cc81d3135a {\n  private GarageCreationResult(VehicleGarage? garage, string message, OperationError error)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public VehicleGarage? Garage \u0026#123;  get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public static GarageCreationResult Completed(VehicleGarage garage)\n  public static GarageCreationResult Failed(string message, OperationError error = OperationError.ValidationFailed)\n  public string Message \u0026#123;  get; \u0026#125;\n}\nclass \u0022GarageOperationResult\u0022 as e_a7bb27afefc092f6c63e {\n  private GarageOperationResult(int? spotNumber, string message, OperationError error)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public int? SpotNumber \u0026#123;  get; \u0026#125;\n  public static GarageOperationResult Completed(int spotNumber, string message)\n  public static GarageOperationResult Failed(string message, OperationError error)\n  public string Message \u0026#123;  get; \u0026#125;\n}\nenum \u0022OperationError\u0022 as e_68ff88246a3b0f165654 {\n  Cancelled\n  DuplicateGarageName\n  DuplicateRegistration\n  FileAccessDenied\n  FileNotFound\n  FileReadFailed\n  GarageFull\n  InvalidJson\n  None\n  SpotEmpty\n  SpotOccupied\n  SpotOutOfRange\n  UnsupportedOperation\n  ValidationFailed\n  VehicleAlreadyParked\n  VehicleDoesNotFit\n  VehicleNotFound\n}\nclass \u0022ParkingResult\u0022 as e_3f3a1c4fa9997c8247b6 {\n  private ParkingResult(int? spotNumber, string message, OperationError error)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public int? SpotNumber \u0026#123;  get; \u0026#125;\n  public static ParkingResult Completed(int spotNumber, string message)\n  public static ParkingResult Failed(string message, OperationError error)\n  public string Message \u0026#123;  get; \u0026#125;\n}\nclass \u0022VehicleCreationResult\u0022 as e_8bad896b706bf4731d84 {\n  private VehicleCreationResult(Vehicle? vehicle, string message, OperationError error, ParkingResult? parking = null)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public ParkingResult? Parking \u0026#123;  get; \u0026#125;\n  public Vehicle? Vehicle \u0026#123;  get; \u0026#125;\n  public bool Cancelled \u0026#123; get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public static VehicleCreationResult Cancel()\n  public static VehicleCreationResult Completed(Vehicle vehicle, ParkingResult? parking = null, string? message = null)\n  public static VehicleCreationResult Failed(string message, OperationError error = OperationError.ValidationFailed)\n  public string Message \u0026#123;  get; \u0026#125;\n}\ne_7a8fe0cab2cc81d3135a -[hidden]down-\u003E e_3f3a1c4fa9997c8247b6\ne_a7bb27afefc092f6c63e -[hidden]down-\u003E e_8bad896b706bf4731d84\n}\npackage \u0022Garage.Services\u0022 as e_9fc3ece9d1004ca21814 {\nclass \u0022ExpectedFailure\u0022 as e_fd3daa564fa221428833 {\n  public static OperationError Code(Exception exception)\n  public static bool IsExpected(Exception exception)\n}\nclass \u0022GarageService\u0022 as e_6dd2ac09b188a18419a6 {\n  private GarageCreationResult CreateAndRegister(Func\u003CVehicleGarage\u003E factory)\n  private GarageCreationResult RegisterGarage(VehicleGarage garage)\n  private ParkingResult ParkNewVehicle(Vehicle vehicle, VehicleGarage garage, int? spotNumber)\n  private readonly List\u003CVehicleGarage\u003E garages\n  public GarageCreationResult CreateGarage(string name, IReadOnlyList\u003CDimensions\u003E sizes)\n  public GarageCreationResult CreateGarage(string name, int capacity)\n  public GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)\n  public GarageService(List\u003CVehicleGarage\u003E initialGarages, List\u003CVehicle\u003E initialVehicles)\n  public IReadOnlyList\u003CVehicle\u003E GetParkableVehicles(VehicleGarage garage, int? spotNumber = null)\n  public IReadOnlyList\u003CVehicleGarage\u003E Garages \u0026#123; get; \u0026#125;\n  public ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)\n  public VehicleCatalog Catalog \u0026#123;  get; \u0026#125;\n  public VehicleCreationService VehicleCreation \u0026#123;  get; \u0026#125;\n  public bool ContainsGarage(string name)\n  public bool IsParked(Vehicle vehicle)\n}\nclass \u0022VehicleCreationService\u0022 as e_30eac2cea220d48d859f {\n  internal VehicleCreationService(VehicleCatalog catalog, Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park)\n  private readonly Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park\n  private readonly VehicleCatalog catalog\n  public VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)\n  public VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)\n}\n}\npackage \u0022Garage.Specifications\u0022 as e_c9f6e67955b27c88b5f3 {\nclass \u0022GaragePlacementSpecification\u0022 as e_4e294155336cf7b2de83 {\n  public IReadOnlyList\u003CSpotAssignment\u003E? Assignments \u0026#123;  get;  init; \u0026#125;\n  public string? GarageName \u0026#123;  get;  init; \u0026#125;\n  public string? VehiclesFile \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022GarageSpecification\u0022 as e_78586a18a36e889092ac {\n  public IReadOnlyList\u003CSpotSpecification\u003E? Spots \u0026#123;  get;  init; \u0026#125;\n  public SpotSizeSpecification? DefaultSpotSize \u0026#123;  get;  init; \u0026#125;\n  public int Capacity \u0026#123;  get;  init; \u0026#125;\n  public string? GarageName \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SpotAssignment\u0022 as e_1aea9a100b328e430774 {\n  public int SpotNumber \u0026#123;  get;  init; \u0026#125;\n  public string? RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SpotSizeSpecification\u0022 as e_62a255ce3df8795d721f {\n  public double HeightMeters \u0026#123;  get;  init; \u0026#125;\n  public double LengthMeters \u0026#123;  get;  init; \u0026#125;\n  public double WidthMeters \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SpotSpecification\u0022 as e_bf4e409810d4cca546f1 {\n  public SpotSizeSpecification? Size \u0026#123;  get;  init; \u0026#125;\n  public int SpotNumber \u0026#123;  get;  init; \u0026#125;\n}\ne_4e294155336cf7b2de83 -[hidden]down-\u003E e_62a255ce3df8795d721f\ne_78586a18a36e889092ac -[hidden]down-\u003E e_bf4e409810d4cca546f1\n}\ne_dbf42b10f0c8e363433c -[hidden]down-\u003E e_b9ddcf58f7305c147c98\ne_b9ddcf58f7305c147c98 -[hidden]down-\u003E e_476c3ab7c0020fdf9044\ne_476c3ab7c0020fdf9044 -[hidden]down-\u003E e_8204406925242146cdfc\ne_8204406925242146cdfc -[hidden]down-\u003E e_2fd8126a30ec979b387a\ne_2fd8126a30ec979b387a -[hidden]down-\u003E e_42481b28c8686aad515e\ne_42481b28c8686aad515e -[hidden]down-\u003E e_9fc3ece9d1004ca21814\ne_9fc3ece9d1004ca21814 -[hidden]down-\u003E e_c9f6e67955b27c88b5f3\nlegend bottom\n  \u003Cb\u003EHow to read this class diagram\u003C/b\u003E\n  Child --|\u003E Parent : solid line \u002B hollow triangle = inherits from\n  Class ..|\u003E Interface : dashed line \u002B hollow triangle = implements\n  The triangle points to the parent class or interface.\n  C = class; A = abstract class; I = interface; E = enum; S = struct.\n  Boxes group members; folder-shaped boxes group namespaces.\n  public / \u002B = accessible publicly; private / - = within the class\n  protected / # = class and derived classes; internal = same assembly\n  Type Name = field/property; Name(...) = method or constructor.\n  --- Related diagrams ---\n  [[../component/garage-components.puml Garage project components]]\n  [[../package/garage-packages.puml Garage projects and namespaces]]\nendlegend\n@enduml\n",
-      "pumlHash": "695bfed25e273862e1c870e65087efeca1a0c64d840bc6701220d0d2b457ffa4"
+      "puml": "@startuml\n\u0027 diagram-id: garage-classes\n\u0027 Generated. Run the UML generate command; do not edit by hand.\nhide empty members\nskinparam classAttributeIconSize 0\ntitle Garage classes\npackage \u0022Garage.Diagnostics\u0022 as e_dbf42b10f0c8e363433c {\nclass \u0022ErrorLogger\u0022 as e_da6e02197dc94806bac4 {\n  private const int LabelWidth\n  private static string LogField(string label, object? value)\n  public static bool TryLog(Exception exception, string? operation = null, object? relatedObject = null)\n}\n}\npackage \u0022Garage.Documentation\u0022 as e_58bc520a9f4d579b96d9 {\nclass \u0022SequenceViewAttribute\u0022 as e_921fac54fe9e9970ce7f {\n  primary constructor SequenceViewAttribute(string id)\n  public int MaxDepth \u0026#123;  get;  set; \u0026#125;\n  public string Id \u0026#123;  get; \u0026#125;\n  public string[] ExpandNamespaces \u0026#123;  get;  set; \u0026#125;\n}\nclass \u0022UseCaseAttribute\u0022 as e_70ee0bedbf2ab27c1a4a {\n  primary constructor UseCaseAttribute(string id, string title)\n  public string Actor \u0026#123;  get;  set; \u0026#125;\n  public string Id \u0026#123;  get; \u0026#125;\n  public string Title \u0026#123;  get; \u0026#125;\n}\n}\npackage \u0022Garage.Models\u0022 as e_b9ddcf58f7305c147c98 {\nclass \u0022Garage\u0022 as e_7dfee8d41ffeed65ee04 {\n  [UseCase(\\\u0022remove\\\u0022, \\\u0022Remove parked vehicle\\\u0022)] public GarageOperationResult Remove(string registrationNumber)\n  [UseCase(\\\u0022search\\\u0022, \\\u0022Search parked vehicles\\\u0022)] public IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)\n  private Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles, IReadOnlyList\u003CDimensions\u003E? spotDimensions)\n  private bool RegistrationExists(string registrationNumber)\n  private readonly List\u003CParkingSpot\u003E parkingSpots\n  private static ParkingResult DuplicateRegistration(Vehicle vehicle)\n  public Garage(string garageName, IReadOnlyList\u003CDimensions\u003E spotDimensions, List\u003CVehicle\u003E? initialVehicles = null)\n  public Garage(string garageName, List\u003CVehicle\u003E vehicles)\n  public Garage(string garageName, int capacity)\n  public Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles)\n  public GarageOperationResult RemoveAtSpot(int spotNumber)\n  public IReadOnlyList\u003CParkedVehicleInfo\u003E ParkedVehicles \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003CParkingSpotInfo\u003E SpotDetails \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003CVehicle\u003E Vehicles \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003CVehicleTypeGroup\u003E VehiclesByType \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003Cint\u003E AvailableSpotsFor(Vehicle vehicle)\n  public ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber)\n  public ParkingResult Park(Vehicle vehicle)\n  public ParkingResult Park(Vehicle vehicle, int spot)\n  public const int MaximumGarageCapacity\n  public int AvailableSpaces \u0026#123; get; \u0026#125;\n  public int Capacity \u0026#123;  get; \u0026#125;\n  public int OccupiedSpaces \u0026#123; get; \u0026#125;\n  public string GarageName \u0026#123;  get; \u0026#125;\n}\nclass \u0022ParkingSpot\u0022 as e_811191dd1ddf83d5085a {\n  public Dimensions? Dimensions \u0026#123;  get; \u0026#125;\n  public ParkingSpot(int number, Dimensions? dimensions)\n  public Vehicle? Vehicle \u0026#123;  get; private set; \u0026#125;\n  public bool Fits(Vehicle vehicle)\n  public int Number \u0026#123;  get; \u0026#125;\n  public void Clear()\n  public void Park(Vehicle vehicle)\n}\nclass \u0022VehicleCatalog\u0022 as e_8007237a91b460f18c21 {\n  internal void Add(Vehicle vehicle)\n  private readonly List\u003CVehicle\u003E vehicles\n  public IReadOnlyList\u003CVehicle\u003E Vehicles \u0026#123; get; \u0026#125;\n  public VehicleCatalog(List\u003CVehicle\u003E? initialVehicles = null)\n  public bool ContainsRegistration(string registrationNumber)\n}\n}\npackage \u0022Garage.Persistence.Json\u0022 as e_476c3ab7c0020fdf9044 {\nclass \u0022GarageJsonLoader\u0022 as e_903b8aec249a8f7a706d {\n  private static Dimensions ToDimensions(SpotSizeSpecification size, string location)\n  private static GaragePlacementSpecification ReadPlacementSpecification(string path)\n  private static GarageSpecification ReadGarageSpecification(string path)\n  private static string ReadJson(string path)\n  private static void ApplyPlacements(VehicleGarage garage, string placementPath)\n  public static VehicleGarage Load(string configurationPath, string? placementPath = null)\n}\nclass \u0022JsonSettings\u0022 as e_4ee1080be52a7f58e2dc {\n  private static JsonSerializerOptions Create()\n  public static JsonSerializerOptions Options \u0026#123;  get; \u0026#125;\n}\nclass \u0022VehicleJsonLoader\u0022 as e_4562483796623659cd4a {\n  public static List\u003CVehicle\u003E LoadVehicles(string? filePath = null)\n  public static Vehicle LoadVehicle(string filePath)\n}\nclass \u0022VehicleJsonMapper\u0022 as e_7166fdfe73ef51bfec0f {\n  private static Airplane CreateAirplane(VehicleJsonContract seed)\n  private static Boat CreateBoat(VehicleJsonContract seed)\n  private static BoatType Require(BoatType? value, VehicleJsonContract seed, string propertyName)\n  private static BodyType Require(BodyType? value, VehicleJsonContract seed, string propertyName)\n  private static Bus CreateBus(VehicleJsonContract seed)\n  private static Car CreateCar(VehicleJsonContract seed)\n  private static Engine CreateEngine(EngineJsonContract seed)\n  private static FuelType Require(FuelType? value, EngineJsonContract seed, string propertyName)\n  private static InvalidDataException MissingProperty(VehicleJsonContract seed, string propertyName)\n  private static List\u003CEngine\u003E CreateEngines(VehicleJsonContract vehicle)\n  private static Motorcycle CreateMotorcycle(VehicleJsonContract seed)\n  private static MotorcycleType Require(MotorcycleType? value, VehicleJsonContract seed, string propertyName)\n  private static Truck CreateTruck(VehicleJsonContract seed)\n  private static bool Require(bool? value, VehicleJsonContract seed, string propertyName)\n  private static double Require(double? value, EngineJsonContract seed, string propertyName)\n  private static double Require(double? value, VehicleJsonContract seed, string propertyName)\n  private static int Require(int? value, EngineJsonContract seed, string propertyName)\n  private static int Require(int? value, VehicleJsonContract seed, string propertyName)\n  private static string Require(string? value, EngineJsonContract seed, string propertyName)\n  private static string Require(string? value, VehicleJsonContract seed, string propertyName)\n  public static Vehicle Create(VehicleJsonContract seed)\n}\ne_903b8aec249a8f7a706d -[hidden]down-\u003E e_7166fdfe73ef51bfec0f\n}\npackage \u0022Garage.Persistence.Json.Contracts\u0022 as e_8204406925242146cdfc {\nclass \u0022EngineJsonContract\u0022 as e_ed20c6e09ee59dfe8f2b {\n  public FuelType? FuelType \u0026#123;  get;  init; \u0026#125;\n  public double? BoilerPressureBar \u0026#123;  get;  init; \u0026#125;\n  public double? BypassRatio \u0026#123;  get;  init; \u0026#125;\n  public double? PowerKw \u0026#123;  get;  init; \u0026#125;\n  public double? ThrustKn \u0026#123;  get;  init; \u0026#125;\n  public double? Voltage \u0026#123;  get;  init; \u0026#125;\n  public int? CylinderCount \u0026#123;  get;  init; \u0026#125;\n  public int? DisplacementCc \u0026#123;  get;  init; \u0026#125;\n  public int? HorsePower \u0026#123;  get;  init; \u0026#125;\n  public int? RotorCount \u0026#123;  get;  init; \u0026#125;\n  public int? ShaftHorsePower \u0026#123;  get;  init; \u0026#125;\n  public required string Model \u0026#123;  get;  init; \u0026#125;\n  public required string SerialNumber \u0026#123;  get;  init; \u0026#125;\n  public required string Type \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022VehicleJsonContract\u0022 as e_4dcd30dc05bd52c59667 {\n  public BoatType? BoatType \u0026#123;  get;  init; \u0026#125;\n  public BodyType? BodyType \u0026#123;  get;  init; \u0026#125;\n  public List\u003CEngineJsonContract\u003E Engines \u0026#123;  get;  init; \u0026#125;\n  public MotorcycleType? MotorcycleType \u0026#123;  get;  init; \u0026#125;\n  public bool? HasCabin \u0026#123;  get;  init; \u0026#125;\n  public bool? HasDualControls \u0026#123;  get;  init; \u0026#125;\n  public bool? HasSidecar \u0026#123;  get;  init; \u0026#125;\n  public double? DraftMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumAltitudeMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumLoadKg \u0026#123;  get;  init; \u0026#125;\n  public double? WingspanMeters \u0026#123;  get;  init; \u0026#125;\n  public int? CabinCrewSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? CabinPassengerSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? CrewSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? DriverSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? DriverSeats \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfAxles \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfDoors \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfSeats \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfWheels \u0026#123;  get;  init; \u0026#125;\n  public int? PassengerCapacity \u0026#123;  get;  init; \u0026#125;\n  public int? PassengerSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? PilotSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? StandingPassengerCapacity \u0026#123;  get;  init; \u0026#125;\n  public required CountryCode CountryCode \u0026#123;  get;  init; \u0026#125;\n  public required VehicleColor Color \u0026#123;  get;  init; \u0026#125;\n  public required double HeightMeters \u0026#123;  get;  init; \u0026#125;\n  public required double LengthMeters \u0026#123;  get;  init; \u0026#125;\n  public required double WeightKg \u0026#123;  get;  init; \u0026#125;\n  public required double WidthMeters \u0026#123;  get;  init; \u0026#125;\n  public required int ManufacturingYear \u0026#123;  get;  init; \u0026#125;\n  public required string Manufacturer \u0026#123;  get;  init; \u0026#125;\n  public required string Model \u0026#123;  get;  init; \u0026#125;\n  public required string RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n  public required string Type \u0026#123;  get;  init; \u0026#125;\n  public string? AirframeSerialNumber \u0026#123;  get;  init; \u0026#125;\n  public string? Hin \u0026#123;  get;  init; \u0026#125;\n  public string? Vin \u0026#123;  get;  init; \u0026#125;\n}\n}\npackage \u0022Garage.Queries\u0022 as e_2fd8126a30ec979b387a {\nclass \u0022ParkedVehicleInfo\u0022 as e_a63aa2e3b7d62db15b04 {\n  primary constructor ParkedVehicleInfo(int SpotNumber, Vehicle Vehicle)\n}\nclass \u0022ParkingSpotInfo\u0022 as e_7ebc156d8765fc753f71 {\n  primary constructor ParkingSpotInfo(int SpotNumber, Dimensions? Dimensions, bool IsOccupied)\n}\nclass \u0022VehicleSearch\u0022 as e_786fb28f30ca0563d04e {\n  private static bool MatchesMeasurement(double actual, double expected)\n  public static bool Matches(Vehicle vehicle, VehicleSearchCriteria criteria)\n}\nclass \u0022VehicleSearchCriteria\u0022 as e_c0c4dd04000b12cbf930 {\n  public BoatType? BoatType \u0026#123;  get;  init; \u0026#125;\n  public BodyType? BodyType \u0026#123;  get;  init; \u0026#125;\n  public Garage.Engines.FuelType? FuelType \u0026#123;  get;  init; \u0026#125;\n  public IReadOnlyList\u003CType\u003E VehicleTypes \u0026#123;  get;  init; \u0026#125;\n  public MotorcycleType? MotorcycleType \u0026#123;  get;  init; \u0026#125;\n  public VehicleColor? Color \u0026#123;  get;  init; \u0026#125;\n  public bool? HasSidecar \u0026#123;  get;  init; \u0026#125;\n  public double? CylinderVolumeCc \u0026#123;  get;  init; \u0026#125;\n  public double? DraftMeters \u0026#123;  get;  init; \u0026#125;\n  public double? LengthMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumAltitudeMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumLoadKg \u0026#123;  get;  init; \u0026#125;\n  public double? WingspanMeters \u0026#123;  get;  init; \u0026#125;\n  public int? ManufacturingYear \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfAxles \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfEngines \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfSeats \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfWheels \u0026#123;  get;  init; \u0026#125;\n  public int? StandingPassengerCapacity \u0026#123;  get;  init; \u0026#125;\n  public string? Manufacturer \u0026#123;  get;  init; \u0026#125;\n  public string? Model \u0026#123;  get;  init; \u0026#125;\n  public string? RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022VehicleTypeGroup\u0022 as e_35e800f198b950258c82 {\n  primary constructor VehicleTypeGroup(string VehicleType, IReadOnlyList\u003CParkedVehicleInfo\u003E Vehicles)\n}\ne_a63aa2e3b7d62db15b04 -[hidden]down-\u003E e_c0c4dd04000b12cbf930\ne_7ebc156d8765fc753f71 -[hidden]down-\u003E e_35e800f198b950258c82\n}\npackage \u0022Garage.Results\u0022 as e_42481b28c8686aad515e {\nclass \u0022GarageCreationResult\u0022 as e_7a8fe0cab2cc81d3135a {\n  private GarageCreationResult(VehicleGarage? garage, string message, OperationError error)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public VehicleGarage? Garage \u0026#123;  get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public static GarageCreationResult Completed(VehicleGarage garage)\n  public static GarageCreationResult Failed(string message, OperationError error = OperationError.ValidationFailed)\n  public string Message \u0026#123;  get; \u0026#125;\n}\nclass \u0022GarageOperationResult\u0022 as e_a7bb27afefc092f6c63e {\n  private GarageOperationResult(int? spotNumber, string message, OperationError error)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public int? SpotNumber \u0026#123;  get; \u0026#125;\n  public static GarageOperationResult Completed(int spotNumber, string message)\n  public static GarageOperationResult Failed(string message, OperationError error)\n  public string Message \u0026#123;  get; \u0026#125;\n}\nenum \u0022OperationError\u0022 as e_68ff88246a3b0f165654 {\n  Cancelled\n  DuplicateGarageName\n  DuplicateRegistration\n  FileAccessDenied\n  FileNotFound\n  FileReadFailed\n  GarageFull\n  InvalidJson\n  None\n  SpotEmpty\n  SpotOccupied\n  SpotOutOfRange\n  UnsupportedOperation\n  ValidationFailed\n  VehicleAlreadyParked\n  VehicleDoesNotFit\n  VehicleNotFound\n}\nclass \u0022ParkingResult\u0022 as e_3f3a1c4fa9997c8247b6 {\n  private ParkingResult(int? spotNumber, string message, OperationError error)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public int? SpotNumber \u0026#123;  get; \u0026#125;\n  public static ParkingResult Completed(int spotNumber, string message)\n  public static ParkingResult Failed(string message, OperationError error)\n  public string Message \u0026#123;  get; \u0026#125;\n}\nclass \u0022VehicleCreationResult\u0022 as e_8bad896b706bf4731d84 {\n  private VehicleCreationResult(Vehicle? vehicle, string message, OperationError error, ParkingResult? parking = null)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public ParkingResult? Parking \u0026#123;  get; \u0026#125;\n  public Vehicle? Vehicle \u0026#123;  get; \u0026#125;\n  public bool Cancelled \u0026#123; get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public static VehicleCreationResult Cancel()\n  public static VehicleCreationResult Completed(Vehicle vehicle, ParkingResult? parking = null, string? message = null)\n  public static VehicleCreationResult Failed(string message, OperationError error = OperationError.ValidationFailed)\n  public string Message \u0026#123;  get; \u0026#125;\n}\ne_7a8fe0cab2cc81d3135a -[hidden]down-\u003E e_3f3a1c4fa9997c8247b6\ne_a7bb27afefc092f6c63e -[hidden]down-\u003E e_8bad896b706bf4731d84\n}\npackage \u0022Garage.Services\u0022 as e_9fc3ece9d1004ca21814 {\nclass \u0022ExpectedFailure\u0022 as e_fd3daa564fa221428833 {\n  public static OperationError Code(Exception exception)\n  public static bool IsExpected(Exception exception)\n}\nclass \u0022GarageService\u0022 as e_6dd2ac09b188a18419a6 {\n  [UseCase(\\\u0022create-garage\\\u0022, \\\u0022Create or import garage\\\u0022)] public GarageCreationResult CreateGarage(string name, int capacity)\n  [UseCase(\\\u0022create-garage\\\u0022, \\\u0022Create or import garage\\\u0022)] public GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)\n  [UseCase(\\\u0022park-vehicle\\\u0022, \\\u0022Park vehicle\\\u0022)] [SequenceView(\\\u0022parking-sequence\\\u0022, MaxDepth = 3, ExpandNamespaces = new[] \u0026#123; \\\u0022Garage.Services\\\u0022, \\\u0022Garage.Models\\\u0022 \u0026#125;)] public ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)\n  private GarageCreationResult CreateAndRegister(Func\u003CVehicleGarage\u003E factory)\n  private GarageCreationResult RegisterGarage(VehicleGarage garage)\n  private ParkingResult ParkNewVehicle(Vehicle vehicle, VehicleGarage garage, int? spotNumber)\n  private readonly List\u003CVehicleGarage\u003E garages\n  public GarageCreationResult CreateGarage(string name, IReadOnlyList\u003CDimensions\u003E sizes)\n  public GarageService(List\u003CVehicleGarage\u003E initialGarages, List\u003CVehicle\u003E initialVehicles)\n  public IReadOnlyList\u003CVehicle\u003E GetParkableVehicles(VehicleGarage garage, int? spotNumber = null)\n  public IReadOnlyList\u003CVehicleGarage\u003E Garages \u0026#123; get; \u0026#125;\n  public VehicleCatalog Catalog \u0026#123;  get; \u0026#125;\n  public VehicleCreationService VehicleCreation \u0026#123;  get; \u0026#125;\n  public bool ContainsGarage(string name)\n  public bool IsParked(Vehicle vehicle)\n}\nclass \u0022VehicleCreationService\u0022 as e_30eac2cea220d48d859f {\n  [UseCase(\\\u0022create-vehicle\\\u0022, \\\u0022Create or import vehicle\\\u0022)] public VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)\n  [UseCase(\\\u0022create-vehicle\\\u0022, \\\u0022Create or import vehicle\\\u0022)] public VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)\n  internal VehicleCreationService(VehicleCatalog catalog, Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park)\n  private readonly Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park\n  private readonly VehicleCatalog catalog\n}\n}\npackage \u0022Garage.Specifications\u0022 as e_c9f6e67955b27c88b5f3 {\nclass \u0022GaragePlacementSpecification\u0022 as e_4e294155336cf7b2de83 {\n  public IReadOnlyList\u003CSpotAssignment\u003E? Assignments \u0026#123;  get;  init; \u0026#125;\n  public string? GarageName \u0026#123;  get;  init; \u0026#125;\n  public string? VehiclesFile \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022GarageSpecification\u0022 as e_78586a18a36e889092ac {\n  public IReadOnlyList\u003CSpotSpecification\u003E? Spots \u0026#123;  get;  init; \u0026#125;\n  public SpotSizeSpecification? DefaultSpotSize \u0026#123;  get;  init; \u0026#125;\n  public int Capacity \u0026#123;  get;  init; \u0026#125;\n  public string? GarageName \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SpotAssignment\u0022 as e_1aea9a100b328e430774 {\n  public int SpotNumber \u0026#123;  get;  init; \u0026#125;\n  public string? RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SpotSizeSpecification\u0022 as e_62a255ce3df8795d721f {\n  public double HeightMeters \u0026#123;  get;  init; \u0026#125;\n  public double LengthMeters \u0026#123;  get;  init; \u0026#125;\n  public double WidthMeters \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SpotSpecification\u0022 as e_bf4e409810d4cca546f1 {\n  public SpotSizeSpecification? Size \u0026#123;  get;  init; \u0026#125;\n  public int SpotNumber \u0026#123;  get;  init; \u0026#125;\n}\ne_4e294155336cf7b2de83 -[hidden]down-\u003E e_62a255ce3df8795d721f\ne_78586a18a36e889092ac -[hidden]down-\u003E e_bf4e409810d4cca546f1\n}\ne_dbf42b10f0c8e363433c -[hidden]down-\u003E e_58bc520a9f4d579b96d9\ne_58bc520a9f4d579b96d9 -[hidden]down-\u003E e_b9ddcf58f7305c147c98\ne_b9ddcf58f7305c147c98 -[hidden]down-\u003E e_476c3ab7c0020fdf9044\ne_476c3ab7c0020fdf9044 -[hidden]down-\u003E e_8204406925242146cdfc\ne_8204406925242146cdfc -[hidden]down-\u003E e_2fd8126a30ec979b387a\ne_2fd8126a30ec979b387a -[hidden]down-\u003E e_42481b28c8686aad515e\ne_42481b28c8686aad515e -[hidden]down-\u003E e_9fc3ece9d1004ca21814\ne_9fc3ece9d1004ca21814 -[hidden]down-\u003E e_c9f6e67955b27c88b5f3\nlegend bottom\n  \u003Cb\u003EHow to read this class diagram\u003C/b\u003E\n  Child --|\u003E Parent : solid line \u002B hollow triangle = inherits from\n  Class ..|\u003E Interface : dashed line \u002B hollow triangle = implements\n  The triangle points to the parent class or interface.\n  C = class; A = abstract class; I = interface; E = enum; S = struct.\n  Boxes group members; folder-shaped boxes group namespaces.\n  public / \u002B = accessible publicly; private / - = within the class\n  protected / # = class and derived classes; internal = same assembly\n  Type Name = field/property; Name(...) = method or constructor.\n  --- Related diagrams ---\n  [[../component/garage-components.puml Garage project components]]\n  [[../package/garage-packages.puml Garage projects and namespaces]]\nendlegend\n@enduml\n",
+      "pumlHash": "f806f654b2899dbfe2c47ee23b47d917ae51d2e3dbbc8ed661ad55cc763af066"
     },
     {
       "id": "vehicle-classes",
@@ -108,14 +108,14 @@ globalThis.GARAGE_UML_DATA = {
       ],
       "source": "structural/package/garage-packages.puml",
       "svg": "structural/package/garage-packages.svg",
-      "puml": "@startuml\n\u0027 diagram-id: garage-packages\n\u0027 Generated. Run the UML generate command; do not edit by hand.\nhide empty members\nskinparam classAttributeIconSize 0\ntitle Garage projects and namespaces\npackage \u0022Garage.Console\u0022 as e_4e8a158f886433b7cb91 {\n  package \u0022Garage.ConsoleApp.Display\u0022 as e_9de32f7d100bfe0b432e { }\n  package \u0022Garage.ConsoleApp.Drafts\u0022 as e_c5b0fbf80f998c68cbcb { }\n  package \u0022Garage.ConsoleApp.Mapping\u0022 as e_3a9eaa677578cbe9c1df { }\n  package \u0022Garage.ConsoleApp.Menus\u0022 as e_f8d009d2fb96f407d004 { }\n  package \u0022Garage.ConsoleApp.Prompts\u0022 as e_12eb5d1aacf60ee95820 { }\n}\npackage \u0022Garage.Terminal\u0022 as e_3bdc5d7ed9efbc4af169 {\n  package \u0022Garage.Terminal.Forms\u0022 as e_e3884fdc3829d04d5bac { }\n  package \u0022Garage.Terminal.Presentation\u0022 as e_d4b69e557dadeb3325cb { }\n}\npackage \u0022Garage.Tests\u0022 as e_5a229a8a577b83de6207 {\n  package \u0022Garage.Tests\u0022 as e_0f1c02c4850cf2ad3811 { }\n  package \u0022Garage.Tests.Fixtures\u0022 as e_acd7f5ae0bd5fccf9e3d { }\n}\npackage \u0022Garage\u0022 as e_fc55a3295fd213831954 {\n  package \u0022Garage.Diagnostics\u0022 as e_ea481c78b81b80db5988 { }\n  package \u0022Garage.Models\u0022 as e_08834dd45de931ba1fcd { }\n  package \u0022Garage.Persistence.Json\u0022 as e_ca4317fe7e4fd39a8899 { }\n  package \u0022Garage.Persistence.Json.Contracts\u0022 as e_cce5127976a13666c25f { }\n  package \u0022Garage.Queries\u0022 as e_a6914bca9de7d0b6e7bc { }\n  package \u0022Garage.Results\u0022 as e_322b54eab66535aad2fe { }\n  package \u0022Garage.Services\u0022 as e_be652e04f07616dca31e { }\n  package \u0022Garage.Specifications\u0022 as e_d524e7959b08d00fcb27 { }\n}\npackage \u0022Vehicle\u0022 as e_6baf9469d9bef8128882 {\n  package \u0022Garage.Engines\u0022 as e_a8e8068c91680140002c { }\n  package \u0022Garage.Engines.Electric\u0022 as e_7e26a2547468f137cb37 { }\n  package \u0022Garage.Engines.ExternalCombustion\u0022 as e_8b7222bb985f2bd80d71 { }\n  package \u0022Garage.Engines.InternalCombustion\u0022 as e_8b2e1d55a3a9a7f07311 { }\n  package \u0022Garage.Engines.InternalCombustion.Piston\u0022 as e_bdff4f545c2ea10c1470 { }\n  package \u0022Garage.Engines.InternalCombustion.Turbine\u0022 as e_384c808b250ee0d3bb5d { }\n  package \u0022Garage.Engines.Specifications\u0022 as e_c98e764eca4aa9062ce1 { }\n  package \u0022Garage.Factories\u0022 as e_400f8bef6cf297e681d8 { }\n  package \u0022Garage.Vehicles\u0022 as e_b61b696f382917360ed0 { }\n  package \u0022Garage.Vehicles.Components\u0022 as e_f034617c6a613de7c0da { }\n  package \u0022Garage.Vehicles.Interfaces\u0022 as e_798d21f2272a791ef52a { }\n  package \u0022Garage.Vehicles.Specifications\u0022 as e_30b3f2e833734e4b75a9 { }\n  package \u0022Garage.Vehicles.Types\u0022 as e_9a13834fdf212e37fd93 { }\n}\ne_4e8a158f886433b7cb91 ..\u003E e_fc55a3295fd213831954 : references\ne_3bdc5d7ed9efbc4af169 ..\u003E e_fc55a3295fd213831954 : references\ne_5a229a8a577b83de6207 ..\u003E e_4e8a158f886433b7cb91 : references\ne_5a229a8a577b83de6207 ..\u003E e_3bdc5d7ed9efbc4af169 : references\ne_5a229a8a577b83de6207 ..\u003E e_fc55a3295fd213831954 : references\ne_5a229a8a577b83de6207 ..\u003E e_6baf9469d9bef8128882 : references\ne_fc55a3295fd213831954 ..\u003E e_6baf9469d9bef8128882 : references\nlegend bottom\n  Folder boxes: projects/namespaces; dashed arrows: project references.\n  [[../component/garage-components.puml Garage project components]]\nendlegend\n@enduml\n",
-      "pumlHash": "c3d3b735dd3f211a914a2810e9b67713acd5e0e27f7c1c535cedac5cb6a7c425"
+      "puml": "@startuml\n\u0027 diagram-id: garage-packages\n\u0027 Generated. Run the UML generate command; do not edit by hand.\nhide empty members\nskinparam classAttributeIconSize 0\ntitle Garage projects and namespaces\npackage \u0022Garage.Console\u0022 as e_4e8a158f886433b7cb91 {\n  package \u0022Garage.ConsoleApp.Display\u0022 as e_9de32f7d100bfe0b432e { }\n  package \u0022Garage.ConsoleApp.Drafts\u0022 as e_c5b0fbf80f998c68cbcb { }\n  package \u0022Garage.ConsoleApp.Mapping\u0022 as e_3a9eaa677578cbe9c1df { }\n  package \u0022Garage.ConsoleApp.Menus\u0022 as e_f8d009d2fb96f407d004 { }\n  package \u0022Garage.ConsoleApp.Prompts\u0022 as e_12eb5d1aacf60ee95820 { }\n}\npackage \u0022Garage.Terminal\u0022 as e_3bdc5d7ed9efbc4af169 {\n  package \u0022Garage.Terminal.Forms\u0022 as e_e3884fdc3829d04d5bac { }\n  package \u0022Garage.Terminal.Presentation\u0022 as e_d4b69e557dadeb3325cb { }\n}\npackage \u0022Garage.Tests\u0022 as e_5a229a8a577b83de6207 {\n  package \u0022Garage.Tests\u0022 as e_0f1c02c4850cf2ad3811 { }\n  package \u0022Garage.Tests.Fixtures\u0022 as e_acd7f5ae0bd5fccf9e3d { }\n}\npackage \u0022Garage\u0022 as e_fc55a3295fd213831954 {\n  package \u0022Garage.Diagnostics\u0022 as e_ea481c78b81b80db5988 { }\n  package \u0022Garage.Documentation\u0022 as e_f5de614a19fdf3030dcd { }\n  package \u0022Garage.Models\u0022 as e_08834dd45de931ba1fcd { }\n  package \u0022Garage.Persistence.Json\u0022 as e_ca4317fe7e4fd39a8899 { }\n  package \u0022Garage.Persistence.Json.Contracts\u0022 as e_cce5127976a13666c25f { }\n  package \u0022Garage.Queries\u0022 as e_a6914bca9de7d0b6e7bc { }\n  package \u0022Garage.Results\u0022 as e_322b54eab66535aad2fe { }\n  package \u0022Garage.Services\u0022 as e_be652e04f07616dca31e { }\n  package \u0022Garage.Specifications\u0022 as e_d524e7959b08d00fcb27 { }\n}\npackage \u0022Vehicle\u0022 as e_6baf9469d9bef8128882 {\n  package \u0022Garage.Engines\u0022 as e_a8e8068c91680140002c { }\n  package \u0022Garage.Engines.Electric\u0022 as e_7e26a2547468f137cb37 { }\n  package \u0022Garage.Engines.ExternalCombustion\u0022 as e_8b7222bb985f2bd80d71 { }\n  package \u0022Garage.Engines.InternalCombustion\u0022 as e_8b2e1d55a3a9a7f07311 { }\n  package \u0022Garage.Engines.InternalCombustion.Piston\u0022 as e_bdff4f545c2ea10c1470 { }\n  package \u0022Garage.Engines.InternalCombustion.Turbine\u0022 as e_384c808b250ee0d3bb5d { }\n  package \u0022Garage.Engines.Specifications\u0022 as e_c98e764eca4aa9062ce1 { }\n  package \u0022Garage.Factories\u0022 as e_400f8bef6cf297e681d8 { }\n  package \u0022Garage.Vehicles\u0022 as e_b61b696f382917360ed0 { }\n  package \u0022Garage.Vehicles.Components\u0022 as e_f034617c6a613de7c0da { }\n  package \u0022Garage.Vehicles.Interfaces\u0022 as e_798d21f2272a791ef52a { }\n  package \u0022Garage.Vehicles.Specifications\u0022 as e_30b3f2e833734e4b75a9 { }\n  package \u0022Garage.Vehicles.Types\u0022 as e_9a13834fdf212e37fd93 { }\n}\ne_4e8a158f886433b7cb91 ..\u003E e_fc55a3295fd213831954 : references\ne_3bdc5d7ed9efbc4af169 ..\u003E e_fc55a3295fd213831954 : references\ne_5a229a8a577b83de6207 ..\u003E e_4e8a158f886433b7cb91 : references\ne_5a229a8a577b83de6207 ..\u003E e_3bdc5d7ed9efbc4af169 : references\ne_5a229a8a577b83de6207 ..\u003E e_fc55a3295fd213831954 : references\ne_5a229a8a577b83de6207 ..\u003E e_6baf9469d9bef8128882 : references\ne_fc55a3295fd213831954 ..\u003E e_6baf9469d9bef8128882 : references\nlegend bottom\n  Folder boxes: projects/namespaces; dashed arrows: project references.\n  [[../component/garage-components.puml Garage project components]]\nendlegend\n@enduml\n",
+      "pumlHash": "6114f18b120d813b6466075fa98f982e099b6667f4ec578d803eb2247b8429de"
     },
     {
       "id": "parking-sequence",
       "type": "sequence",
       "title": "Park an existing catalog vehicle",
-      "maintenance": "reviewed",
+      "maintenance": "generated",
       "status": "active",
       "related": [
         "garage-components",
@@ -125,8 +125,8 @@ globalThis.GARAGE_UML_DATA = {
       ],
       "source": "interaction/sequence/parking-sequence.puml",
       "svg": "interaction/sequence/parking-sequence.svg",
-      "puml": "@startuml\n\u0027 diagram-id: parking-sequence\n\u0027 entities: service:garage, model:garage, model:parking-spot, operation:park\ntitle Park an existing catalog vehicle\nactor User\nparticipant \u0022Console or Terminal UI\u0022 as UI\nparticipant \u0022GarageService\u0022 as Service\nparticipant \u0022Garage\u0022 as Garage\nparticipant \u0022ParkingSpot\u0022 as Spot\nUser -\u003E UI : Choose vehicle and garage\nUI -\u003E Service : Park(vehicle, garage, spotNumber?)\nnote over UI, Service\n  Scope: non-null arguments. Result branches are summarized;\n  this is not a complete call trace.\nend note\nalt Vehicle is outside catalog\n  Service --\u003E UI : Failed(VehicleNotFound)\nelse Garage is unregistered\n  Service --\u003E UI : Failed(ValidationFailed)\nelse Vehicle registration is already parked\n  Service --\u003E UI : Failed(VehicleAlreadyParked)\nelse Eligible to park\n  alt A spot number is supplied\n    Service -\u003E Garage : Park(vehicle, spotNumber)\n  else Find first suitable spot\n    Service -\u003E Garage : Park(vehicle)\n    Garage -\u003E Spot : Fits(vehicle) for candidate empty spots\n    Spot --\u003E Garage : fits / does not fit\n    note right of Garage\n      No suitable spot returns GarageFull\n      or VehicleDoesNotFit.\n      A match delegates to Park(vehicle, spot).\n    end note\n  end\n  note right of Garage\n    The numbered operation checks range,\n    occupancy, dimensions, and duplicate registration.\n  end note\n  alt Numbered spot passes validation\n    Garage -\u003E Spot : Park(vehicle)\n    Spot --\u003E Garage : Vehicle assigned\n    Garage --\u003E Service : ParkingResult.Completed(spot, message)\n  else No suitable spot or validation failed\n    Garage --\u003E Service : ParkingResult.Failed(message, error)\n  end\n  Service --\u003E UI : ParkingResult\nend\nUI --\u003E User : Display result message\nlegend bottom\n  [[../../structural/class/garage-classes.puml Garage classes]]\n  [[../../behavioral/activity/parking-activity.puml Parking activity]]\n  [[../../behavioral/state-machine/parking-spot-state.puml Spot state]]\nendlegend\n@enduml\n",
-      "pumlHash": "4cbe4f8eb93f5a42e3d2cee106217c1cdddcde4c2e8c650df7ac3dc831cd4792"
+      "puml": "@startuml\n\u0027 diagram-id: parking-sequence\n\u0027 Generated from code annotations and source. Run generate; do not edit by hand.\ntitle Park an existing catalog vehicle\nactor \u0022Garage operator\u0022 as Actor\nparticipant \u0022Garage.Services.GarageService\u0022 as p_753cfee6aae6\nparticipant \u0022Garage.Results.ParkingResult\u0022 as p_426dd07c2e3a\nparticipant \u0022Garage.Models.Garage\u0022 as p_50a211325908\nparticipant \u0022Garage.Models.ParkingSpot\u0022 as p_b323161f1e5c\nnote over p_753cfee6aae6\nStatic source view; MaxDepth=3. Lifelines group calls by declared type, not runtime instance.\nAlternatives are possible source paths, not a recorded execution. Guards may be infeasible together.\nProperty getters and implicit/external exceptions are not expanded. Framework calls and callbacks are boundaries.\nCaller continuation assumes the callee returns normally. Async scheduling is not modeled.\nExpand bodies in: Garage.Models, Garage.Services. Other calls remain visible as boundaries.\nend note\nActor -\u003E p_753cfee6aae6 : Park(vehicle, garage, spotNumber)\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(garage)\nend note\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): Catalog.Vehicles.Contains(vehicle)\nend note\nalt !Catalog.Vehicles.Contains(vehicle)\np_753cfee6aae6 -\u003E p_426dd07c2e3a : Failed(\u0026quot;Choose a vehicle from this application\u0027s catalog.\u0026quot;, OperationError.VehicleNotFound)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_753cfee6aae6 : Garage.Results.ParkingResult (if call returns)\np_753cfee6aae6 --\u003E Actor : ParkingResult.Failed(\u0026quot;Choose a vehicle from this application\u0027s catalog.\u0026quot;, OperationError.VehicleNotFound)\nelse otherwise\np_753cfee6aae6 -\u003E p_753cfee6aae6 : ParkNewVehicle(vehicle, garage, spotNumber)\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): garages.Contains(garage)\nend note\nalt !garages.Contains(garage)\np_753cfee6aae6 -\u003E p_426dd07c2e3a : Failed(\u0026quot;Choose a garage registered with this application.\u0026quot;, OperationError.ValidationFailed)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_753cfee6aae6 : Garage.Results.ParkingResult (if call returns)\np_753cfee6aae6 --\u003E p_753cfee6aae6 : ParkingResult.Failed(\u0026quot;Choose a garage registered with this application.\u0026quot;, OperationError.ValidationFailed)\nelse otherwise\np_753cfee6aae6 -\u003E p_753cfee6aae6 : IsParked(vehicle)\nnote over p_753cfee6aae6\nCallback boundary (not executed by this analysis): garage =\u0026gt; garage.Vehicles.Any(parked =\u0026gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase))\nend note\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): garages.Any(garage =\u0026gt; garage.Vehicles.Any(parked =\u0026gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))\nend note\np_753cfee6aae6 --\u003E p_753cfee6aae6 : garages.Any(garage =\u0026gt; garage.Vehicles.Any(parked =\u0026gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))\nalt IsParked(vehicle)\np_753cfee6aae6 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} is already parked in a garage.\u0026quot;, OperationError.VehicleAlreadyParked)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_753cfee6aae6 : Garage.Results.ParkingResult (if call returns)\np_753cfee6aae6 --\u003E p_753cfee6aae6 : ParkingResult.Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} is already parked in a garage.\u0026quot;, OperationError.VehicleAlreadyParked)\nelse otherwise\nalt spotNumber is int spot\np_753cfee6aae6 -\u003E p_50a211325908 : Park(vehicle, spot)\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nalt spot \u0026lt; 1 || spot \u0026gt; Capacity\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Parking spot must be between 1 and {Capacity}.\u0026quot;, OperationError.SpotOutOfRange)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed($\u0026quot;Parking spot must be between 1 and {Capacity}.\u0026quot;, OperationError.SpotOutOfRange)\nelse otherwise\nalt parkingSpot.Vehicle is not null\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Parking spot {spot} is occupied.\u0026quot;, OperationError.SpotOccupied)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed($\u0026quot;Parking spot {spot} is occupied.\u0026quot;, OperationError.SpotOccupied)\nelse otherwise\np_50a211325908 -\u003E p_b323161f1e5c : Fits(vehicle)\nnote over p_b323161f1e5c\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nalt Dimensions is null\np_b323161f1e5c --\u003E p_50a211325908 : true\nelse otherwise\np_b323161f1e5c --\u003E p_50a211325908 : size.LengthMeters \u0026lt;= Dimensions.LengthMeters \u0026amp;\u0026amp; size.WidthMeters \u0026lt;= Dimensions.WidthMeters \u0026amp;\u0026amp; size.HeightMeters \u0026lt;= Dimensions.HeightMeters\nend\nalt !parkingSpot.Fits(vehicle)\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0026quot;, OperationError.VehicleDoesNotFit)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0026quot;, OperationError.VehicleDoesNotFit)\nelse otherwise\np_50a211325908 -\u003E p_50a211325908 : RegistrationExists(vehicle.RegistrationNumber)\nnote over p_50a211325908\nCallback boundary (not executed by this analysis): spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)\nend note\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): parkingSpots.Any(spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))\nend note\np_50a211325908 --\u003E p_50a211325908 : parkingSpots.Any(spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))\nalt RegistrationExists(vehicle.RegistrationNumber)\np_50a211325908 -\u003E p_50a211325908 : DuplicateRegistration(vehicle)\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0026quot;, OperationError.DuplicateRegistration)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0026quot;, OperationError.DuplicateRegistration)\np_50a211325908 --\u003E p_753cfee6aae6 : DuplicateRegistration(vehicle)\nelse otherwise\np_50a211325908 -\u003E p_b323161f1e5c : Park(vehicle)\nnote over p_b323161f1e5c\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nalt Vehicle is not null is false\np_b323161f1e5c -\u003E p_b323161f1e5c : Fits(vehicle)\nnote over p_b323161f1e5c\nDepth boundary: method body not expanded.\nend note\np_b323161f1e5c --\u003E p_b323161f1e5c : bool (if call returns)\nelse short-circuit\nend\nalt Vehicle is not null || !Fits(vehicle)\nnote over p_b323161f1e5c\nConstructor/initializer boundary (not expanded): new InvalidOperationException(\u0026quot;The spot must be empty and large enough for the vehicle.\u0026quot;)\nend note\nnote over p_b323161f1e5c\nThrows: new InvalidOperationException(\u0026quot;The spot must be empty and large enough for the vehicle.\u0026quot;); this path terminates here.\nend note\nelse otherwise\np_b323161f1e5c --\u003E p_50a211325908 : complete\nend\np_50a211325908 -\u003E p_426dd07c2e3a : Completed(spot, $\u0026quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0026quot;)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Completed(spot, $\u0026quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0026quot;)\nend\nend\nend\nend\np_753cfee6aae6 --\u003E p_753cfee6aae6 : garage.Park(vehicle, spot)\nelse otherwise\np_753cfee6aae6 -\u003E p_50a211325908 : Park(vehicle)\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\np_50a211325908 -\u003E p_50a211325908 : RegistrationExists(vehicle.RegistrationNumber)\nnote over p_50a211325908\nCallback boundary (not executed by this analysis): spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)\nend note\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): parkingSpots.Any(spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))\nend note\np_50a211325908 --\u003E p_50a211325908 : parkingSpots.Any(spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))\nalt RegistrationExists(vehicle.RegistrationNumber)\np_50a211325908 -\u003E p_50a211325908 : DuplicateRegistration(vehicle)\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0026quot;, OperationError.DuplicateRegistration)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0026quot;, OperationError.DuplicateRegistration)\np_50a211325908 --\u003E p_753cfee6aae6 : DuplicateRegistration(vehicle)\nelse otherwise\nnote over p_50a211325908\nCallback boundary (not executed by this analysis): spot =\u0026gt; spot.Vehicle is null \u0026amp;\u0026amp; spot.Fits(vehicle)\nend note\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): parkingSpots.FirstOrDefault(spot =\u0026gt; spot.Vehicle is null \u0026amp;\u0026amp; spot.Fits(vehicle))\nend note\nalt availableSpot is null\nalt AvailableSpaces == 0\np_50a211325908 -\u003E p_426dd07c2e3a : Failed(\u0026quot;The garage is full.\u0026quot;, OperationError.GarageFull)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed(\u0026quot;The garage is full.\u0026quot;, OperationError.GarageFull)\nelse otherwise\np_50a211325908 -\u003E p_426dd07c2e3a : Failed(\u0026quot;No available parking spot is large enough for this vehicle.\u0026quot;, OperationError.VehicleDoesNotFit)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed(\u0026quot;No available parking spot is large enough for this vehicle.\u0026quot;, OperationError.VehicleDoesNotFit)\nend\nelse otherwise\np_50a211325908 -\u003E p_50a211325908 : Park(vehicle, availableSpot.Number)\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nalt spot \u0026lt; 1 || spot \u0026gt; Capacity\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Parking spot must be between 1 and {Capacity}.\u0026quot;, OperationError.SpotOutOfRange)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;Parking spot must be between 1 and {Capacity}.\u0026quot;, OperationError.SpotOutOfRange)\nelse otherwise\nalt parkingSpot.Vehicle is not null\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Parking spot {spot} is occupied.\u0026quot;, OperationError.SpotOccupied)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;Parking spot {spot} is occupied.\u0026quot;, OperationError.SpotOccupied)\nelse otherwise\np_50a211325908 -\u003E p_b323161f1e5c : Fits(vehicle)\nnote over p_b323161f1e5c\nDepth boundary: method body not expanded.\nend note\np_b323161f1e5c --\u003E p_50a211325908 : bool (if call returns)\nalt !parkingSpot.Fits(vehicle)\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0026quot;, OperationError.VehicleDoesNotFit)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0026quot;, OperationError.VehicleDoesNotFit)\nelse otherwise\np_50a211325908 -\u003E p_50a211325908 : RegistrationExists(vehicle.RegistrationNumber)\nnote over p_50a211325908\nDepth boundary: method body not expanded.\nend note\np_50a211325908 --\u003E p_50a211325908 : bool (if call returns)\nalt RegistrationExists(vehicle.RegistrationNumber)\np_50a211325908 -\u003E p_50a211325908 : DuplicateRegistration(vehicle)\nnote over p_50a211325908\nDepth boundary: method body not expanded.\nend note\np_50a211325908 --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : DuplicateRegistration(vehicle)\nelse otherwise\np_50a211325908 -\u003E p_b323161f1e5c : Park(vehicle)\nnote over p_b323161f1e5c\nDepth boundary: method body not expanded.\nend note\np_b323161f1e5c --\u003E p_50a211325908 : complete (if call returns)\np_50a211325908 -\u003E p_426dd07c2e3a : Completed(spot, $\u0026quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0026quot;)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Completed(spot, $\u0026quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0026quot;)\nend\nend\nend\nend\np_50a211325908 --\u003E p_753cfee6aae6 : Park(vehicle, availableSpot.Number)\nend\nend\np_753cfee6aae6 --\u003E p_753cfee6aae6 : garage.Park(vehicle)\nend\nend\nend\np_753cfee6aae6 --\u003E Actor : ParkNewVehicle(vehicle, garage, spotNumber)\nend\nlegend bottom\n  [[../../structural/component/garage-components.puml Garage project components]]\n  [[../../structural/class/garage-classes.puml Garage classes]]\n  [[../../behavioral/activity/parking-activity.puml Parking validation and assignment]]\n  [[../../behavioral/state-machine/parking-spot-state.puml Parking spot occupancy]]\nendlegend\n@enduml\n",
+      "pumlHash": "4e5a7affd28ff873053070a4e3c908dad4214e7f29d36a4b74c3924a7c0adfd3"
     },
     {
       "id": "parking-activity",
@@ -177,7 +177,7 @@ globalThis.GARAGE_UML_DATA = {
       "id": "garage-use-cases",
       "type": "use-case",
       "title": "Garage user capabilities",
-      "maintenance": "reviewed",
+      "maintenance": "generated",
       "status": "active",
       "related": [
         "garage-components",
@@ -185,8 +185,8 @@ globalThis.GARAGE_UML_DATA = {
       ],
       "source": "behavioral/use-case/garage-use-cases.puml",
       "svg": "behavioral/use-case/garage-use-cases.svg",
-      "puml": "@startuml\n\u0027 diagram-id: garage-use-cases\n\u0027 entities: system:garage, service:garage\ntitle Garage user capabilities\nleft to right direction\nactor User\nrectangle \u0022Garage application\u0022 {\n  usecase \u0022Create or import garage\u0022 as CreateGarage\n  usecase \u0022Create or import vehicle\u0022 as CreateVehicle\n  usecase \u0022List garages and vehicles\u0022 as List\n  usecase \u0022Park vehicle\u0022 as Park\n  usecase \u0022Remove parked vehicle\u0022 as Remove\n  usecase \u0022Inspect parking spaces\u0022 as Inspect\n  usecase \u0022Search parked vehicles\u0022 as Search\n}\nUser --\u003E CreateGarage\nUser --\u003E CreateVehicle\nUser --\u003E List\nUser --\u003E Park\nUser --\u003E Remove\nUser --\u003E Inspect\nUser --\u003E Search\nnote bottom of Park\n  Parking can select the first fitting spot or a specific spot.\n  Both interfaces share the domain parking rules.\nend note\nlegend bottom\n  [[../../structural/component/garage-components.puml Components]]\n  [[../../interaction/sequence/parking-sequence.puml Parking sequence]]\nendlegend\n@enduml\n",
-      "pumlHash": "dd462792bab61d4f37e6634959847939bc4785a2d5e64968e306a8ebed712571"
+      "puml": "@startuml\n\u0027 diagram-id: garage-use-cases\n\u0027 Generated from code annotations and source. Run generate; do not edit by hand.\ntitle Garage user capabilities\nleft to right direction\nactor \u0022Garage operator\u0022 as a_7348bf17d801\nrectangle \u0022Garage application\u0022 {\n  usecase \u0022Create or import garage\u0022 as u_create_garage\n  usecase \u0022Create or import vehicle\u0022 as u_create_vehicle\n  usecase \u0022Inspect parking spaces\u0022 as u_inspect\n  usecase \u0022List garages and vehicles\u0022 as u_list\n  usecase \u0022Park vehicle\u0022 as u_park_vehicle\n  usecase \u0022Remove parked vehicle\u0022 as u_remove\n  usecase \u0022Search parked vehicles\u0022 as u_search\n}\na_7348bf17d801 --\u003E u_create_garage\na_7348bf17d801 --\u003E u_create_vehicle\na_7348bf17d801 --\u003E u_inspect\na_7348bf17d801 --\u003E u_list\na_7348bf17d801 --\u003E u_park_vehicle\na_7348bf17d801 --\u003E u_remove\na_7348bf17d801 --\u003E u_search\nlegend bottom\n  [[../../structural/component/garage-components.puml Garage project components]]\n  [[../../interaction/sequence/parking-sequence.puml Park an existing catalog vehicle]]\nendlegend\n@enduml\n",
+      "pumlHash": "80c631901e5c4b4e07e98e719ea5b848e939fea8c27389408d7afa042800103e"
     },
     {
       "id": "garage-object",
@@ -297,11 +297,53 @@ globalThis.GARAGE_UML_DATA = {
           "parent": null
         },
         {
+          "id": "type:Garage/Garage.csproj:Garage.Documentation.SequenceViewAttribute",
+          "name": "SequenceViewAttribute",
+          "kind": "class",
+          "group": "Garage.Documentation",
+          "members": [
+            "primary constructor SequenceViewAttribute(string id)",
+            "public int MaxDepth {  get;  set; }",
+            "public string Id {  get; }",
+            "public string[] ExpandNamespaces {  get;  set; }"
+          ],
+          "files": [
+            "Garage/Documentation/DiagramAttributes.cs"
+          ],
+          "declaration": "public sealed class SequenceViewAttribute(string id)",
+          "bases": [
+            "Attribute"
+          ],
+          "parent": null
+        },
+        {
+          "id": "type:Garage/Garage.csproj:Garage.Documentation.UseCaseAttribute",
+          "name": "UseCaseAttribute",
+          "kind": "class",
+          "group": "Garage.Documentation",
+          "members": [
+            "primary constructor UseCaseAttribute(string id, string title)",
+            "public string Actor {  get;  set; }",
+            "public string Id {  get; }",
+            "public string Title {  get; }"
+          ],
+          "files": [
+            "Garage/Documentation/DiagramAttributes.cs"
+          ],
+          "declaration": "public sealed class UseCaseAttribute(string id, string title)",
+          "bases": [
+            "Attribute"
+          ],
+          "parent": null
+        },
+        {
           "id": "type:Garage/Garage.csproj:Garage.Models.Garage",
           "name": "Garage",
           "kind": "class",
           "group": "Garage.Models",
           "members": [
+            "[UseCase(\u0022remove\u0022, \u0022Remove parked vehicle\u0022)]\npublic GarageOperationResult Remove(string registrationNumber)",
+            "[UseCase(\u0022search\u0022, \u0022Search parked vehicles\u0022)]\npublic IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)",
             "private Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles, IReadOnlyList\u003CDimensions\u003E? spotDimensions)",
             "private bool RegistrationExists(string registrationNumber)",
             "private readonly List\u003CParkingSpot\u003E parkingSpots",
@@ -310,11 +352,9 @@ globalThis.GARAGE_UML_DATA = {
             "public Garage(string garageName, List\u003CVehicle\u003E vehicles)",
             "public Garage(string garageName, int capacity)",
             "public Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles)",
-            "public GarageOperationResult Remove(string registrationNumber)",
             "public GarageOperationResult RemoveAtSpot(int spotNumber)",
             "public IReadOnlyList\u003CParkedVehicleInfo\u003E ParkedVehicles { get; }",
             "public IReadOnlyList\u003CParkingSpotInfo\u003E SpotDetails { get; }",
-            "public IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)",
             "public IReadOnlyList\u003CVehicle\u003E Vehicles { get; }",
             "public IReadOnlyList\u003CVehicleTypeGroup\u003E VehiclesByType { get; }",
             "public IReadOnlyList\u003Cint\u003E AvailableSpotsFor(Vehicle vehicle)",
@@ -778,17 +818,17 @@ globalThis.GARAGE_UML_DATA = {
           "kind": "class",
           "group": "Garage.Services",
           "members": [
+            "[UseCase(\u0022create-garage\u0022, \u0022Create or import garage\u0022)]\npublic GarageCreationResult CreateGarage(string name, int capacity)",
+            "[UseCase(\u0022create-garage\u0022, \u0022Create or import garage\u0022)]\npublic GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)",
+            "[UseCase(\u0022park-vehicle\u0022, \u0022Park vehicle\u0022)]\n[SequenceView(\u0022parking-sequence\u0022, MaxDepth = 3, ExpandNamespaces = new[] { \u0022Garage.Services\u0022, \u0022Garage.Models\u0022 })]\npublic ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)",
             "private GarageCreationResult CreateAndRegister(Func\u003CVehicleGarage\u003E factory)",
             "private GarageCreationResult RegisterGarage(VehicleGarage garage)",
             "private ParkingResult ParkNewVehicle(Vehicle vehicle, VehicleGarage garage, int? spotNumber)",
             "private readonly List\u003CVehicleGarage\u003E garages",
             "public GarageCreationResult CreateGarage(string name, IReadOnlyList\u003CDimensions\u003E sizes)",
-            "public GarageCreationResult CreateGarage(string name, int capacity)",
-            "public GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)",
             "public GarageService(List\u003CVehicleGarage\u003E initialGarages, List\u003CVehicle\u003E initialVehicles)",
             "public IReadOnlyList\u003CVehicle\u003E GetParkableVehicles(VehicleGarage garage, int? spotNumber = null)",
             "public IReadOnlyList\u003CVehicleGarage\u003E Garages { get; }",
-            "public ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)",
             "public VehicleCatalog Catalog {  get; }",
             "public VehicleCreationService VehicleCreation {  get; }",
             "public bool ContainsGarage(string name)",
@@ -807,11 +847,11 @@ globalThis.GARAGE_UML_DATA = {
           "kind": "class",
           "group": "Garage.Services",
           "members": [
+            "[UseCase(\u0022create-vehicle\u0022, \u0022Create or import vehicle\u0022)]\npublic VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)",
+            "[UseCase(\u0022create-vehicle\u0022, \u0022Create or import vehicle\u0022)]\npublic VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)",
             "internal VehicleCreationService(VehicleCatalog catalog, Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park)",
             "private readonly Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park",
-            "private readonly VehicleCatalog catalog",
-            "public VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)",
-            "public VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)"
+            "private readonly VehicleCatalog catalog"
           ],
           "files": [
             "Garage/Services/VehicleCreationService.cs"
@@ -1940,6 +1980,7 @@ globalThis.GARAGE_UML_DATA = {
           "group": "",
           "members": [
             "Garage.Diagnostics",
+            "Garage.Documentation",
             "Garage.Models",
             "Garage.Persistence.Json",
             "Garage.Persistence.Json.Contracts",
@@ -2787,8 +2828,8 @@ globalThis.GARAGE_UML_DATA = {
       "type": "use-case",
       "nodes": [
         {
-          "id": "garage-use-cases:User",
-          "name": "User",
+          "id": "garage-use-cases:a_7348bf17d801",
+          "name": "Garage operator",
           "kind": "actor",
           "group": "",
           "members": [],
@@ -2807,10 +2848,10 @@ globalThis.GARAGE_UML_DATA = {
           "members": [
             "Contains: Create or import garage",
             "Contains: Create or import vehicle",
+            "Contains: Inspect parking spaces",
             "Contains: List garages and vehicles",
             "Contains: Park vehicle",
             "Contains: Remove parked vehicle",
-            "Contains: Inspect parking spaces",
             "Contains: Search parked vehicles"
           ],
           "files": [
@@ -2821,93 +2862,91 @@ globalThis.GARAGE_UML_DATA = {
           "parent": null
         },
         {
-          "id": "garage-use-cases:CreateGarage",
+          "id": "garage-use-cases:u_create_garage",
           "name": "Create or import garage",
           "kind": "use-case",
           "group": "Garage application",
           "members": [],
           "files": [
-            "docs/uml/behavioral/use-case/garage-use-cases.puml"
+            "Garage/Services/GarageService.cs"
           ],
           "declaration": "",
           "bases": [],
           "parent": "garage-use-cases:container-1"
         },
         {
-          "id": "garage-use-cases:CreateVehicle",
+          "id": "garage-use-cases:u_create_vehicle",
           "name": "Create or import vehicle",
           "kind": "use-case",
           "group": "Garage application",
           "members": [],
           "files": [
-            "docs/uml/behavioral/use-case/garage-use-cases.puml"
+            "Garage/Services/VehicleCreationService.cs"
           ],
           "declaration": "",
           "bases": [],
           "parent": "garage-use-cases:container-1"
         },
         {
-          "id": "garage-use-cases:List",
-          "name": "List garages and vehicles",
-          "kind": "use-case",
-          "group": "Garage application",
-          "members": [],
-          "files": [
-            "docs/uml/behavioral/use-case/garage-use-cases.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "garage-use-cases:container-1"
-        },
-        {
-          "id": "garage-use-cases:Park",
-          "name": "Park vehicle",
-          "kind": "use-case",
-          "group": "Garage application",
-          "members": [
-            "Parking can select the first fitting spot or a specific spot. Both interfaces share the domain parking rules."
-          ],
-          "files": [
-            "docs/uml/behavioral/use-case/garage-use-cases.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "garage-use-cases:container-1"
-        },
-        {
-          "id": "garage-use-cases:Remove",
-          "name": "Remove parked vehicle",
-          "kind": "use-case",
-          "group": "Garage application",
-          "members": [],
-          "files": [
-            "docs/uml/behavioral/use-case/garage-use-cases.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "garage-use-cases:container-1"
-        },
-        {
-          "id": "garage-use-cases:Inspect",
+          "id": "garage-use-cases:u_inspect",
           "name": "Inspect parking spaces",
           "kind": "use-case",
           "group": "Garage application",
           "members": [],
           "files": [
-            "docs/uml/behavioral/use-case/garage-use-cases.puml"
+            "Garage/Models/Garage.cs"
           ],
           "declaration": "",
           "bases": [],
           "parent": "garage-use-cases:container-1"
         },
         {
-          "id": "garage-use-cases:Search",
+          "id": "garage-use-cases:u_list",
+          "name": "List garages and vehicles",
+          "kind": "use-case",
+          "group": "Garage application",
+          "members": [],
+          "files": [
+            "Garage/Services/GarageService.cs"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "garage-use-cases:container-1"
+        },
+        {
+          "id": "garage-use-cases:u_park_vehicle",
+          "name": "Park vehicle",
+          "kind": "use-case",
+          "group": "Garage application",
+          "members": [],
+          "files": [
+            "Garage/Services/GarageService.cs"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "garage-use-cases:container-1"
+        },
+        {
+          "id": "garage-use-cases:u_remove",
+          "name": "Remove parked vehicle",
+          "kind": "use-case",
+          "group": "Garage application",
+          "members": [],
+          "files": [
+            "Garage/Models/Garage.cs"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "garage-use-cases:container-1"
+        },
+        {
+          "id": "garage-use-cases:u_search",
           "name": "Search parked vehicles",
           "kind": "use-case",
           "group": "Garage application",
           "members": [],
           "files": [
-            "docs/uml/behavioral/use-case/garage-use-cases.puml"
+            "Garage/Models/Garage.cs"
           ],
           "declaration": "",
           "bases": [],
@@ -2917,59 +2956,57 @@ globalThis.GARAGE_UML_DATA = {
       "edges": [
         {
           "id": "garage-use-cases:edge-2",
-          "source": "garage-use-cases:User",
-          "target": "garage-use-cases:CreateGarage",
+          "source": "garage-use-cases:a_7348bf17d801",
+          "target": "garage-use-cases:u_create_garage",
           "kind": "association",
           "label": ""
         },
         {
           "id": "garage-use-cases:edge-3",
-          "source": "garage-use-cases:User",
-          "target": "garage-use-cases:CreateVehicle",
+          "source": "garage-use-cases:a_7348bf17d801",
+          "target": "garage-use-cases:u_create_vehicle",
           "kind": "association",
           "label": ""
         },
         {
           "id": "garage-use-cases:edge-4",
-          "source": "garage-use-cases:User",
-          "target": "garage-use-cases:List",
+          "source": "garage-use-cases:a_7348bf17d801",
+          "target": "garage-use-cases:u_inspect",
           "kind": "association",
           "label": ""
         },
         {
           "id": "garage-use-cases:edge-5",
-          "source": "garage-use-cases:User",
-          "target": "garage-use-cases:Park",
+          "source": "garage-use-cases:a_7348bf17d801",
+          "target": "garage-use-cases:u_list",
           "kind": "association",
           "label": ""
         },
         {
           "id": "garage-use-cases:edge-6",
-          "source": "garage-use-cases:User",
-          "target": "garage-use-cases:Remove",
+          "source": "garage-use-cases:a_7348bf17d801",
+          "target": "garage-use-cases:u_park_vehicle",
           "kind": "association",
           "label": ""
         },
         {
           "id": "garage-use-cases:edge-7",
-          "source": "garage-use-cases:User",
-          "target": "garage-use-cases:Inspect",
+          "source": "garage-use-cases:a_7348bf17d801",
+          "target": "garage-use-cases:u_remove",
           "kind": "association",
           "label": ""
         },
         {
           "id": "garage-use-cases:edge-8",
-          "source": "garage-use-cases:User",
-          "target": "garage-use-cases:Search",
+          "source": "garage-use-cases:a_7348bf17d801",
+          "target": "garage-use-cases:u_search",
           "kind": "association",
           "label": ""
         }
       ],
       "sequence": null,
       "timing": null,
-      "notes": [
-        "Parking can select the first fitting spot or a specific spot. Both interfaces share the domain parking rules."
-      ]
+      "notes": []
     },
     "local-deployment": {
       "id": "local-deployment",
@@ -3918,8 +3955,8 @@ globalThis.GARAGE_UML_DATA = {
       "type": "sequence",
       "nodes": [
         {
-          "id": "parking-sequence:User",
-          "name": "User",
+          "id": "parking-sequence:Actor",
+          "name": "Garage operator",
           "kind": "actor",
           "group": "",
           "members": [],
@@ -3931,55 +3968,52 @@ globalThis.GARAGE_UML_DATA = {
           "parent": null
         },
         {
-          "id": "parking-sequence:UI",
-          "name": "Console or Terminal UI",
+          "id": "parking-sequence:p_753cfee6aae6",
+          "name": "Garage.Services.GarageService",
           "kind": "participant",
           "group": "",
           "members": [],
           "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
+            "Garage/Services/GarageService.cs"
           ],
           "declaration": "",
           "bases": [],
           "parent": null
         },
         {
-          "id": "parking-sequence:Service",
-          "name": "GarageService",
+          "id": "parking-sequence:p_426dd07c2e3a",
+          "name": "Garage.Results.ParkingResult",
           "kind": "participant",
           "group": "",
           "members": [],
           "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
+            "Garage/Results/ParkingResult.cs"
           ],
           "declaration": "",
           "bases": [],
           "parent": null
         },
         {
-          "id": "parking-sequence:Garage",
-          "name": "Garage",
+          "id": "parking-sequence:p_50a211325908",
+          "name": "Garage.Models.Garage",
           "kind": "participant",
           "group": "",
-          "members": [
-            "No suitable spot returns GarageFull or VehicleDoesNotFit. A match delegates to Park(vehicle, spot).",
-            "The numbered operation checks range, occupancy, dimensions, and duplicate registration."
-          ],
+          "members": [],
           "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
+            "Garage/Models/Garage.cs"
           ],
           "declaration": "",
           "bases": [],
           "parent": null
         },
         {
-          "id": "parking-sequence:Spot",
-          "name": "ParkingSpot",
+          "id": "parking-sequence:p_b323161f1e5c",
+          "name": "Garage.Models.ParkingSpot",
           "kind": "participant",
           "group": "",
           "members": [],
           "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
+            "Garage/Models/ParkingSpot.cs"
           ],
           "declaration": "",
           "bases": [],
@@ -3987,11 +4021,24 @@ globalThis.GARAGE_UML_DATA = {
         },
         {
           "id": "parking-sequence:element-1",
-          "name": "Choose vehicle and garage",
+          "name": "Static source view; MaxDepth=3. Lifelines group calls by declared type, not runtime instance. Alternatives are possible source paths, not a recorded execution. Guards may be infeasible together. Property getters and implicit/external exceptions are not expanded. Framework calls and callbacks are boundaries. Caller continuation assumes the callee returns normally. Async scheduling is not modeled. Expand bodies in: Garage.Models, Garage.Services. Other calls remain visible as boundaries.",
+          "kind": "note",
+          "group": "",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null
+        },
+        {
+          "id": "parking-sequence:element-2",
+          "name": "Park(vehicle, garage, spotNumber)",
           "kind": "message",
           "group": "",
           "members": [
-            "From User to Console or Terminal UI",
+            "From Garage operator to Garage.Services.GarageService",
             "Synchronous message / call"
           ],
           "files": [
@@ -4002,14 +4049,11 @@ globalThis.GARAGE_UML_DATA = {
           "parent": null
         },
         {
-          "id": "parking-sequence:element-3",
-          "name": "Park(vehicle, garage, spotNumber?)",
-          "kind": "message",
+          "id": "parking-sequence:element-4",
+          "name": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+          "kind": "note",
           "group": "",
-          "members": [
-            "From Console or Terminal UI to GarageService",
-            "Synchronous message / call"
-          ],
+          "members": [],
           "files": [
             "docs/uml/interaction/sequence/parking-sequence.puml"
           ],
@@ -4019,7 +4063,7 @@ globalThis.GARAGE_UML_DATA = {
         },
         {
           "id": "parking-sequence:element-5",
-          "name": "Scope: non-null arguments. Result branches are summarized; this is not a complete call trace.",
+          "name": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(garage)",
           "kind": "note",
           "group": "",
           "members": [],
@@ -4032,15 +4076,10 @@ globalThis.GARAGE_UML_DATA = {
         },
         {
           "id": "parking-sequence:element-6",
-          "name": "alt \u00B7 4 paths",
-          "kind": "fragment",
+          "name": "External/delegate call boundary (not expanded): Catalog.Vehicles.Contains(vehicle)",
+          "kind": "note",
           "group": "",
-          "members": [
-            "Vehicle is outside catalog",
-            "Garage is unregistered",
-            "Vehicle registration is already parked",
-            "Eligible to park"
-          ],
+          "members": [],
           "files": [
             "docs/uml/interaction/sequence/parking-sequence.puml"
           ],
@@ -4050,262 +4089,12 @@ globalThis.GARAGE_UML_DATA = {
         },
         {
           "id": "parking-sequence:element-7",
-          "name": "Failed(VehicleNotFound)",
-          "kind": "reply",
-          "group": "Alternative paths",
-          "members": [
-            "From GarageService to Console or Terminal UI",
-            "Reply / returned result"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-6"
-        },
-        {
-          "id": "parking-sequence:element-9",
-          "name": "Failed(ValidationFailed)",
-          "kind": "reply",
-          "group": "Alternative paths",
-          "members": [
-            "From GarageService to Console or Terminal UI",
-            "Reply / returned result"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-6"
-        },
-        {
-          "id": "parking-sequence:element-11",
-          "name": "Failed(VehicleAlreadyParked)",
-          "kind": "reply",
-          "group": "Alternative paths",
-          "members": [
-            "From GarageService to Console or Terminal UI",
-            "Reply / returned result"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-6"
-        },
-        {
-          "id": "parking-sequence:element-13",
           "name": "alt \u00B7 2 paths",
           "kind": "fragment",
-          "group": "Alternative paths",
-          "members": [
-            "A spot number is supplied",
-            "Find first suitable spot"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-6"
-        },
-        {
-          "id": "parking-sequence:element-14",
-          "name": "Park(vehicle, spotNumber)",
-          "kind": "message",
-          "group": "Alternative paths",
-          "members": [
-            "From GarageService to Garage",
-            "Synchronous message / call"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-13"
-        },
-        {
-          "id": "parking-sequence:element-16",
-          "name": "Park(vehicle)",
-          "kind": "message",
-          "group": "Alternative paths",
-          "members": [
-            "From GarageService to Garage",
-            "Synchronous message / call"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-13"
-        },
-        {
-          "id": "parking-sequence:element-18",
-          "name": "Fits(vehicle) for candidate empty spots",
-          "kind": "message",
-          "group": "Alternative paths",
-          "members": [
-            "From Garage to ParkingSpot",
-            "Synchronous message / call"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-13"
-        },
-        {
-          "id": "parking-sequence:element-20",
-          "name": "fits / does not fit",
-          "kind": "reply",
-          "group": "Alternative paths",
-          "members": [
-            "From ParkingSpot to Garage",
-            "Reply / returned result"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-13"
-        },
-        {
-          "id": "parking-sequence:element-22",
-          "name": "No suitable spot returns GarageFull or VehicleDoesNotFit. A match delegates to Park(vehicle, spot).",
-          "kind": "note",
-          "group": "Alternative paths",
-          "members": [],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-13"
-        },
-        {
-          "id": "parking-sequence:element-23",
-          "name": "The numbered operation checks range, occupancy, dimensions, and duplicate registration.",
-          "kind": "note",
-          "group": "Alternative paths",
-          "members": [],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-6"
-        },
-        {
-          "id": "parking-sequence:element-24",
-          "name": "alt \u00B7 2 paths",
-          "kind": "fragment",
-          "group": "Alternative paths",
-          "members": [
-            "Numbered spot passes validation",
-            "No suitable spot or validation failed"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-6"
-        },
-        {
-          "id": "parking-sequence:element-25",
-          "name": "Park(vehicle)",
-          "kind": "message",
-          "group": "Alternative paths",
-          "members": [
-            "From Garage to ParkingSpot",
-            "Synchronous message / call"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-24"
-        },
-        {
-          "id": "parking-sequence:element-27",
-          "name": "Vehicle assigned",
-          "kind": "reply",
-          "group": "Alternative paths",
-          "members": [
-            "From ParkingSpot to Garage",
-            "Reply / returned result"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-24"
-        },
-        {
-          "id": "parking-sequence:element-29",
-          "name": "ParkingResult.Completed(spot, message)",
-          "kind": "reply",
-          "group": "Alternative paths",
-          "members": [
-            "From Garage to GarageService",
-            "Reply / returned result"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-24"
-        },
-        {
-          "id": "parking-sequence:element-31",
-          "name": "ParkingResult.Failed(message, error)",
-          "kind": "reply",
-          "group": "Alternative paths",
-          "members": [
-            "From Garage to GarageService",
-            "Reply / returned result"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-24"
-        },
-        {
-          "id": "parking-sequence:element-33",
-          "name": "ParkingResult",
-          "kind": "reply",
-          "group": "Alternative paths",
-          "members": [
-            "From GarageService to Console or Terminal UI",
-            "Reply / returned result"
-          ],
-          "files": [
-            "docs/uml/interaction/sequence/parking-sequence.puml"
-          ],
-          "declaration": "",
-          "bases": [],
-          "parent": "parking-sequence:element-6"
-        },
-        {
-          "id": "parking-sequence:element-35",
-          "name": "Display result message",
-          "kind": "reply",
           "group": "",
           "members": [
-            "From Console or Terminal UI to User",
-            "Reply / returned result"
+            "!Catalog.Vehicles.Contains(vehicle)",
+            "otherwise"
           ],
           "files": [
             "docs/uml/interaction/sequence/parking-sequence.puml"
@@ -4313,146 +4102,2614 @@ globalThis.GARAGE_UML_DATA = {
           "declaration": "",
           "bases": [],
           "parent": null
+        },
+        {
+          "id": "parking-sequence:element-8",
+          "name": "Failed(\u0022Choose a vehicle from this application\u0027s catalog.\u0022, OperationError.VehicleNotFound)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-7"
+        },
+        {
+          "id": "parking-sequence:element-10",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-7"
+        },
+        {
+          "id": "parking-sequence:element-11",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-7"
+        },
+        {
+          "id": "parking-sequence:element-13",
+          "name": "ParkingResult.Failed(\u0022Choose a vehicle from this application\u0027s catalog.\u0022, OperationError.VehicleNotFound)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage operator",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-7"
+        },
+        {
+          "id": "parking-sequence:element-15",
+          "name": "ParkNewVehicle(vehicle, garage, spotNumber)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage.Services.GarageService",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-7"
+        },
+        {
+          "id": "parking-sequence:element-17",
+          "name": "External/delegate call boundary (not expanded): garages.Contains(garage)",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-7"
+        },
+        {
+          "id": "parking-sequence:element-18",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "!garages.Contains(garage)",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-7"
+        },
+        {
+          "id": "parking-sequence:element-19",
+          "name": "Failed(\u0022Choose a garage registered with this application.\u0022, OperationError.ValidationFailed)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-18"
+        },
+        {
+          "id": "parking-sequence:element-21",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-18"
+        },
+        {
+          "id": "parking-sequence:element-22",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-18"
+        },
+        {
+          "id": "parking-sequence:element-24",
+          "name": "ParkingResult.Failed(\u0022Choose a garage registered with this application.\u0022, OperationError.ValidationFailed)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-18"
+        },
+        {
+          "id": "parking-sequence:element-26",
+          "name": "IsParked(vehicle)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage.Services.GarageService",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-18"
+        },
+        {
+          "id": "parking-sequence:element-28",
+          "name": "Callback boundary (not executed by this analysis): garage =\u003E garage.Vehicles.Any(parked =\u003E string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase))",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-18"
+        },
+        {
+          "id": "parking-sequence:element-29",
+          "name": "External/delegate call boundary (not expanded): garages.Any(garage =\u003E garage.Vehicles.Any(parked =\u003E string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-18"
+        },
+        {
+          "id": "parking-sequence:element-30",
+          "name": "garages.Any(garage =\u003E garage.Vehicles.Any(parked =\u003E string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-18"
+        },
+        {
+          "id": "parking-sequence:element-32",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "IsParked(vehicle)",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-18"
+        },
+        {
+          "id": "parking-sequence:element-33",
+          "name": "Failed($\u0022Vehicle {vehicle.RegistrationNumber} is already parked in a garage.\u0022, OperationError.VehicleAlreadyParked)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-32"
+        },
+        {
+          "id": "parking-sequence:element-35",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-32"
+        },
+        {
+          "id": "parking-sequence:element-36",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-32"
+        },
+        {
+          "id": "parking-sequence:element-38",
+          "name": "ParkingResult.Failed($\u0022Vehicle {vehicle.RegistrationNumber} is already parked in a garage.\u0022, OperationError.VehicleAlreadyParked)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-32"
+        },
+        {
+          "id": "parking-sequence:element-40",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "spotNumber is int spot",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-32"
+        },
+        {
+          "id": "parking-sequence:element-41",
+          "name": "Park(vehicle, spot)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage.Models.Garage",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-40"
+        },
+        {
+          "id": "parking-sequence:element-43",
+          "name": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-40"
+        },
+        {
+          "id": "parking-sequence:element-44",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "spot \u003C 1 || spot \u003E Capacity",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-40"
+        },
+        {
+          "id": "parking-sequence:element-45",
+          "name": "Failed($\u0022Parking spot must be between 1 and {Capacity}.\u0022, OperationError.SpotOutOfRange)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-44"
+        },
+        {
+          "id": "parking-sequence:element-47",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-44"
+        },
+        {
+          "id": "parking-sequence:element-48",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-44"
+        },
+        {
+          "id": "parking-sequence:element-50",
+          "name": "ParkingResult.Failed($\u0022Parking spot must be between 1 and {Capacity}.\u0022, OperationError.SpotOutOfRange)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-44"
+        },
+        {
+          "id": "parking-sequence:element-52",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "parkingSpot.Vehicle is not null",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-44"
+        },
+        {
+          "id": "parking-sequence:element-53",
+          "name": "Failed($\u0022Parking spot {spot} is occupied.\u0022, OperationError.SpotOccupied)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-52"
+        },
+        {
+          "id": "parking-sequence:element-55",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-52"
+        },
+        {
+          "id": "parking-sequence:element-56",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-52"
+        },
+        {
+          "id": "parking-sequence:element-58",
+          "name": "ParkingResult.Failed($\u0022Parking spot {spot} is occupied.\u0022, OperationError.SpotOccupied)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-52"
+        },
+        {
+          "id": "parking-sequence:element-60",
+          "name": "Fits(vehicle)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.ParkingSpot",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-52"
+        },
+        {
+          "id": "parking-sequence:element-62",
+          "name": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-52"
+        },
+        {
+          "id": "parking-sequence:element-63",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "Dimensions is null",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-52"
+        },
+        {
+          "id": "parking-sequence:element-64",
+          "name": "true",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.ParkingSpot to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-63"
+        },
+        {
+          "id": "parking-sequence:element-66",
+          "name": "size.LengthMeters \u003C= Dimensions.LengthMeters \u0026\u0026 size.WidthMeters \u003C= Dimensions.WidthMeters \u0026\u0026 size.HeightMeters \u003C= Dimensions.HeightMeters",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.ParkingSpot to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-63"
+        },
+        {
+          "id": "parking-sequence:element-68",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "!parkingSpot.Fits(vehicle)",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-52"
+        },
+        {
+          "id": "parking-sequence:element-69",
+          "name": "Failed($\u0022Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0022, OperationError.VehicleDoesNotFit)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-68"
+        },
+        {
+          "id": "parking-sequence:element-71",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-68"
+        },
+        {
+          "id": "parking-sequence:element-72",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-68"
+        },
+        {
+          "id": "parking-sequence:element-74",
+          "name": "ParkingResult.Failed($\u0022Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0022, OperationError.VehicleDoesNotFit)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-68"
+        },
+        {
+          "id": "parking-sequence:element-76",
+          "name": "RegistrationExists(vehicle.RegistrationNumber)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-68"
+        },
+        {
+          "id": "parking-sequence:element-78",
+          "name": "Callback boundary (not executed by this analysis): spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-68"
+        },
+        {
+          "id": "parking-sequence:element-79",
+          "name": "External/delegate call boundary (not expanded): parkingSpots.Any(spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-68"
+        },
+        {
+          "id": "parking-sequence:element-80",
+          "name": "parkingSpots.Any(spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-68"
+        },
+        {
+          "id": "parking-sequence:element-82",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "RegistrationExists(vehicle.RegistrationNumber)",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-68"
+        },
+        {
+          "id": "parking-sequence:element-83",
+          "name": "DuplicateRegistration(vehicle)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-85",
+          "name": "Failed($\u0022A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0022, OperationError.DuplicateRegistration)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-87",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-88",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-90",
+          "name": "ParkingResult.Failed($\u0022A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0022, OperationError.DuplicateRegistration)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-92",
+          "name": "DuplicateRegistration(vehicle)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-94",
+          "name": "Park(vehicle)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.ParkingSpot",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-96",
+          "name": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-97",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "Vehicle is not null is false",
+            "short-circuit"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-98",
+          "name": "Fits(vehicle)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.ParkingSpot to Garage.Models.ParkingSpot",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-97"
+        },
+        {
+          "id": "parking-sequence:element-100",
+          "name": "Depth boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-97"
+        },
+        {
+          "id": "parking-sequence:element-101",
+          "name": "bool (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.ParkingSpot to Garage.Models.ParkingSpot",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-97"
+        },
+        {
+          "id": "parking-sequence:element-103",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "Vehicle is not null || !Fits(vehicle)",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-104",
+          "name": "Constructor/initializer boundary (not expanded): new InvalidOperationException(\u0022The spot must be empty and large enough for the vehicle.\u0022)",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-103"
+        },
+        {
+          "id": "parking-sequence:element-105",
+          "name": "Throws: new InvalidOperationException(\u0022The spot must be empty and large enough for the vehicle.\u0022); this path terminates here.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-103"
+        },
+        {
+          "id": "parking-sequence:element-106",
+          "name": "complete",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.ParkingSpot to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-103"
+        },
+        {
+          "id": "parking-sequence:element-108",
+          "name": "Completed(spot, $\u0022Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0022)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-110",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-111",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-113",
+          "name": "ParkingResult.Completed(spot, $\u0022Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0022)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-82"
+        },
+        {
+          "id": "parking-sequence:element-115",
+          "name": "garage.Park(vehicle, spot)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-40"
+        },
+        {
+          "id": "parking-sequence:element-117",
+          "name": "Park(vehicle)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage.Models.Garage",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-40"
+        },
+        {
+          "id": "parking-sequence:element-119",
+          "name": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-40"
+        },
+        {
+          "id": "parking-sequence:element-120",
+          "name": "RegistrationExists(vehicle.RegistrationNumber)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-40"
+        },
+        {
+          "id": "parking-sequence:element-122",
+          "name": "Callback boundary (not executed by this analysis): spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-40"
+        },
+        {
+          "id": "parking-sequence:element-123",
+          "name": "External/delegate call boundary (not expanded): parkingSpots.Any(spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-40"
+        },
+        {
+          "id": "parking-sequence:element-124",
+          "name": "parkingSpots.Any(spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-40"
+        },
+        {
+          "id": "parking-sequence:element-126",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "RegistrationExists(vehicle.RegistrationNumber)",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-40"
+        },
+        {
+          "id": "parking-sequence:element-127",
+          "name": "DuplicateRegistration(vehicle)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-126"
+        },
+        {
+          "id": "parking-sequence:element-129",
+          "name": "Failed($\u0022A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0022, OperationError.DuplicateRegistration)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-126"
+        },
+        {
+          "id": "parking-sequence:element-131",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-126"
+        },
+        {
+          "id": "parking-sequence:element-132",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-126"
+        },
+        {
+          "id": "parking-sequence:element-134",
+          "name": "ParkingResult.Failed($\u0022A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0022, OperationError.DuplicateRegistration)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-126"
+        },
+        {
+          "id": "parking-sequence:element-136",
+          "name": "DuplicateRegistration(vehicle)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-126"
+        },
+        {
+          "id": "parking-sequence:element-138",
+          "name": "Callback boundary (not executed by this analysis): spot =\u003E spot.Vehicle is null \u0026\u0026 spot.Fits(vehicle)",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-126"
+        },
+        {
+          "id": "parking-sequence:element-139",
+          "name": "External/delegate call boundary (not expanded): parkingSpots.FirstOrDefault(spot =\u003E spot.Vehicle is null \u0026\u0026 spot.Fits(vehicle))",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-126"
+        },
+        {
+          "id": "parking-sequence:element-140",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "availableSpot is null",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-126"
+        },
+        {
+          "id": "parking-sequence:element-141",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "AvailableSpaces == 0",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-140"
+        },
+        {
+          "id": "parking-sequence:element-142",
+          "name": "Failed(\u0022The garage is full.\u0022, OperationError.GarageFull)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-141"
+        },
+        {
+          "id": "parking-sequence:element-144",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-141"
+        },
+        {
+          "id": "parking-sequence:element-145",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-141"
+        },
+        {
+          "id": "parking-sequence:element-147",
+          "name": "ParkingResult.Failed(\u0022The garage is full.\u0022, OperationError.GarageFull)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-141"
+        },
+        {
+          "id": "parking-sequence:element-149",
+          "name": "Failed(\u0022No available parking spot is large enough for this vehicle.\u0022, OperationError.VehicleDoesNotFit)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-141"
+        },
+        {
+          "id": "parking-sequence:element-151",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-141"
+        },
+        {
+          "id": "parking-sequence:element-152",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-141"
+        },
+        {
+          "id": "parking-sequence:element-154",
+          "name": "ParkingResult.Failed(\u0022No available parking spot is large enough for this vehicle.\u0022, OperationError.VehicleDoesNotFit)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-141"
+        },
+        {
+          "id": "parking-sequence:element-156",
+          "name": "Park(vehicle, availableSpot.Number)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-140"
+        },
+        {
+          "id": "parking-sequence:element-158",
+          "name": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-140"
+        },
+        {
+          "id": "parking-sequence:element-159",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "spot \u003C 1 || spot \u003E Capacity",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-140"
+        },
+        {
+          "id": "parking-sequence:element-160",
+          "name": "Failed($\u0022Parking spot must be between 1 and {Capacity}.\u0022, OperationError.SpotOutOfRange)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-159"
+        },
+        {
+          "id": "parking-sequence:element-162",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-159"
+        },
+        {
+          "id": "parking-sequence:element-163",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-159"
+        },
+        {
+          "id": "parking-sequence:element-165",
+          "name": "ParkingResult.Failed($\u0022Parking spot must be between 1 and {Capacity}.\u0022, OperationError.SpotOutOfRange)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-159"
+        },
+        {
+          "id": "parking-sequence:element-167",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "parkingSpot.Vehicle is not null",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-159"
+        },
+        {
+          "id": "parking-sequence:element-168",
+          "name": "Failed($\u0022Parking spot {spot} is occupied.\u0022, OperationError.SpotOccupied)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-167"
+        },
+        {
+          "id": "parking-sequence:element-170",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-167"
+        },
+        {
+          "id": "parking-sequence:element-171",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-167"
+        },
+        {
+          "id": "parking-sequence:element-173",
+          "name": "ParkingResult.Failed($\u0022Parking spot {spot} is occupied.\u0022, OperationError.SpotOccupied)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-167"
+        },
+        {
+          "id": "parking-sequence:element-175",
+          "name": "Fits(vehicle)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.ParkingSpot",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-167"
+        },
+        {
+          "id": "parking-sequence:element-177",
+          "name": "Depth boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-167"
+        },
+        {
+          "id": "parking-sequence:element-178",
+          "name": "bool (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.ParkingSpot to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-167"
+        },
+        {
+          "id": "parking-sequence:element-180",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "!parkingSpot.Fits(vehicle)",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-167"
+        },
+        {
+          "id": "parking-sequence:element-181",
+          "name": "Failed($\u0022Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0022, OperationError.VehicleDoesNotFit)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-180"
+        },
+        {
+          "id": "parking-sequence:element-183",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-180"
+        },
+        {
+          "id": "parking-sequence:element-184",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-180"
+        },
+        {
+          "id": "parking-sequence:element-186",
+          "name": "ParkingResult.Failed($\u0022Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0022, OperationError.VehicleDoesNotFit)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-180"
+        },
+        {
+          "id": "parking-sequence:element-188",
+          "name": "RegistrationExists(vehicle.RegistrationNumber)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-180"
+        },
+        {
+          "id": "parking-sequence:element-190",
+          "name": "Depth boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-180"
+        },
+        {
+          "id": "parking-sequence:element-191",
+          "name": "bool (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-180"
+        },
+        {
+          "id": "parking-sequence:element-193",
+          "name": "alt \u00B7 2 paths",
+          "kind": "fragment",
+          "group": "Alternative paths",
+          "members": [
+            "RegistrationExists(vehicle.RegistrationNumber)",
+            "otherwise"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-180"
+        },
+        {
+          "id": "parking-sequence:element-194",
+          "name": "DuplicateRegistration(vehicle)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-193"
+        },
+        {
+          "id": "parking-sequence:element-196",
+          "name": "Depth boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-193"
+        },
+        {
+          "id": "parking-sequence:element-197",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-193"
+        },
+        {
+          "id": "parking-sequence:element-199",
+          "name": "DuplicateRegistration(vehicle)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-193"
+        },
+        {
+          "id": "parking-sequence:element-201",
+          "name": "Park(vehicle)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.ParkingSpot",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-193"
+        },
+        {
+          "id": "parking-sequence:element-203",
+          "name": "Depth boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-193"
+        },
+        {
+          "id": "parking-sequence:element-204",
+          "name": "complete (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.ParkingSpot to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-193"
+        },
+        {
+          "id": "parking-sequence:element-206",
+          "name": "Completed(spot, $\u0022Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0022)",
+          "kind": "message",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Results.ParkingResult",
+            "Synchronous message / call"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-193"
+        },
+        {
+          "id": "parking-sequence:element-208",
+          "name": "Scope boundary: method body not expanded.",
+          "kind": "note",
+          "group": "Alternative paths",
+          "members": [],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-193"
+        },
+        {
+          "id": "parking-sequence:element-209",
+          "name": "Garage.Results.ParkingResult (if call returns)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Results.ParkingResult to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-193"
+        },
+        {
+          "id": "parking-sequence:element-211",
+          "name": "ParkingResult.Completed(spot, $\u0022Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0022)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Models.Garage",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-193"
+        },
+        {
+          "id": "parking-sequence:element-213",
+          "name": "Park(vehicle, availableSpot.Number)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Models.Garage to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-140"
+        },
+        {
+          "id": "parking-sequence:element-215",
+          "name": "garage.Park(vehicle)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage.Services.GarageService",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-40"
+        },
+        {
+          "id": "parking-sequence:element-217",
+          "name": "ParkNewVehicle(vehicle, garage, spotNumber)",
+          "kind": "reply",
+          "group": "Alternative paths",
+          "members": [
+            "From Garage.Services.GarageService to Garage operator",
+            "Reply / returned result"
+          ],
+          "files": [
+            "docs/uml/interaction/sequence/parking-sequence.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "parking-sequence:element-7"
         }
       ],
       "edges": [
         {
-          "id": "parking-sequence:edge-2",
-          "source": "parking-sequence:User",
-          "target": "parking-sequence:UI",
+          "id": "parking-sequence:edge-3",
+          "source": "parking-sequence:Actor",
+          "target": "parking-sequence:p_753cfee6aae6",
           "kind": "message",
-          "label": "Choose vehicle and garage"
+          "label": "Park(vehicle, garage, spotNumber)"
         },
         {
-          "id": "parking-sequence:edge-4",
-          "source": "parking-sequence:UI",
-          "target": "parking-sequence:Service",
+          "id": "parking-sequence:edge-9",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:p_426dd07c2e3a",
           "kind": "message",
-          "label": "Park(vehicle, garage, spotNumber?)"
-        },
-        {
-          "id": "parking-sequence:edge-8",
-          "source": "parking-sequence:Service",
-          "target": "parking-sequence:UI",
-          "kind": "reply",
-          "label": "Failed(VehicleNotFound)"
-        },
-        {
-          "id": "parking-sequence:edge-10",
-          "source": "parking-sequence:Service",
-          "target": "parking-sequence:UI",
-          "kind": "reply",
-          "label": "Failed(ValidationFailed)"
+          "label": "Failed(\u0022Choose a vehicle from this application\u0027s catalog.\u0022, OperationError.VehicleNotFound)"
         },
         {
           "id": "parking-sequence:edge-12",
-          "source": "parking-sequence:Service",
-          "target": "parking-sequence:UI",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_753cfee6aae6",
           "kind": "reply",
-          "label": "Failed(VehicleAlreadyParked)"
+          "label": "Garage.Results.ParkingResult (if call returns)"
         },
         {
-          "id": "parking-sequence:edge-15",
-          "source": "parking-sequence:Service",
-          "target": "parking-sequence:Garage",
+          "id": "parking-sequence:edge-14",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:Actor",
+          "kind": "reply",
+          "label": "ParkingResult.Failed(\u0022Choose a vehicle from this application\u0027s catalog.\u0022, OperationError.VehicleNotFound)"
+        },
+        {
+          "id": "parking-sequence:edge-16",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:p_753cfee6aae6",
           "kind": "message",
-          "label": "Park(vehicle, spotNumber)"
+          "label": "ParkNewVehicle(vehicle, garage, spotNumber)"
         },
         {
-          "id": "parking-sequence:edge-17",
-          "source": "parking-sequence:Service",
-          "target": "parking-sequence:Garage",
+          "id": "parking-sequence:edge-20",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:p_426dd07c2e3a",
           "kind": "message",
-          "label": "Park(vehicle)"
+          "label": "Failed(\u0022Choose a garage registered with this application.\u0022, OperationError.ValidationFailed)"
         },
         {
-          "id": "parking-sequence:edge-19",
-          "source": "parking-sequence:Garage",
-          "target": "parking-sequence:Spot",
+          "id": "parking-sequence:edge-23",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-25",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "ParkingResult.Failed(\u0022Choose a garage registered with this application.\u0022, OperationError.ValidationFailed)"
+        },
+        {
+          "id": "parking-sequence:edge-27",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:p_753cfee6aae6",
           "kind": "message",
-          "label": "Fits(vehicle) for candidate empty spots"
+          "label": "IsParked(vehicle)"
         },
         {
-          "id": "parking-sequence:edge-21",
-          "source": "parking-sequence:Spot",
-          "target": "parking-sequence:Garage",
+          "id": "parking-sequence:edge-31",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:p_753cfee6aae6",
           "kind": "reply",
-          "label": "fits / does not fit"
-        },
-        {
-          "id": "parking-sequence:edge-26",
-          "source": "parking-sequence:Garage",
-          "target": "parking-sequence:Spot",
-          "kind": "message",
-          "label": "Park(vehicle)"
-        },
-        {
-          "id": "parking-sequence:edge-28",
-          "source": "parking-sequence:Spot",
-          "target": "parking-sequence:Garage",
-          "kind": "reply",
-          "label": "Vehicle assigned"
-        },
-        {
-          "id": "parking-sequence:edge-30",
-          "source": "parking-sequence:Garage",
-          "target": "parking-sequence:Service",
-          "kind": "reply",
-          "label": "ParkingResult.Completed(spot, message)"
-        },
-        {
-          "id": "parking-sequence:edge-32",
-          "source": "parking-sequence:Garage",
-          "target": "parking-sequence:Service",
-          "kind": "reply",
-          "label": "ParkingResult.Failed(message, error)"
+          "label": "garages.Any(garage =\u003E garage.Vehicles.Any(parked =\u003E string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))"
         },
         {
           "id": "parking-sequence:edge-34",
-          "source": "parking-sequence:Service",
-          "target": "parking-sequence:UI",
-          "kind": "reply",
-          "label": "ParkingResult"
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Failed($\u0022Vehicle {vehicle.RegistrationNumber} is already parked in a garage.\u0022, OperationError.VehicleAlreadyParked)"
         },
         {
-          "id": "parking-sequence:edge-36",
-          "source": "parking-sequence:UI",
-          "target": "parking-sequence:User",
+          "id": "parking-sequence:edge-37",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_753cfee6aae6",
           "kind": "reply",
-          "label": "Display result message"
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-39",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "ParkingResult.Failed($\u0022Vehicle {vehicle.RegistrationNumber} is already parked in a garage.\u0022, OperationError.VehicleAlreadyParked)"
+        },
+        {
+          "id": "parking-sequence:edge-42",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "message",
+          "label": "Park(vehicle, spot)"
+        },
+        {
+          "id": "parking-sequence:edge-46",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Failed($\u0022Parking spot must be between 1 and {Capacity}.\u0022, OperationError.SpotOutOfRange)"
+        },
+        {
+          "id": "parking-sequence:edge-49",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-51",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "ParkingResult.Failed($\u0022Parking spot must be between 1 and {Capacity}.\u0022, OperationError.SpotOutOfRange)"
+        },
+        {
+          "id": "parking-sequence:edge-54",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Failed($\u0022Parking spot {spot} is occupied.\u0022, OperationError.SpotOccupied)"
+        },
+        {
+          "id": "parking-sequence:edge-57",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-59",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "ParkingResult.Failed($\u0022Parking spot {spot} is occupied.\u0022, OperationError.SpotOccupied)"
+        },
+        {
+          "id": "parking-sequence:edge-61",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_b323161f1e5c",
+          "kind": "message",
+          "label": "Fits(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-65",
+          "source": "parking-sequence:p_b323161f1e5c",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "true"
+        },
+        {
+          "id": "parking-sequence:edge-67",
+          "source": "parking-sequence:p_b323161f1e5c",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "size.LengthMeters \u003C= Dimensions.LengthMeters \u0026\u0026 size.WidthMeters \u003C= Dimensions.WidthMeters \u0026\u0026 size.HeightMeters \u003C= Dimensions.HeightMeters"
+        },
+        {
+          "id": "parking-sequence:edge-70",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Failed($\u0022Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0022, OperationError.VehicleDoesNotFit)"
+        },
+        {
+          "id": "parking-sequence:edge-73",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-75",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "ParkingResult.Failed($\u0022Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0022, OperationError.VehicleDoesNotFit)"
+        },
+        {
+          "id": "parking-sequence:edge-77",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "message",
+          "label": "RegistrationExists(vehicle.RegistrationNumber)"
+        },
+        {
+          "id": "parking-sequence:edge-81",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "parkingSpots.Any(spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))"
+        },
+        {
+          "id": "parking-sequence:edge-84",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "message",
+          "label": "DuplicateRegistration(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-86",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Failed($\u0022A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0022, OperationError.DuplicateRegistration)"
+        },
+        {
+          "id": "parking-sequence:edge-89",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-91",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "ParkingResult.Failed($\u0022A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0022, OperationError.DuplicateRegistration)"
+        },
+        {
+          "id": "parking-sequence:edge-93",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "DuplicateRegistration(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-95",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_b323161f1e5c",
+          "kind": "message",
+          "label": "Park(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-99",
+          "source": "parking-sequence:p_b323161f1e5c",
+          "target": "parking-sequence:p_b323161f1e5c",
+          "kind": "message",
+          "label": "Fits(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-102",
+          "source": "parking-sequence:p_b323161f1e5c",
+          "target": "parking-sequence:p_b323161f1e5c",
+          "kind": "reply",
+          "label": "bool (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-107",
+          "source": "parking-sequence:p_b323161f1e5c",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "complete"
+        },
+        {
+          "id": "parking-sequence:edge-109",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Completed(spot, $\u0022Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0022)"
+        },
+        {
+          "id": "parking-sequence:edge-112",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-114",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "ParkingResult.Completed(spot, $\u0022Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0022)"
+        },
+        {
+          "id": "parking-sequence:edge-116",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "garage.Park(vehicle, spot)"
+        },
+        {
+          "id": "parking-sequence:edge-118",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "message",
+          "label": "Park(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-121",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "message",
+          "label": "RegistrationExists(vehicle.RegistrationNumber)"
+        },
+        {
+          "id": "parking-sequence:edge-125",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "parkingSpots.Any(spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))"
+        },
+        {
+          "id": "parking-sequence:edge-128",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "message",
+          "label": "DuplicateRegistration(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-130",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Failed($\u0022A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0022, OperationError.DuplicateRegistration)"
+        },
+        {
+          "id": "parking-sequence:edge-133",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-135",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "ParkingResult.Failed($\u0022A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0022, OperationError.DuplicateRegistration)"
+        },
+        {
+          "id": "parking-sequence:edge-137",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "DuplicateRegistration(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-143",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Failed(\u0022The garage is full.\u0022, OperationError.GarageFull)"
+        },
+        {
+          "id": "parking-sequence:edge-146",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-148",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "ParkingResult.Failed(\u0022The garage is full.\u0022, OperationError.GarageFull)"
+        },
+        {
+          "id": "parking-sequence:edge-150",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Failed(\u0022No available parking spot is large enough for this vehicle.\u0022, OperationError.VehicleDoesNotFit)"
+        },
+        {
+          "id": "parking-sequence:edge-153",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-155",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "ParkingResult.Failed(\u0022No available parking spot is large enough for this vehicle.\u0022, OperationError.VehicleDoesNotFit)"
+        },
+        {
+          "id": "parking-sequence:edge-157",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "message",
+          "label": "Park(vehicle, availableSpot.Number)"
+        },
+        {
+          "id": "parking-sequence:edge-161",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Failed($\u0022Parking spot must be between 1 and {Capacity}.\u0022, OperationError.SpotOutOfRange)"
+        },
+        {
+          "id": "parking-sequence:edge-164",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-166",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "ParkingResult.Failed($\u0022Parking spot must be between 1 and {Capacity}.\u0022, OperationError.SpotOutOfRange)"
+        },
+        {
+          "id": "parking-sequence:edge-169",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Failed($\u0022Parking spot {spot} is occupied.\u0022, OperationError.SpotOccupied)"
+        },
+        {
+          "id": "parking-sequence:edge-172",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-174",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "ParkingResult.Failed($\u0022Parking spot {spot} is occupied.\u0022, OperationError.SpotOccupied)"
+        },
+        {
+          "id": "parking-sequence:edge-176",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_b323161f1e5c",
+          "kind": "message",
+          "label": "Fits(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-179",
+          "source": "parking-sequence:p_b323161f1e5c",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "bool (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-182",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Failed($\u0022Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0022, OperationError.VehicleDoesNotFit)"
+        },
+        {
+          "id": "parking-sequence:edge-185",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-187",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "ParkingResult.Failed($\u0022Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0022, OperationError.VehicleDoesNotFit)"
+        },
+        {
+          "id": "parking-sequence:edge-189",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "message",
+          "label": "RegistrationExists(vehicle.RegistrationNumber)"
+        },
+        {
+          "id": "parking-sequence:edge-192",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "bool (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-195",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "message",
+          "label": "DuplicateRegistration(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-198",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-200",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "DuplicateRegistration(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-202",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_b323161f1e5c",
+          "kind": "message",
+          "label": "Park(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-205",
+          "source": "parking-sequence:p_b323161f1e5c",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "complete (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-207",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_426dd07c2e3a",
+          "kind": "message",
+          "label": "Completed(spot, $\u0022Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0022)"
+        },
+        {
+          "id": "parking-sequence:edge-210",
+          "source": "parking-sequence:p_426dd07c2e3a",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "Garage.Results.ParkingResult (if call returns)"
+        },
+        {
+          "id": "parking-sequence:edge-212",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_50a211325908",
+          "kind": "reply",
+          "label": "ParkingResult.Completed(spot, $\u0022Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0022)"
+        },
+        {
+          "id": "parking-sequence:edge-214",
+          "source": "parking-sequence:p_50a211325908",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "Park(vehicle, availableSpot.Number)"
+        },
+        {
+          "id": "parking-sequence:edge-216",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:p_753cfee6aae6",
+          "kind": "reply",
+          "label": "garage.Park(vehicle)"
+        },
+        {
+          "id": "parking-sequence:edge-218",
+          "source": "parking-sequence:p_753cfee6aae6",
+          "target": "parking-sequence:Actor",
+          "kind": "reply",
+          "label": "ParkNewVehicle(vehicle, garage, spotNumber)"
         }
       ],
       "sequence": {
         "participants": [
-          "parking-sequence:User",
-          "parking-sequence:UI",
-          "parking-sequence:Service",
-          "parking-sequence:Garage",
-          "parking-sequence:Spot"
+          "parking-sequence:Actor",
+          "parking-sequence:p_753cfee6aae6",
+          "parking-sequence:p_426dd07c2e3a",
+          "parking-sequence:p_50a211325908",
+          "parking-sequence:p_b323161f1e5c"
         ],
         "items": [
           {
             "id": "parking-sequence:element-1",
-            "kind": "message",
-            "label": "Choose vehicle and garage",
-            "source": "parking-sequence:User",
-            "target": "parking-sequence:UI",
+            "kind": "note",
+            "label": "Static source view; MaxDepth=3. Lifelines group calls by declared type, not runtime instance. Alternatives are possible source paths, not a recorded execution. Guards may be infeasible together. Property getters and implicit/external exceptions are not expanded. Framework calls and callbacks are boundaries. Caller continuation assumes the callee returns normally. Async scheduling is not modeled. Expand bodies in: Garage.Models, Garage.Services. Other calls remain visible as boundaries.",
+            "source": null,
+            "target": null,
             "reply": false,
             "branches": []
           },
           {
-            "id": "parking-sequence:element-3",
+            "id": "parking-sequence:element-2",
             "kind": "message",
-            "label": "Park(vehicle, garage, spotNumber?)",
-            "source": "parking-sequence:UI",
-            "target": "parking-sequence:Service",
+            "label": "Park(vehicle, garage, spotNumber)",
+            "source": "parking-sequence:Actor",
+            "target": "parking-sequence:p_753cfee6aae6",
+            "reply": false,
+            "branches": []
+          },
+          {
+            "id": "parking-sequence:element-4",
+            "kind": "note",
+            "label": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+            "source": null,
+            "target": null,
             "reply": false,
             "branches": []
           },
           {
             "id": "parking-sequence:element-5",
             "kind": "note",
-            "label": "Scope: non-null arguments. Result branches are summarized; this is not a complete call trace.",
+            "label": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(garage)",
             "source": null,
             "target": null,
             "reply": false,
@@ -4460,6 +6717,15 @@ globalThis.GARAGE_UML_DATA = {
           },
           {
             "id": "parking-sequence:element-6",
+            "kind": "note",
+            "label": "External/delegate call boundary (not expanded): Catalog.Vehicles.Contains(vehicle)",
+            "source": null,
+            "target": null,
+            "reply": false,
+            "branches": []
+          },
+          {
+            "id": "parking-sequence:element-7",
             "kind": "fragment",
             "label": "Alternative paths",
             "source": null,
@@ -4467,52 +6733,69 @@ globalThis.GARAGE_UML_DATA = {
             "reply": false,
             "branches": [
               {
-                "label": "Vehicle is outside catalog",
+                "label": "!Catalog.Vehicles.Contains(vehicle)",
                 "items": [
                   {
-                    "id": "parking-sequence:element-7",
-                    "kind": "reply",
-                    "label": "Failed(VehicleNotFound)",
-                    "source": "parking-sequence:Service",
-                    "target": "parking-sequence:UI",
-                    "reply": true,
+                    "id": "parking-sequence:element-8",
+                    "kind": "message",
+                    "label": "Failed(\u0022Choose a vehicle from this application\u0027s catalog.\u0022, OperationError.VehicleNotFound)",
+                    "source": "parking-sequence:p_753cfee6aae6",
+                    "target": "parking-sequence:p_426dd07c2e3a",
+                    "reply": false,
                     "branches": []
-                  }
-                ]
-              },
-              {
-                "label": "Garage is unregistered",
-                "items": [
+                  },
                   {
-                    "id": "parking-sequence:element-9",
-                    "kind": "reply",
-                    "label": "Failed(ValidationFailed)",
-                    "source": "parking-sequence:Service",
-                    "target": "parking-sequence:UI",
-                    "reply": true,
+                    "id": "parking-sequence:element-10",
+                    "kind": "note",
+                    "label": "Scope boundary: method body not expanded.",
+                    "source": null,
+                    "target": null,
+                    "reply": false,
                     "branches": []
-                  }
-                ]
-              },
-              {
-                "label": "Vehicle registration is already parked",
-                "items": [
+                  },
                   {
                     "id": "parking-sequence:element-11",
                     "kind": "reply",
-                    "label": "Failed(VehicleAlreadyParked)",
-                    "source": "parking-sequence:Service",
-                    "target": "parking-sequence:UI",
+                    "label": "Garage.Results.ParkingResult (if call returns)",
+                    "source": "parking-sequence:p_426dd07c2e3a",
+                    "target": "parking-sequence:p_753cfee6aae6",
+                    "reply": true,
+                    "branches": []
+                  },
+                  {
+                    "id": "parking-sequence:element-13",
+                    "kind": "reply",
+                    "label": "ParkingResult.Failed(\u0022Choose a vehicle from this application\u0027s catalog.\u0022, OperationError.VehicleNotFound)",
+                    "source": "parking-sequence:p_753cfee6aae6",
+                    "target": "parking-sequence:Actor",
                     "reply": true,
                     "branches": []
                   }
                 ]
               },
               {
-                "label": "Eligible to park",
+                "label": "otherwise",
                 "items": [
                   {
-                    "id": "parking-sequence:element-13",
+                    "id": "parking-sequence:element-15",
+                    "kind": "message",
+                    "label": "ParkNewVehicle(vehicle, garage, spotNumber)",
+                    "source": "parking-sequence:p_753cfee6aae6",
+                    "target": "parking-sequence:p_753cfee6aae6",
+                    "reply": false,
+                    "branches": []
+                  },
+                  {
+                    "id": "parking-sequence:element-17",
+                    "kind": "note",
+                    "label": "External/delegate call boundary (not expanded): garages.Contains(garage)",
+                    "source": null,
+                    "target": null,
+                    "reply": false,
+                    "branches": []
+                  },
+                  {
+                    "id": "parking-sequence:element-18",
                     "kind": "fragment",
                     "label": "Alternative paths",
                     "source": null,
@@ -4520,156 +6803,1365 @@ globalThis.GARAGE_UML_DATA = {
                     "reply": false,
                     "branches": [
                       {
-                        "label": "A spot number is supplied",
+                        "label": "!garages.Contains(garage)",
                         "items": [
                           {
-                            "id": "parking-sequence:element-14",
+                            "id": "parking-sequence:element-19",
                             "kind": "message",
-                            "label": "Park(vehicle, spotNumber)",
-                            "source": "parking-sequence:Service",
-                            "target": "parking-sequence:Garage",
-                            "reply": false,
-                            "branches": []
-                          }
-                        ]
-                      },
-                      {
-                        "label": "Find first suitable spot",
-                        "items": [
-                          {
-                            "id": "parking-sequence:element-16",
-                            "kind": "message",
-                            "label": "Park(vehicle)",
-                            "source": "parking-sequence:Service",
-                            "target": "parking-sequence:Garage",
+                            "label": "Failed(\u0022Choose a garage registered with this application.\u0022, OperationError.ValidationFailed)",
+                            "source": "parking-sequence:p_753cfee6aae6",
+                            "target": "parking-sequence:p_426dd07c2e3a",
                             "reply": false,
                             "branches": []
                           },
                           {
-                            "id": "parking-sequence:element-18",
-                            "kind": "message",
-                            "label": "Fits(vehicle) for candidate empty spots",
-                            "source": "parking-sequence:Garage",
-                            "target": "parking-sequence:Spot",
-                            "reply": false,
-                            "branches": []
-                          },
-                          {
-                            "id": "parking-sequence:element-20",
-                            "kind": "reply",
-                            "label": "fits / does not fit",
-                            "source": "parking-sequence:Spot",
-                            "target": "parking-sequence:Garage",
-                            "reply": true,
-                            "branches": []
-                          },
-                          {
-                            "id": "parking-sequence:element-22",
+                            "id": "parking-sequence:element-21",
                             "kind": "note",
-                            "label": "No suitable spot returns GarageFull or VehicleDoesNotFit. A match delegates to Park(vehicle, spot).",
+                            "label": "Scope boundary: method body not expanded.",
                             "source": null,
                             "target": null,
                             "reply": false,
                             "branches": []
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "id": "parking-sequence:element-23",
-                    "kind": "note",
-                    "label": "The numbered operation checks range, occupancy, dimensions, and duplicate registration.",
-                    "source": null,
-                    "target": null,
-                    "reply": false,
-                    "branches": []
-                  },
-                  {
-                    "id": "parking-sequence:element-24",
-                    "kind": "fragment",
-                    "label": "Alternative paths",
-                    "source": null,
-                    "target": null,
-                    "reply": false,
-                    "branches": [
-                      {
-                        "label": "Numbered spot passes validation",
-                        "items": [
-                          {
-                            "id": "parking-sequence:element-25",
-                            "kind": "message",
-                            "label": "Park(vehicle)",
-                            "source": "parking-sequence:Garage",
-                            "target": "parking-sequence:Spot",
-                            "reply": false,
-                            "branches": []
                           },
                           {
-                            "id": "parking-sequence:element-27",
+                            "id": "parking-sequence:element-22",
                             "kind": "reply",
-                            "label": "Vehicle assigned",
-                            "source": "parking-sequence:Spot",
-                            "target": "parking-sequence:Garage",
+                            "label": "Garage.Results.ParkingResult (if call returns)",
+                            "source": "parking-sequence:p_426dd07c2e3a",
+                            "target": "parking-sequence:p_753cfee6aae6",
                             "reply": true,
                             "branches": []
                           },
                           {
-                            "id": "parking-sequence:element-29",
+                            "id": "parking-sequence:element-24",
                             "kind": "reply",
-                            "label": "ParkingResult.Completed(spot, message)",
-                            "source": "parking-sequence:Garage",
-                            "target": "parking-sequence:Service",
+                            "label": "ParkingResult.Failed(\u0022Choose a garage registered with this application.\u0022, OperationError.ValidationFailed)",
+                            "source": "parking-sequence:p_753cfee6aae6",
+                            "target": "parking-sequence:p_753cfee6aae6",
                             "reply": true,
                             "branches": []
                           }
                         ]
                       },
                       {
-                        "label": "No suitable spot or validation failed",
+                        "label": "otherwise",
                         "items": [
                           {
-                            "id": "parking-sequence:element-31",
+                            "id": "parking-sequence:element-26",
+                            "kind": "message",
+                            "label": "IsParked(vehicle)",
+                            "source": "parking-sequence:p_753cfee6aae6",
+                            "target": "parking-sequence:p_753cfee6aae6",
+                            "reply": false,
+                            "branches": []
+                          },
+                          {
+                            "id": "parking-sequence:element-28",
+                            "kind": "note",
+                            "label": "Callback boundary (not executed by this analysis): garage =\u003E garage.Vehicles.Any(parked =\u003E string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase))",
+                            "source": null,
+                            "target": null,
+                            "reply": false,
+                            "branches": []
+                          },
+                          {
+                            "id": "parking-sequence:element-29",
+                            "kind": "note",
+                            "label": "External/delegate call boundary (not expanded): garages.Any(garage =\u003E garage.Vehicles.Any(parked =\u003E string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))",
+                            "source": null,
+                            "target": null,
+                            "reply": false,
+                            "branches": []
+                          },
+                          {
+                            "id": "parking-sequence:element-30",
                             "kind": "reply",
-                            "label": "ParkingResult.Failed(message, error)",
-                            "source": "parking-sequence:Garage",
-                            "target": "parking-sequence:Service",
+                            "label": "garages.Any(garage =\u003E garage.Vehicles.Any(parked =\u003E string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))",
+                            "source": "parking-sequence:p_753cfee6aae6",
+                            "target": "parking-sequence:p_753cfee6aae6",
                             "reply": true,
                             "branches": []
+                          },
+                          {
+                            "id": "parking-sequence:element-32",
+                            "kind": "fragment",
+                            "label": "Alternative paths",
+                            "source": null,
+                            "target": null,
+                            "reply": false,
+                            "branches": [
+                              {
+                                "label": "IsParked(vehicle)",
+                                "items": [
+                                  {
+                                    "id": "parking-sequence:element-33",
+                                    "kind": "message",
+                                    "label": "Failed($\u0022Vehicle {vehicle.RegistrationNumber} is already parked in a garage.\u0022, OperationError.VehicleAlreadyParked)",
+                                    "source": "parking-sequence:p_753cfee6aae6",
+                                    "target": "parking-sequence:p_426dd07c2e3a",
+                                    "reply": false,
+                                    "branches": []
+                                  },
+                                  {
+                                    "id": "parking-sequence:element-35",
+                                    "kind": "note",
+                                    "label": "Scope boundary: method body not expanded.",
+                                    "source": null,
+                                    "target": null,
+                                    "reply": false,
+                                    "branches": []
+                                  },
+                                  {
+                                    "id": "parking-sequence:element-36",
+                                    "kind": "reply",
+                                    "label": "Garage.Results.ParkingResult (if call returns)",
+                                    "source": "parking-sequence:p_426dd07c2e3a",
+                                    "target": "parking-sequence:p_753cfee6aae6",
+                                    "reply": true,
+                                    "branches": []
+                                  },
+                                  {
+                                    "id": "parking-sequence:element-38",
+                                    "kind": "reply",
+                                    "label": "ParkingResult.Failed($\u0022Vehicle {vehicle.RegistrationNumber} is already parked in a garage.\u0022, OperationError.VehicleAlreadyParked)",
+                                    "source": "parking-sequence:p_753cfee6aae6",
+                                    "target": "parking-sequence:p_753cfee6aae6",
+                                    "reply": true,
+                                    "branches": []
+                                  }
+                                ]
+                              },
+                              {
+                                "label": "otherwise",
+                                "items": [
+                                  {
+                                    "id": "parking-sequence:element-40",
+                                    "kind": "fragment",
+                                    "label": "Alternative paths",
+                                    "source": null,
+                                    "target": null,
+                                    "reply": false,
+                                    "branches": [
+                                      {
+                                        "label": "spotNumber is int spot",
+                                        "items": [
+                                          {
+                                            "id": "parking-sequence:element-41",
+                                            "kind": "message",
+                                            "label": "Park(vehicle, spot)",
+                                            "source": "parking-sequence:p_753cfee6aae6",
+                                            "target": "parking-sequence:p_50a211325908",
+                                            "reply": false,
+                                            "branches": []
+                                          },
+                                          {
+                                            "id": "parking-sequence:element-43",
+                                            "kind": "note",
+                                            "label": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+                                            "source": null,
+                                            "target": null,
+                                            "reply": false,
+                                            "branches": []
+                                          },
+                                          {
+                                            "id": "parking-sequence:element-44",
+                                            "kind": "fragment",
+                                            "label": "Alternative paths",
+                                            "source": null,
+                                            "target": null,
+                                            "reply": false,
+                                            "branches": [
+                                              {
+                                                "label": "spot \u003C 1 || spot \u003E Capacity",
+                                                "items": [
+                                                  {
+                                                    "id": "parking-sequence:element-45",
+                                                    "kind": "message",
+                                                    "label": "Failed($\u0022Parking spot must be between 1 and {Capacity}.\u0022, OperationError.SpotOutOfRange)",
+                                                    "source": "parking-sequence:p_50a211325908",
+                                                    "target": "parking-sequence:p_426dd07c2e3a",
+                                                    "reply": false,
+                                                    "branches": []
+                                                  },
+                                                  {
+                                                    "id": "parking-sequence:element-47",
+                                                    "kind": "note",
+                                                    "label": "Scope boundary: method body not expanded.",
+                                                    "source": null,
+                                                    "target": null,
+                                                    "reply": false,
+                                                    "branches": []
+                                                  },
+                                                  {
+                                                    "id": "parking-sequence:element-48",
+                                                    "kind": "reply",
+                                                    "label": "Garage.Results.ParkingResult (if call returns)",
+                                                    "source": "parking-sequence:p_426dd07c2e3a",
+                                                    "target": "parking-sequence:p_50a211325908",
+                                                    "reply": true,
+                                                    "branches": []
+                                                  },
+                                                  {
+                                                    "id": "parking-sequence:element-50",
+                                                    "kind": "reply",
+                                                    "label": "ParkingResult.Failed($\u0022Parking spot must be between 1 and {Capacity}.\u0022, OperationError.SpotOutOfRange)",
+                                                    "source": "parking-sequence:p_50a211325908",
+                                                    "target": "parking-sequence:p_753cfee6aae6",
+                                                    "reply": true,
+                                                    "branches": []
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "label": "otherwise",
+                                                "items": [
+                                                  {
+                                                    "id": "parking-sequence:element-52",
+                                                    "kind": "fragment",
+                                                    "label": "Alternative paths",
+                                                    "source": null,
+                                                    "target": null,
+                                                    "reply": false,
+                                                    "branches": [
+                                                      {
+                                                        "label": "parkingSpot.Vehicle is not null",
+                                                        "items": [
+                                                          {
+                                                            "id": "parking-sequence:element-53",
+                                                            "kind": "message",
+                                                            "label": "Failed($\u0022Parking spot {spot} is occupied.\u0022, OperationError.SpotOccupied)",
+                                                            "source": "parking-sequence:p_50a211325908",
+                                                            "target": "parking-sequence:p_426dd07c2e3a",
+                                                            "reply": false,
+                                                            "branches": []
+                                                          },
+                                                          {
+                                                            "id": "parking-sequence:element-55",
+                                                            "kind": "note",
+                                                            "label": "Scope boundary: method body not expanded.",
+                                                            "source": null,
+                                                            "target": null,
+                                                            "reply": false,
+                                                            "branches": []
+                                                          },
+                                                          {
+                                                            "id": "parking-sequence:element-56",
+                                                            "kind": "reply",
+                                                            "label": "Garage.Results.ParkingResult (if call returns)",
+                                                            "source": "parking-sequence:p_426dd07c2e3a",
+                                                            "target": "parking-sequence:p_50a211325908",
+                                                            "reply": true,
+                                                            "branches": []
+                                                          },
+                                                          {
+                                                            "id": "parking-sequence:element-58",
+                                                            "kind": "reply",
+                                                            "label": "ParkingResult.Failed($\u0022Parking spot {spot} is occupied.\u0022, OperationError.SpotOccupied)",
+                                                            "source": "parking-sequence:p_50a211325908",
+                                                            "target": "parking-sequence:p_753cfee6aae6",
+                                                            "reply": true,
+                                                            "branches": []
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "label": "otherwise",
+                                                        "items": [
+                                                          {
+                                                            "id": "parking-sequence:element-60",
+                                                            "kind": "message",
+                                                            "label": "Fits(vehicle)",
+                                                            "source": "parking-sequence:p_50a211325908",
+                                                            "target": "parking-sequence:p_b323161f1e5c",
+                                                            "reply": false,
+                                                            "branches": []
+                                                          },
+                                                          {
+                                                            "id": "parking-sequence:element-62",
+                                                            "kind": "note",
+                                                            "label": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+                                                            "source": null,
+                                                            "target": null,
+                                                            "reply": false,
+                                                            "branches": []
+                                                          },
+                                                          {
+                                                            "id": "parking-sequence:element-63",
+                                                            "kind": "fragment",
+                                                            "label": "Alternative paths",
+                                                            "source": null,
+                                                            "target": null,
+                                                            "reply": false,
+                                                            "branches": [
+                                                              {
+                                                                "label": "Dimensions is null",
+                                                                "items": [
+                                                                  {
+                                                                    "id": "parking-sequence:element-64",
+                                                                    "kind": "reply",
+                                                                    "label": "true",
+                                                                    "source": "parking-sequence:p_b323161f1e5c",
+                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                    "reply": true,
+                                                                    "branches": []
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "label": "otherwise",
+                                                                "items": [
+                                                                  {
+                                                                    "id": "parking-sequence:element-66",
+                                                                    "kind": "reply",
+                                                                    "label": "size.LengthMeters \u003C= Dimensions.LengthMeters \u0026\u0026 size.WidthMeters \u003C= Dimensions.WidthMeters \u0026\u0026 size.HeightMeters \u003C= Dimensions.HeightMeters",
+                                                                    "source": "parking-sequence:p_b323161f1e5c",
+                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                    "reply": true,
+                                                                    "branches": []
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "id": "parking-sequence:element-68",
+                                                            "kind": "fragment",
+                                                            "label": "Alternative paths",
+                                                            "source": null,
+                                                            "target": null,
+                                                            "reply": false,
+                                                            "branches": [
+                                                              {
+                                                                "label": "!parkingSpot.Fits(vehicle)",
+                                                                "items": [
+                                                                  {
+                                                                    "id": "parking-sequence:element-69",
+                                                                    "kind": "message",
+                                                                    "label": "Failed($\u0022Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0022, OperationError.VehicleDoesNotFit)",
+                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                    "target": "parking-sequence:p_426dd07c2e3a",
+                                                                    "reply": false,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-71",
+                                                                    "kind": "note",
+                                                                    "label": "Scope boundary: method body not expanded.",
+                                                                    "source": null,
+                                                                    "target": null,
+                                                                    "reply": false,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-72",
+                                                                    "kind": "reply",
+                                                                    "label": "Garage.Results.ParkingResult (if call returns)",
+                                                                    "source": "parking-sequence:p_426dd07c2e3a",
+                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                    "reply": true,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-74",
+                                                                    "kind": "reply",
+                                                                    "label": "ParkingResult.Failed($\u0022Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0022, OperationError.VehicleDoesNotFit)",
+                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                    "target": "parking-sequence:p_753cfee6aae6",
+                                                                    "reply": true,
+                                                                    "branches": []
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "label": "otherwise",
+                                                                "items": [
+                                                                  {
+                                                                    "id": "parking-sequence:element-76",
+                                                                    "kind": "message",
+                                                                    "label": "RegistrationExists(vehicle.RegistrationNumber)",
+                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                    "reply": false,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-78",
+                                                                    "kind": "note",
+                                                                    "label": "Callback boundary (not executed by this analysis): spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)",
+                                                                    "source": null,
+                                                                    "target": null,
+                                                                    "reply": false,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-79",
+                                                                    "kind": "note",
+                                                                    "label": "External/delegate call boundary (not expanded): parkingSpots.Any(spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))",
+                                                                    "source": null,
+                                                                    "target": null,
+                                                                    "reply": false,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-80",
+                                                                    "kind": "reply",
+                                                                    "label": "parkingSpots.Any(spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))",
+                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                    "reply": true,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-82",
+                                                                    "kind": "fragment",
+                                                                    "label": "Alternative paths",
+                                                                    "source": null,
+                                                                    "target": null,
+                                                                    "reply": false,
+                                                                    "branches": [
+                                                                      {
+                                                                        "label": "RegistrationExists(vehicle.RegistrationNumber)",
+                                                                        "items": [
+                                                                          {
+                                                                            "id": "parking-sequence:element-83",
+                                                                            "kind": "message",
+                                                                            "label": "DuplicateRegistration(vehicle)",
+                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                            "reply": false,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-85",
+                                                                            "kind": "message",
+                                                                            "label": "Failed($\u0022A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0022, OperationError.DuplicateRegistration)",
+                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                            "target": "parking-sequence:p_426dd07c2e3a",
+                                                                            "reply": false,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-87",
+                                                                            "kind": "note",
+                                                                            "label": "Scope boundary: method body not expanded.",
+                                                                            "source": null,
+                                                                            "target": null,
+                                                                            "reply": false,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-88",
+                                                                            "kind": "reply",
+                                                                            "label": "Garage.Results.ParkingResult (if call returns)",
+                                                                            "source": "parking-sequence:p_426dd07c2e3a",
+                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                            "reply": true,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-90",
+                                                                            "kind": "reply",
+                                                                            "label": "ParkingResult.Failed($\u0022A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0022, OperationError.DuplicateRegistration)",
+                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                            "reply": true,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-92",
+                                                                            "kind": "reply",
+                                                                            "label": "DuplicateRegistration(vehicle)",
+                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                            "target": "parking-sequence:p_753cfee6aae6",
+                                                                            "reply": true,
+                                                                            "branches": []
+                                                                          }
+                                                                        ]
+                                                                      },
+                                                                      {
+                                                                        "label": "otherwise",
+                                                                        "items": [
+                                                                          {
+                                                                            "id": "parking-sequence:element-94",
+                                                                            "kind": "message",
+                                                                            "label": "Park(vehicle)",
+                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                            "target": "parking-sequence:p_b323161f1e5c",
+                                                                            "reply": false,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-96",
+                                                                            "kind": "note",
+                                                                            "label": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+                                                                            "source": null,
+                                                                            "target": null,
+                                                                            "reply": false,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-97",
+                                                                            "kind": "fragment",
+                                                                            "label": "Alternative paths",
+                                                                            "source": null,
+                                                                            "target": null,
+                                                                            "reply": false,
+                                                                            "branches": [
+                                                                              {
+                                                                                "label": "Vehicle is not null is false",
+                                                                                "items": [
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-98",
+                                                                                    "kind": "message",
+                                                                                    "label": "Fits(vehicle)",
+                                                                                    "source": "parking-sequence:p_b323161f1e5c",
+                                                                                    "target": "parking-sequence:p_b323161f1e5c",
+                                                                                    "reply": false,
+                                                                                    "branches": []
+                                                                                  },
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-100",
+                                                                                    "kind": "note",
+                                                                                    "label": "Depth boundary: method body not expanded.",
+                                                                                    "source": null,
+                                                                                    "target": null,
+                                                                                    "reply": false,
+                                                                                    "branches": []
+                                                                                  },
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-101",
+                                                                                    "kind": "reply",
+                                                                                    "label": "bool (if call returns)",
+                                                                                    "source": "parking-sequence:p_b323161f1e5c",
+                                                                                    "target": "parking-sequence:p_b323161f1e5c",
+                                                                                    "reply": true,
+                                                                                    "branches": []
+                                                                                  }
+                                                                                ]
+                                                                              },
+                                                                              {
+                                                                                "label": "short-circuit",
+                                                                                "items": []
+                                                                              }
+                                                                            ]
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-103",
+                                                                            "kind": "fragment",
+                                                                            "label": "Alternative paths",
+                                                                            "source": null,
+                                                                            "target": null,
+                                                                            "reply": false,
+                                                                            "branches": [
+                                                                              {
+                                                                                "label": "Vehicle is not null || !Fits(vehicle)",
+                                                                                "items": [
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-104",
+                                                                                    "kind": "note",
+                                                                                    "label": "Constructor/initializer boundary (not expanded): new InvalidOperationException(\u0022The spot must be empty and large enough for the vehicle.\u0022)",
+                                                                                    "source": null,
+                                                                                    "target": null,
+                                                                                    "reply": false,
+                                                                                    "branches": []
+                                                                                  },
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-105",
+                                                                                    "kind": "note",
+                                                                                    "label": "Throws: new InvalidOperationException(\u0022The spot must be empty and large enough for the vehicle.\u0022); this path terminates here.",
+                                                                                    "source": null,
+                                                                                    "target": null,
+                                                                                    "reply": false,
+                                                                                    "branches": []
+                                                                                  }
+                                                                                ]
+                                                                              },
+                                                                              {
+                                                                                "label": "otherwise",
+                                                                                "items": [
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-106",
+                                                                                    "kind": "reply",
+                                                                                    "label": "complete",
+                                                                                    "source": "parking-sequence:p_b323161f1e5c",
+                                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                                    "reply": true,
+                                                                                    "branches": []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-108",
+                                                                            "kind": "message",
+                                                                            "label": "Completed(spot, $\u0022Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0022)",
+                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                            "target": "parking-sequence:p_426dd07c2e3a",
+                                                                            "reply": false,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-110",
+                                                                            "kind": "note",
+                                                                            "label": "Scope boundary: method body not expanded.",
+                                                                            "source": null,
+                                                                            "target": null,
+                                                                            "reply": false,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-111",
+                                                                            "kind": "reply",
+                                                                            "label": "Garage.Results.ParkingResult (if call returns)",
+                                                                            "source": "parking-sequence:p_426dd07c2e3a",
+                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                            "reply": true,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-113",
+                                                                            "kind": "reply",
+                                                                            "label": "ParkingResult.Completed(spot, $\u0022Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0022)",
+                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                            "target": "parking-sequence:p_753cfee6aae6",
+                                                                            "reply": true,
+                                                                            "branches": []
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "id": "parking-sequence:element-115",
+                                            "kind": "reply",
+                                            "label": "garage.Park(vehicle, spot)",
+                                            "source": "parking-sequence:p_753cfee6aae6",
+                                            "target": "parking-sequence:p_753cfee6aae6",
+                                            "reply": true,
+                                            "branches": []
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "label": "otherwise",
+                                        "items": [
+                                          {
+                                            "id": "parking-sequence:element-117",
+                                            "kind": "message",
+                                            "label": "Park(vehicle)",
+                                            "source": "parking-sequence:p_753cfee6aae6",
+                                            "target": "parking-sequence:p_50a211325908",
+                                            "reply": false,
+                                            "branches": []
+                                          },
+                                          {
+                                            "id": "parking-sequence:element-119",
+                                            "kind": "note",
+                                            "label": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+                                            "source": null,
+                                            "target": null,
+                                            "reply": false,
+                                            "branches": []
+                                          },
+                                          {
+                                            "id": "parking-sequence:element-120",
+                                            "kind": "message",
+                                            "label": "RegistrationExists(vehicle.RegistrationNumber)",
+                                            "source": "parking-sequence:p_50a211325908",
+                                            "target": "parking-sequence:p_50a211325908",
+                                            "reply": false,
+                                            "branches": []
+                                          },
+                                          {
+                                            "id": "parking-sequence:element-122",
+                                            "kind": "note",
+                                            "label": "Callback boundary (not executed by this analysis): spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)",
+                                            "source": null,
+                                            "target": null,
+                                            "reply": false,
+                                            "branches": []
+                                          },
+                                          {
+                                            "id": "parking-sequence:element-123",
+                                            "kind": "note",
+                                            "label": "External/delegate call boundary (not expanded): parkingSpots.Any(spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))",
+                                            "source": null,
+                                            "target": null,
+                                            "reply": false,
+                                            "branches": []
+                                          },
+                                          {
+                                            "id": "parking-sequence:element-124",
+                                            "kind": "reply",
+                                            "label": "parkingSpots.Any(spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))",
+                                            "source": "parking-sequence:p_50a211325908",
+                                            "target": "parking-sequence:p_50a211325908",
+                                            "reply": true,
+                                            "branches": []
+                                          },
+                                          {
+                                            "id": "parking-sequence:element-126",
+                                            "kind": "fragment",
+                                            "label": "Alternative paths",
+                                            "source": null,
+                                            "target": null,
+                                            "reply": false,
+                                            "branches": [
+                                              {
+                                                "label": "RegistrationExists(vehicle.RegistrationNumber)",
+                                                "items": [
+                                                  {
+                                                    "id": "parking-sequence:element-127",
+                                                    "kind": "message",
+                                                    "label": "DuplicateRegistration(vehicle)",
+                                                    "source": "parking-sequence:p_50a211325908",
+                                                    "target": "parking-sequence:p_50a211325908",
+                                                    "reply": false,
+                                                    "branches": []
+                                                  },
+                                                  {
+                                                    "id": "parking-sequence:element-129",
+                                                    "kind": "message",
+                                                    "label": "Failed($\u0022A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0022, OperationError.DuplicateRegistration)",
+                                                    "source": "parking-sequence:p_50a211325908",
+                                                    "target": "parking-sequence:p_426dd07c2e3a",
+                                                    "reply": false,
+                                                    "branches": []
+                                                  },
+                                                  {
+                                                    "id": "parking-sequence:element-131",
+                                                    "kind": "note",
+                                                    "label": "Scope boundary: method body not expanded.",
+                                                    "source": null,
+                                                    "target": null,
+                                                    "reply": false,
+                                                    "branches": []
+                                                  },
+                                                  {
+                                                    "id": "parking-sequence:element-132",
+                                                    "kind": "reply",
+                                                    "label": "Garage.Results.ParkingResult (if call returns)",
+                                                    "source": "parking-sequence:p_426dd07c2e3a",
+                                                    "target": "parking-sequence:p_50a211325908",
+                                                    "reply": true,
+                                                    "branches": []
+                                                  },
+                                                  {
+                                                    "id": "parking-sequence:element-134",
+                                                    "kind": "reply",
+                                                    "label": "ParkingResult.Failed($\u0022A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0022, OperationError.DuplicateRegistration)",
+                                                    "source": "parking-sequence:p_50a211325908",
+                                                    "target": "parking-sequence:p_50a211325908",
+                                                    "reply": true,
+                                                    "branches": []
+                                                  },
+                                                  {
+                                                    "id": "parking-sequence:element-136",
+                                                    "kind": "reply",
+                                                    "label": "DuplicateRegistration(vehicle)",
+                                                    "source": "parking-sequence:p_50a211325908",
+                                                    "target": "parking-sequence:p_753cfee6aae6",
+                                                    "reply": true,
+                                                    "branches": []
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "label": "otherwise",
+                                                "items": [
+                                                  {
+                                                    "id": "parking-sequence:element-138",
+                                                    "kind": "note",
+                                                    "label": "Callback boundary (not executed by this analysis): spot =\u003E spot.Vehicle is null \u0026\u0026 spot.Fits(vehicle)",
+                                                    "source": null,
+                                                    "target": null,
+                                                    "reply": false,
+                                                    "branches": []
+                                                  },
+                                                  {
+                                                    "id": "parking-sequence:element-139",
+                                                    "kind": "note",
+                                                    "label": "External/delegate call boundary (not expanded): parkingSpots.FirstOrDefault(spot =\u003E spot.Vehicle is null \u0026\u0026 spot.Fits(vehicle))",
+                                                    "source": null,
+                                                    "target": null,
+                                                    "reply": false,
+                                                    "branches": []
+                                                  },
+                                                  {
+                                                    "id": "parking-sequence:element-140",
+                                                    "kind": "fragment",
+                                                    "label": "Alternative paths",
+                                                    "source": null,
+                                                    "target": null,
+                                                    "reply": false,
+                                                    "branches": [
+                                                      {
+                                                        "label": "availableSpot is null",
+                                                        "items": [
+                                                          {
+                                                            "id": "parking-sequence:element-141",
+                                                            "kind": "fragment",
+                                                            "label": "Alternative paths",
+                                                            "source": null,
+                                                            "target": null,
+                                                            "reply": false,
+                                                            "branches": [
+                                                              {
+                                                                "label": "AvailableSpaces == 0",
+                                                                "items": [
+                                                                  {
+                                                                    "id": "parking-sequence:element-142",
+                                                                    "kind": "message",
+                                                                    "label": "Failed(\u0022The garage is full.\u0022, OperationError.GarageFull)",
+                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                    "target": "parking-sequence:p_426dd07c2e3a",
+                                                                    "reply": false,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-144",
+                                                                    "kind": "note",
+                                                                    "label": "Scope boundary: method body not expanded.",
+                                                                    "source": null,
+                                                                    "target": null,
+                                                                    "reply": false,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-145",
+                                                                    "kind": "reply",
+                                                                    "label": "Garage.Results.ParkingResult (if call returns)",
+                                                                    "source": "parking-sequence:p_426dd07c2e3a",
+                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                    "reply": true,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-147",
+                                                                    "kind": "reply",
+                                                                    "label": "ParkingResult.Failed(\u0022The garage is full.\u0022, OperationError.GarageFull)",
+                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                    "target": "parking-sequence:p_753cfee6aae6",
+                                                                    "reply": true,
+                                                                    "branches": []
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "label": "otherwise",
+                                                                "items": [
+                                                                  {
+                                                                    "id": "parking-sequence:element-149",
+                                                                    "kind": "message",
+                                                                    "label": "Failed(\u0022No available parking spot is large enough for this vehicle.\u0022, OperationError.VehicleDoesNotFit)",
+                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                    "target": "parking-sequence:p_426dd07c2e3a",
+                                                                    "reply": false,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-151",
+                                                                    "kind": "note",
+                                                                    "label": "Scope boundary: method body not expanded.",
+                                                                    "source": null,
+                                                                    "target": null,
+                                                                    "reply": false,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-152",
+                                                                    "kind": "reply",
+                                                                    "label": "Garage.Results.ParkingResult (if call returns)",
+                                                                    "source": "parking-sequence:p_426dd07c2e3a",
+                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                    "reply": true,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-154",
+                                                                    "kind": "reply",
+                                                                    "label": "ParkingResult.Failed(\u0022No available parking spot is large enough for this vehicle.\u0022, OperationError.VehicleDoesNotFit)",
+                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                    "target": "parking-sequence:p_753cfee6aae6",
+                                                                    "reply": true,
+                                                                    "branches": []
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "label": "otherwise",
+                                                        "items": [
+                                                          {
+                                                            "id": "parking-sequence:element-156",
+                                                            "kind": "message",
+                                                            "label": "Park(vehicle, availableSpot.Number)",
+                                                            "source": "parking-sequence:p_50a211325908",
+                                                            "target": "parking-sequence:p_50a211325908",
+                                                            "reply": false,
+                                                            "branches": []
+                                                          },
+                                                          {
+                                                            "id": "parking-sequence:element-158",
+                                                            "kind": "note",
+                                                            "label": "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+                                                            "source": null,
+                                                            "target": null,
+                                                            "reply": false,
+                                                            "branches": []
+                                                          },
+                                                          {
+                                                            "id": "parking-sequence:element-159",
+                                                            "kind": "fragment",
+                                                            "label": "Alternative paths",
+                                                            "source": null,
+                                                            "target": null,
+                                                            "reply": false,
+                                                            "branches": [
+                                                              {
+                                                                "label": "spot \u003C 1 || spot \u003E Capacity",
+                                                                "items": [
+                                                                  {
+                                                                    "id": "parking-sequence:element-160",
+                                                                    "kind": "message",
+                                                                    "label": "Failed($\u0022Parking spot must be between 1 and {Capacity}.\u0022, OperationError.SpotOutOfRange)",
+                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                    "target": "parking-sequence:p_426dd07c2e3a",
+                                                                    "reply": false,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-162",
+                                                                    "kind": "note",
+                                                                    "label": "Scope boundary: method body not expanded.",
+                                                                    "source": null,
+                                                                    "target": null,
+                                                                    "reply": false,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-163",
+                                                                    "kind": "reply",
+                                                                    "label": "Garage.Results.ParkingResult (if call returns)",
+                                                                    "source": "parking-sequence:p_426dd07c2e3a",
+                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                    "reply": true,
+                                                                    "branches": []
+                                                                  },
+                                                                  {
+                                                                    "id": "parking-sequence:element-165",
+                                                                    "kind": "reply",
+                                                                    "label": "ParkingResult.Failed($\u0022Parking spot must be between 1 and {Capacity}.\u0022, OperationError.SpotOutOfRange)",
+                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                    "reply": true,
+                                                                    "branches": []
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "label": "otherwise",
+                                                                "items": [
+                                                                  {
+                                                                    "id": "parking-sequence:element-167",
+                                                                    "kind": "fragment",
+                                                                    "label": "Alternative paths",
+                                                                    "source": null,
+                                                                    "target": null,
+                                                                    "reply": false,
+                                                                    "branches": [
+                                                                      {
+                                                                        "label": "parkingSpot.Vehicle is not null",
+                                                                        "items": [
+                                                                          {
+                                                                            "id": "parking-sequence:element-168",
+                                                                            "kind": "message",
+                                                                            "label": "Failed($\u0022Parking spot {spot} is occupied.\u0022, OperationError.SpotOccupied)",
+                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                            "target": "parking-sequence:p_426dd07c2e3a",
+                                                                            "reply": false,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-170",
+                                                                            "kind": "note",
+                                                                            "label": "Scope boundary: method body not expanded.",
+                                                                            "source": null,
+                                                                            "target": null,
+                                                                            "reply": false,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-171",
+                                                                            "kind": "reply",
+                                                                            "label": "Garage.Results.ParkingResult (if call returns)",
+                                                                            "source": "parking-sequence:p_426dd07c2e3a",
+                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                            "reply": true,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-173",
+                                                                            "kind": "reply",
+                                                                            "label": "ParkingResult.Failed($\u0022Parking spot {spot} is occupied.\u0022, OperationError.SpotOccupied)",
+                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                            "reply": true,
+                                                                            "branches": []
+                                                                          }
+                                                                        ]
+                                                                      },
+                                                                      {
+                                                                        "label": "otherwise",
+                                                                        "items": [
+                                                                          {
+                                                                            "id": "parking-sequence:element-175",
+                                                                            "kind": "message",
+                                                                            "label": "Fits(vehicle)",
+                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                            "target": "parking-sequence:p_b323161f1e5c",
+                                                                            "reply": false,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-177",
+                                                                            "kind": "note",
+                                                                            "label": "Depth boundary: method body not expanded.",
+                                                                            "source": null,
+                                                                            "target": null,
+                                                                            "reply": false,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-178",
+                                                                            "kind": "reply",
+                                                                            "label": "bool (if call returns)",
+                                                                            "source": "parking-sequence:p_b323161f1e5c",
+                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                            "reply": true,
+                                                                            "branches": []
+                                                                          },
+                                                                          {
+                                                                            "id": "parking-sequence:element-180",
+                                                                            "kind": "fragment",
+                                                                            "label": "Alternative paths",
+                                                                            "source": null,
+                                                                            "target": null,
+                                                                            "reply": false,
+                                                                            "branches": [
+                                                                              {
+                                                                                "label": "!parkingSpot.Fits(vehicle)",
+                                                                                "items": [
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-181",
+                                                                                    "kind": "message",
+                                                                                    "label": "Failed($\u0022Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0022, OperationError.VehicleDoesNotFit)",
+                                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                                    "target": "parking-sequence:p_426dd07c2e3a",
+                                                                                    "reply": false,
+                                                                                    "branches": []
+                                                                                  },
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-183",
+                                                                                    "kind": "note",
+                                                                                    "label": "Scope boundary: method body not expanded.",
+                                                                                    "source": null,
+                                                                                    "target": null,
+                                                                                    "reply": false,
+                                                                                    "branches": []
+                                                                                  },
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-184",
+                                                                                    "kind": "reply",
+                                                                                    "label": "Garage.Results.ParkingResult (if call returns)",
+                                                                                    "source": "parking-sequence:p_426dd07c2e3a",
+                                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                                    "reply": true,
+                                                                                    "branches": []
+                                                                                  },
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-186",
+                                                                                    "kind": "reply",
+                                                                                    "label": "ParkingResult.Failed($\u0022Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0022, OperationError.VehicleDoesNotFit)",
+                                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                                    "reply": true,
+                                                                                    "branches": []
+                                                                                  }
+                                                                                ]
+                                                                              },
+                                                                              {
+                                                                                "label": "otherwise",
+                                                                                "items": [
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-188",
+                                                                                    "kind": "message",
+                                                                                    "label": "RegistrationExists(vehicle.RegistrationNumber)",
+                                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                                    "reply": false,
+                                                                                    "branches": []
+                                                                                  },
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-190",
+                                                                                    "kind": "note",
+                                                                                    "label": "Depth boundary: method body not expanded.",
+                                                                                    "source": null,
+                                                                                    "target": null,
+                                                                                    "reply": false,
+                                                                                    "branches": []
+                                                                                  },
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-191",
+                                                                                    "kind": "reply",
+                                                                                    "label": "bool (if call returns)",
+                                                                                    "source": "parking-sequence:p_50a211325908",
+                                                                                    "target": "parking-sequence:p_50a211325908",
+                                                                                    "reply": true,
+                                                                                    "branches": []
+                                                                                  },
+                                                                                  {
+                                                                                    "id": "parking-sequence:element-193",
+                                                                                    "kind": "fragment",
+                                                                                    "label": "Alternative paths",
+                                                                                    "source": null,
+                                                                                    "target": null,
+                                                                                    "reply": false,
+                                                                                    "branches": [
+                                                                                      {
+                                                                                        "label": "RegistrationExists(vehicle.RegistrationNumber)",
+                                                                                        "items": [
+                                                                                          {
+                                                                                            "id": "parking-sequence:element-194",
+                                                                                            "kind": "message",
+                                                                                            "label": "DuplicateRegistration(vehicle)",
+                                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                                            "reply": false,
+                                                                                            "branches": []
+                                                                                          },
+                                                                                          {
+                                                                                            "id": "parking-sequence:element-196",
+                                                                                            "kind": "note",
+                                                                                            "label": "Depth boundary: method body not expanded.",
+                                                                                            "source": null,
+                                                                                            "target": null,
+                                                                                            "reply": false,
+                                                                                            "branches": []
+                                                                                          },
+                                                                                          {
+                                                                                            "id": "parking-sequence:element-197",
+                                                                                            "kind": "reply",
+                                                                                            "label": "Garage.Results.ParkingResult (if call returns)",
+                                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                                            "reply": true,
+                                                                                            "branches": []
+                                                                                          },
+                                                                                          {
+                                                                                            "id": "parking-sequence:element-199",
+                                                                                            "kind": "reply",
+                                                                                            "label": "DuplicateRegistration(vehicle)",
+                                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                                            "reply": true,
+                                                                                            "branches": []
+                                                                                          }
+                                                                                        ]
+                                                                                      },
+                                                                                      {
+                                                                                        "label": "otherwise",
+                                                                                        "items": [
+                                                                                          {
+                                                                                            "id": "parking-sequence:element-201",
+                                                                                            "kind": "message",
+                                                                                            "label": "Park(vehicle)",
+                                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                                            "target": "parking-sequence:p_b323161f1e5c",
+                                                                                            "reply": false,
+                                                                                            "branches": []
+                                                                                          },
+                                                                                          {
+                                                                                            "id": "parking-sequence:element-203",
+                                                                                            "kind": "note",
+                                                                                            "label": "Depth boundary: method body not expanded.",
+                                                                                            "source": null,
+                                                                                            "target": null,
+                                                                                            "reply": false,
+                                                                                            "branches": []
+                                                                                          },
+                                                                                          {
+                                                                                            "id": "parking-sequence:element-204",
+                                                                                            "kind": "reply",
+                                                                                            "label": "complete (if call returns)",
+                                                                                            "source": "parking-sequence:p_b323161f1e5c",
+                                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                                            "reply": true,
+                                                                                            "branches": []
+                                                                                          },
+                                                                                          {
+                                                                                            "id": "parking-sequence:element-206",
+                                                                                            "kind": "message",
+                                                                                            "label": "Completed(spot, $\u0022Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0022)",
+                                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                                            "target": "parking-sequence:p_426dd07c2e3a",
+                                                                                            "reply": false,
+                                                                                            "branches": []
+                                                                                          },
+                                                                                          {
+                                                                                            "id": "parking-sequence:element-208",
+                                                                                            "kind": "note",
+                                                                                            "label": "Scope boundary: method body not expanded.",
+                                                                                            "source": null,
+                                                                                            "target": null,
+                                                                                            "reply": false,
+                                                                                            "branches": []
+                                                                                          },
+                                                                                          {
+                                                                                            "id": "parking-sequence:element-209",
+                                                                                            "kind": "reply",
+                                                                                            "label": "Garage.Results.ParkingResult (if call returns)",
+                                                                                            "source": "parking-sequence:p_426dd07c2e3a",
+                                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                                            "reply": true,
+                                                                                            "branches": []
+                                                                                          },
+                                                                                          {
+                                                                                            "id": "parking-sequence:element-211",
+                                                                                            "kind": "reply",
+                                                                                            "label": "ParkingResult.Completed(spot, $\u0022Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0022)",
+                                                                                            "source": "parking-sequence:p_50a211325908",
+                                                                                            "target": "parking-sequence:p_50a211325908",
+                                                                                            "reply": true,
+                                                                                            "branches": []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "id": "parking-sequence:element-213",
+                                                            "kind": "reply",
+                                                            "label": "Park(vehicle, availableSpot.Number)",
+                                                            "source": "parking-sequence:p_50a211325908",
+                                                            "target": "parking-sequence:p_753cfee6aae6",
+                                                            "reply": true,
+                                                            "branches": []
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "id": "parking-sequence:element-215",
+                                            "kind": "reply",
+                                            "label": "garage.Park(vehicle)",
+                                            "source": "parking-sequence:p_753cfee6aae6",
+                                            "target": "parking-sequence:p_753cfee6aae6",
+                                            "reply": true,
+                                            "branches": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
                           }
                         ]
                       }
                     ]
                   },
                   {
-                    "id": "parking-sequence:element-33",
+                    "id": "parking-sequence:element-217",
                     "kind": "reply",
-                    "label": "ParkingResult",
-                    "source": "parking-sequence:Service",
-                    "target": "parking-sequence:UI",
+                    "label": "ParkNewVehicle(vehicle, garage, spotNumber)",
+                    "source": "parking-sequence:p_753cfee6aae6",
+                    "target": "parking-sequence:Actor",
                     "reply": true,
                     "branches": []
                   }
                 ]
               }
             ]
-          },
-          {
-            "id": "parking-sequence:element-35",
-            "kind": "reply",
-            "label": "Display result message",
-            "source": "parking-sequence:UI",
-            "target": "parking-sequence:User",
-            "reply": true,
-            "branches": []
           }
         ]
       },
       "timing": null,
       "notes": [
-        "Scope: non-null arguments. Result branches are summarized; this is not a complete call trace.",
-        "No suitable spot returns GarageFull or VehicleDoesNotFit. A match delegates to Park(vehicle, spot).",
-        "The numbered operation checks range, occupancy, dimensions, and duplicate registration."
+        "Static source view; MaxDepth=3. Lifelines group calls by declared type, not runtime instance. Alternatives are possible source paths, not a recorded execution. Guards may be infeasible together. Property getters and implicit/external exceptions are not expanded. Framework calls and callbacks are boundaries. Caller continuation assumes the callee returns normally. Async scheduling is not modeled. Expand bodies in: Garage.Models, Garage.Services. Other calls remain visible as boundaries.",
+        "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+        "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(garage)",
+        "External/delegate call boundary (not expanded): Catalog.Vehicles.Contains(vehicle)",
+        "Scope boundary: method body not expanded.",
+        "External/delegate call boundary (not expanded): garages.Contains(garage)",
+        "Scope boundary: method body not expanded.",
+        "Callback boundary (not executed by this analysis): garage =\u003E garage.Vehicles.Any(parked =\u003E string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase))",
+        "External/delegate call boundary (not expanded): garages.Any(garage =\u003E garage.Vehicles.Any(parked =\u003E string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))",
+        "Scope boundary: method body not expanded.",
+        "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+        "Scope boundary: method body not expanded.",
+        "Scope boundary: method body not expanded.",
+        "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+        "Scope boundary: method body not expanded.",
+        "Callback boundary (not executed by this analysis): spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)",
+        "External/delegate call boundary (not expanded): parkingSpots.Any(spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))",
+        "Scope boundary: method body not expanded.",
+        "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+        "Depth boundary: method body not expanded.",
+        "Constructor/initializer boundary (not expanded): new InvalidOperationException(\u0022The spot must be empty and large enough for the vehicle.\u0022)",
+        "Throws: new InvalidOperationException(\u0022The spot must be empty and large enough for the vehicle.\u0022); this path terminates here.",
+        "Scope boundary: method body not expanded.",
+        "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+        "Callback boundary (not executed by this analysis): spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)",
+        "External/delegate call boundary (not expanded): parkingSpots.Any(spot =\u003E string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))",
+        "Scope boundary: method body not expanded.",
+        "Callback boundary (not executed by this analysis): spot =\u003E spot.Vehicle is null \u0026\u0026 spot.Fits(vehicle)",
+        "External/delegate call boundary (not expanded): parkingSpots.FirstOrDefault(spot =\u003E spot.Vehicle is null \u0026\u0026 spot.Fits(vehicle))",
+        "Scope boundary: method body not expanded.",
+        "Scope boundary: method body not expanded.",
+        "External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)",
+        "Scope boundary: method body not expanded.",
+        "Scope boundary: method body not expanded.",
+        "Depth boundary: method body not expanded.",
+        "Scope boundary: method body not expanded.",
+        "Depth boundary: method body not expanded.",
+        "Depth boundary: method body not expanded.",
+        "Depth boundary: method body not expanded.",
+        "Scope boundary: method body not expanded."
       ]
     },
     "parking-spot-state": {

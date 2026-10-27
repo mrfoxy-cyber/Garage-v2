@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "projects": [
     {
       "id": "project:Garage.Console/Garage.Console.csproj",
@@ -2982,6 +2982,48 @@
       ]
     },
     {
+      "id": "type:Garage/Garage.csproj:Garage.Documentation.SequenceViewAttribute",
+      "project": "Garage/Garage.csproj",
+      "namespace": "Garage.Documentation",
+      "name": "SequenceViewAttribute",
+      "kind": "class",
+      "declaration": "public sealed class SequenceViewAttribute(string id)",
+      "files": [
+        "Garage/Documentation/DiagramAttributes.cs"
+      ],
+      "bases": [
+        "Attribute"
+      ],
+      "members": [
+        "primary constructor SequenceViewAttribute(string id)",
+        "public int MaxDepth {  get;  set; }",
+        "public string Id {  get; }",
+        "public string[] ExpandNamespaces {  get;  set; }"
+      ],
+      "operations": []
+    },
+    {
+      "id": "type:Garage/Garage.csproj:Garage.Documentation.UseCaseAttribute",
+      "project": "Garage/Garage.csproj",
+      "namespace": "Garage.Documentation",
+      "name": "UseCaseAttribute",
+      "kind": "class",
+      "declaration": "public sealed class UseCaseAttribute(string id, string title)",
+      "files": [
+        "Garage/Documentation/DiagramAttributes.cs"
+      ],
+      "bases": [
+        "Attribute"
+      ],
+      "members": [
+        "primary constructor UseCaseAttribute(string id, string title)",
+        "public string Actor {  get;  set; }",
+        "public string Id {  get; }",
+        "public string Title {  get; }"
+      ],
+      "operations": []
+    },
+    {
       "id": "type:Garage/Garage.csproj:Garage.Models.Garage",
       "project": "Garage/Garage.csproj",
       "namespace": "Garage.Models",
@@ -2993,6 +3035,8 @@
       ],
       "bases": [],
       "members": [
+        "[UseCase(\u0022remove\u0022, \u0022Remove parked vehicle\u0022)]\npublic GarageOperationResult Remove(string registrationNumber)",
+        "[UseCase(\u0022search\u0022, \u0022Search parked vehicles\u0022)]\npublic IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)",
         "private Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles, IReadOnlyList\u003CDimensions\u003E? spotDimensions)",
         "private bool RegistrationExists(string registrationNumber)",
         "private readonly List\u003CParkingSpot\u003E parkingSpots",
@@ -3001,11 +3045,9 @@
         "public Garage(string garageName, List\u003CVehicle\u003E vehicles)",
         "public Garage(string garageName, int capacity)",
         "public Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles)",
-        "public GarageOperationResult Remove(string registrationNumber)",
         "public GarageOperationResult RemoveAtSpot(int spotNumber)",
         "public IReadOnlyList\u003CParkedVehicleInfo\u003E ParkedVehicles { get; }",
         "public IReadOnlyList\u003CParkingSpotInfo\u003E SpotDetails { get; }",
-        "public IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)",
         "public IReadOnlyList\u003CVehicle\u003E Vehicles { get; }",
         "public IReadOnlyList\u003CVehicleTypeGroup\u003E VehiclesByType { get; }",
         "public IReadOnlyList\u003Cint\u003E AvailableSpotsFor(Vehicle vehicle)",
@@ -3052,7 +3094,7 @@
         {
           "id": "operation:Garage/Garage.csproj:Garage.Models.Garage.Remove(string)",
           "name": "Remove",
-          "signature": "public GarageOperationResult Remove(string registrationNumber)"
+          "signature": "[UseCase(\u0022remove\u0022, \u0022Remove parked vehicle\u0022)]\npublic GarageOperationResult Remove(string registrationNumber)"
         },
         {
           "id": "operation:Garage/Garage.csproj:Garage.Models.Garage.RemoveAtSpot(int)",
@@ -3062,7 +3104,7 @@
         {
           "id": "operation:Garage/Garage.csproj:Garage.Models.Garage.Search(VehicleSearchCriteria)",
           "name": "Search",
-          "signature": "public IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)"
+          "signature": "[UseCase(\u0022search\u0022, \u0022Search parked vehicles\u0022)]\npublic IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)"
         }
       ]
     },
@@ -3787,17 +3829,17 @@
       ],
       "bases": [],
       "members": [
+        "[UseCase(\u0022create-garage\u0022, \u0022Create or import garage\u0022)]\npublic GarageCreationResult CreateGarage(string name, int capacity)",
+        "[UseCase(\u0022create-garage\u0022, \u0022Create or import garage\u0022)]\npublic GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)",
+        "[UseCase(\u0022park-vehicle\u0022, \u0022Park vehicle\u0022)]\n[SequenceView(\u0022parking-sequence\u0022, MaxDepth = 3, ExpandNamespaces = new[] { \u0022Garage.Services\u0022, \u0022Garage.Models\u0022 })]\npublic ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)",
         "private GarageCreationResult CreateAndRegister(Func\u003CVehicleGarage\u003E factory)",
         "private GarageCreationResult RegisterGarage(VehicleGarage garage)",
         "private ParkingResult ParkNewVehicle(Vehicle vehicle, VehicleGarage garage, int? spotNumber)",
         "private readonly List\u003CVehicleGarage\u003E garages",
         "public GarageCreationResult CreateGarage(string name, IReadOnlyList\u003CDimensions\u003E sizes)",
-        "public GarageCreationResult CreateGarage(string name, int capacity)",
-        "public GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)",
         "public GarageService(List\u003CVehicleGarage\u003E initialGarages, List\u003CVehicle\u003E initialVehicles)",
         "public IReadOnlyList\u003CVehicle\u003E GetParkableVehicles(VehicleGarage garage, int? spotNumber = null)",
         "public IReadOnlyList\u003CVehicleGarage\u003E Garages { get; }",
-        "public ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)",
         "public VehicleCatalog Catalog {  get; }",
         "public VehicleCreationService VehicleCreation {  get; }",
         "public bool ContainsGarage(string name)",
@@ -3822,12 +3864,12 @@
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.GarageService.CreateGarage(string,int)",
           "name": "CreateGarage",
-          "signature": "public GarageCreationResult CreateGarage(string name, int capacity)"
+          "signature": "[UseCase(\u0022create-garage\u0022, \u0022Create or import garage\u0022)]\npublic GarageCreationResult CreateGarage(string name, int capacity)"
         },
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.GarageService.CreateGarageFromJson(string,string?)",
           "name": "CreateGarageFromJson",
-          "signature": "public GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)"
+          "signature": "[UseCase(\u0022create-garage\u0022, \u0022Create or import garage\u0022)]\npublic GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)"
         },
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.GarageService.GetParkableVehicles(VehicleGarage,int?)",
@@ -3842,7 +3884,7 @@
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.GarageService.Park(Vehicle,VehicleGarage,int?)",
           "name": "Park",
-          "signature": "public ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)"
+          "signature": "[UseCase(\u0022park-vehicle\u0022, \u0022Park vehicle\u0022)]\n[SequenceView(\u0022parking-sequence\u0022, MaxDepth = 3, ExpandNamespaces = new[] { \u0022Garage.Services\u0022, \u0022Garage.Models\u0022 })]\npublic ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)"
         },
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.GarageService.ParkNewVehicle(Vehicle,VehicleGarage,int?)",
@@ -3868,22 +3910,22 @@
       ],
       "bases": [],
       "members": [
+        "[UseCase(\u0022create-vehicle\u0022, \u0022Create or import vehicle\u0022)]\npublic VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)",
+        "[UseCase(\u0022create-vehicle\u0022, \u0022Create or import vehicle\u0022)]\npublic VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)",
         "internal VehicleCreationService(VehicleCatalog catalog, Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park)",
         "private readonly Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park",
-        "private readonly VehicleCatalog catalog",
-        "public VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)",
-        "public VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)"
+        "private readonly VehicleCatalog catalog"
       ],
       "operations": [
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.VehicleCreationService.Create(Func\u003CVehicle\u003E,VehicleGarage?,int?)",
           "name": "Create",
-          "signature": "public VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)"
+          "signature": "[UseCase(\u0022create-vehicle\u0022, \u0022Create or import vehicle\u0022)]\npublic VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)"
         },
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.VehicleCreationService.FromJson(string,VehicleGarage?,int?)",
           "name": "FromJson",
-          "signature": "public VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)"
+          "signature": "[UseCase(\u0022create-vehicle\u0022, \u0022Create or import vehicle\u0022)]\npublic VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)"
         }
       ]
     },
@@ -5475,6 +5517,76 @@
           "name": "ValidateRegistration",
           "signature": "private void ValidateRegistration(string number, CountryCode countryCode)"
         }
+      ]
+    }
+  ],
+  "useCases": [
+    {
+      "id": "create-garage",
+      "title": "Create or import garage",
+      "actor": "Garage operator",
+      "sources": [
+        "Garage/Services/GarageService.cs"
+      ]
+    },
+    {
+      "id": "create-vehicle",
+      "title": "Create or import vehicle",
+      "actor": "Garage operator",
+      "sources": [
+        "Garage/Services/VehicleCreationService.cs"
+      ]
+    },
+    {
+      "id": "inspect",
+      "title": "Inspect parking spaces",
+      "actor": "Garage operator",
+      "sources": [
+        "Garage/Models/Garage.cs"
+      ]
+    },
+    {
+      "id": "list",
+      "title": "List garages and vehicles",
+      "actor": "Garage operator",
+      "sources": [
+        "Garage/Services/GarageService.cs"
+      ]
+    },
+    {
+      "id": "park-vehicle",
+      "title": "Park vehicle",
+      "actor": "Garage operator",
+      "sources": [
+        "Garage/Services/GarageService.cs"
+      ]
+    },
+    {
+      "id": "remove",
+      "title": "Remove parked vehicle",
+      "actor": "Garage operator",
+      "sources": [
+        "Garage/Models/Garage.cs"
+      ]
+    },
+    {
+      "id": "search",
+      "title": "Search parked vehicles",
+      "actor": "Garage operator",
+      "sources": [
+        "Garage/Models/Garage.cs"
+      ]
+    }
+  ],
+  "sequenceEntries": [
+    {
+      "id": "parking-sequence",
+      "entryPoint": "Garage.Services.GarageService.Park(Garage.Vehicles.Vehicle, Garage.Models.Garage, int?)",
+      "source": "Garage/Services/GarageService.cs",
+      "maxDepth": 3,
+      "expandNamespaces": [
+        "Garage.Models",
+        "Garage.Services"
       ]
     }
   ]

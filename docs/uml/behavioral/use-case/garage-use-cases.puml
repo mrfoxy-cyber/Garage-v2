@@ -1,31 +1,27 @@
 @startuml
 ' diagram-id: garage-use-cases
-' entities: system:garage, service:garage
+' Generated from code annotations and source. Run generate; do not edit by hand.
 title Garage user capabilities
 left to right direction
-actor User
+actor "Garage operator" as a_7348bf17d801
 rectangle "Garage application" {
-  usecase "Create or import garage" as CreateGarage
-  usecase "Create or import vehicle" as CreateVehicle
-  usecase "List garages and vehicles" as List
-  usecase "Park vehicle" as Park
-  usecase "Remove parked vehicle" as Remove
-  usecase "Inspect parking spaces" as Inspect
-  usecase "Search parked vehicles" as Search
+  usecase "Create or import garage" as u_create_garage
+  usecase "Create or import vehicle" as u_create_vehicle
+  usecase "Inspect parking spaces" as u_inspect
+  usecase "List garages and vehicles" as u_list
+  usecase "Park vehicle" as u_park_vehicle
+  usecase "Remove parked vehicle" as u_remove
+  usecase "Search parked vehicles" as u_search
 }
-User --> CreateGarage
-User --> CreateVehicle
-User --> List
-User --> Park
-User --> Remove
-User --> Inspect
-User --> Search
-note bottom of Park
-  Parking can select the first fitting spot or a specific spot.
-  Both interfaces share the domain parking rules.
-end note
+a_7348bf17d801 --> u_create_garage
+a_7348bf17d801 --> u_create_vehicle
+a_7348bf17d801 --> u_inspect
+a_7348bf17d801 --> u_list
+a_7348bf17d801 --> u_park_vehicle
+a_7348bf17d801 --> u_remove
+a_7348bf17d801 --> u_search
 legend bottom
-  [[../../structural/component/garage-components.puml Components]]
-  [[../../interaction/sequence/parking-sequence.puml Parking sequence]]
+  [[../../structural/component/garage-components.puml Garage project components]]
+  [[../../interaction/sequence/parking-sequence.puml Park an existing catalog vehicle]]
 endlegend
 @enduml

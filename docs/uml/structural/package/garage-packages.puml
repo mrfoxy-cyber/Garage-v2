@@ -21,6 +21,7 @@ package "Garage.Tests" as e_5a229a8a577b83de6207 {
 }
 package "Garage" as e_fc55a3295fd213831954 {
   package "Garage.Diagnostics" as e_ea481c78b81b80db5988 { }
+  package "Garage.Documentation" as e_f5de614a19fdf3030dcd { }
   package "Garage.Models" as e_08834dd45de931ba1fcd { }
   package "Garage.Persistence.Json" as e_ca4317fe7e4fd39a8899 { }
   package "Garage.Persistence.Json.Contracts" as e_cce5127976a13666c25f { }

@@ -147,16 +147,10 @@
       "type": "sequence",
       "title": "Park an existing catalog vehicle",
       "file": "docs/uml/interaction/sequence/parking-sequence.puml",
-      "maintenance": "reviewed",
+      "maintenance": "generated",
       "status": "active",
       "project": null,
-      "trackFiles": [
-        "Garage/Services/GarageService.cs",
-        "Garage/Models/Garage.cs",
-        "Garage/Models/ParkingSpot.cs",
-        "Garage/Results/ParkingResult.cs",
-        "Garage/Results/OperationError.cs"
-      ],
+      "trackFiles": [],
       "trackSymbols": [],
       "entities": [
         "service:garage",
@@ -248,16 +242,10 @@
       "type": "use-case",
       "title": "Garage user capabilities",
       "file": "docs/uml/behavioral/use-case/garage-use-cases.puml",
-      "maintenance": "reviewed",
+      "maintenance": "generated",
       "status": "active",
       "project": null,
-      "trackFiles": [
-        "Garage/Services/**/*.cs",
-        "Garage/Models/Garage.cs",
-        "Garage/Queries/**/*.cs",
-        "Garage.Console/Menus/**/*.cs",
-        "Garage.Terminal/Presentation/**/*.cs"
-      ],
+      "trackFiles": [],
       "trackSymbols": [],
       "entities": [
         "system:garage",

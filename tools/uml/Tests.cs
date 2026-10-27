@@ -116,6 +116,7 @@ static class Tests
             Throws(() => Uml.Extract(root, manifest), "missing projects fail instead of disappearing silently");
             count += GraphDataTests.Run();
             count += AuthoredDataTests.Run();
+            count += CodeDiagramTests.Run(root);
             Console.WriteLine($"{count} UML self-tests passed.");
             return 0;
         }

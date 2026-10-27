@@ -1,6 +1,6 @@
 # Garage UML
 
-This folder connects diagrams to the code in **Garage-v2**. It contains all 14 UML diagram types: 18 diagram files, of which seven are generated, five are reviewed views of the current application, and six are explicitly labeled templates.
+This folder connects diagrams to the code in **Garage-v2**. It contains all 14 UML diagram types: 18 diagram files, of which nine are generated, three are reviewed views of the current application, and six are explicitly labeled templates.
 
 Start with the [diagram browser](index.html), [components](structural/component/garage-components.puml), or [parking sequence](interaction/sequence/parking-sequence.puml). Render first to create local SVG previews. Every diagram has a stable ID and related-diagram links in the manifest; diagram sources also link to related views.
 
@@ -10,7 +10,7 @@ The explorer displays **all 18 diagrams as live views**, covering all 14 UML typ
 
 The **Interactive / PlantUML / PUML source** switch chooses the presentation for the selected diagram. Interactive and PlantUML previews have their own pan/zoom positions; returning to Interactive keeps its expanded element. PUML source displays the exact shared definition as read-only text. The selection stays in effect when navigating between diagrams.
 
-These are presentations of one definition. Authored diagrams are edited in their `.puml` source; class/component/package sources are generated from the code model. `generate` captures the source text and its SHA-256 alongside the interactive data. The render command automatically runs generation, renders that exact captured PUML snapshot, and writes matching preview fingerprints. If a preview has not been refreshed against the current source, PlantUML mode shows a refresh message instead of displaying stale output.
+These are presentations of one definition. Class/component/package sources are generated from the code model. The use-case view and parking sequence are generated from C# annotations and implementation. Edit their C# inputs, then regenerate; their `.puml` files are output. The remaining authored diagrams are edited in their `.puml` source. `generate` captures the source text and its SHA-256 alongside the interactive data. The render command automatically runs generation, renders that exact captured PUML snapshot, and writes matching preview fingerprints. If a preview has not been refreshed against the current source, PlantUML mode shows a refresh message instead of displaying stale output.
 
 Use the sidebar to choose a diagram, **Find a class** to locate a type, and **Focus selection** to show that type with its direct neighbors. Large class views initially select a useful namespace so names remain readable; the type count shows how many of the project's types are visible. Filter by namespace to explore another area; **Show all** clears the filters. Search always covers the entire project. **Fit view**, **+ / −**, and **1:1** control the camera. Drag the background to pan, scroll to zoom, or use touch pinch. The fullscreen control enlarges the workbench. Keyboard users can tab to cards and press Enter to open them; on the focused canvas use +, −, 0 or F (fit), and arrow keys to pan. Member-list scrolling is independent of canvas zoom.
 
@@ -28,7 +28,7 @@ Use the sidebar to choose a diagram, **Find a class** to locate a type, and **Fo
 
 The six illustrative templates remain labeled **Template**. Their interactive presentation does not promote them to reviewed descriptions of the implementation. **Diagram notes** exposes source annotations. Static SVG exports remain available through **SVG export**. See [vendor provenance and license](vendor/README.md). No CDN, account, build step or server is required to use the page.
 
-`AuthoredData.cs` reads the bounded PlantUML notation used by the current diagrams: entity declarations, containment, member values, notes, labeled connections, activities with `if`/`else`/`endif`, sequence messages and nested `alt` frames, and robust timing signals with increasing sample times. It is not a general PlantUML interpreter. Unsupported statements or unresolved endpoints fail generation with a source location, so new notation must be supported explicitly before it can appear in the live viewer. Edit the `.puml` source and run `generate`; no second hand-maintained diagram model is required.
+`AuthoredData.cs` reads the bounded PlantUML notation used by the current diagrams, including the generated sequence/use-case sources: entity declarations, containment, member values, notes, labeled connections, activities with `if`/`else`/`endif`, sequence messages and nested `alt` frames, and robust timing signals with increasing sample times. It is not a general PlantUML interpreter. Unsupported statements or unresolved endpoints fail generation with a source location, so new notation must be supported explicitly before it can appear in the live viewer. No second hand-maintained diagram model is required.
 
 In Visual Studio, open `GarageArrays.slnx` and expand **UML Diagrams** in Solution Explorer. All 18 diagram sources are grouped by category and type; the browser, guide and tracking files are at the top, with tooling under **Automation**. Reload the solution if it was already open when these folders were added. Open `index.html` in a web browser to view the rendered diagrams.
 
@@ -81,7 +81,7 @@ dotnet run --project tools/uml -- check --strict
 dotnet run --project tools/uml -- self-test
 ```
 
-`generate` updates the seven generated diagrams, shared model and browser. It never overwrites hand-authored diagrams or records a review. `check` is read-only for sources and review state; it writes local reports. Generated drift and broken references fail checks. Pending reviews are advisory by default and fail with `--strict`. Exit codes: 0 passed, 1 outdated output or strict review pending, 2 invalid input/tool error. From elsewhere, pass `--root /path/to/Garage-v2` after the command.
+`generate` updates the nine generated diagrams, shared model and browser. It never overwrites hand-authored diagrams or records a review. `check` is read-only for sources and review state; it writes local reports. Generated drift and broken references fail checks. Pending reviews are advisory by default and fail with `--strict`. Exit codes: 0 passed, 1 outdated output or strict review pending, 2 invalid input/tool error. From elsewhere, pass `--root /path/to/Garage-v2` after the command. Add `--verbose` to print exception details when diagnosing a tool error.
 
 Render and validate full PlantUML syntax with PowerShell 7:
 
@@ -94,10 +94,37 @@ Running `pwsh -File tools/uml/render.ps1` refreshes **both presentations togethe
 
 Open `docs/uml/index.html` directly in a browser. All live views are ready as soon as `generate` has run; rendering creates the static SVG exports. The same folder is uploaded as a CI artifact. Download and extract the artifact, then open its `index.html` locally. Run `node tools/uml/graph-layout-tests.js` and `node tools/uml/semantic-layout-tests.js` to test the layouts with the pinned ELK engine.
 
+## Generate use cases and sequences from code
+
+The annotations in `Garage/Documentation/DiagramAttributes.cs` supply a goal, actor and view scope. The generator reads the implementation for messages, decisions and returns. They have no behavior that changes application execution.
+
+For example, the parking entry in `Garage/Services/GarageService.cs` is marked:
+
+```csharp
+[UseCase("park-vehicle", "Park vehicle")]
+[SequenceView("parking-sequence", MaxDepth = 3,
+    ExpandNamespaces = new[] { "Garage.Services", "Garage.Models" })]
+public ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)
+```
+
+`UseCase` can mark methods or properties. Its stable ID groups implementations of one capability; the title and `Actor` must agree wherever that ID is reused. `Actor` defaults to `Garage operator`. The generated `garage-use-cases` view collects these annotations. Capability cards link back to the annotated C# files. The shared JSON model records the annotations and sequence entry points.
+
+`SequenceView` marks one implemented method with exactly one `UseCase`. Its ID must match a generated sequence entry in `manifest.json`; the manifest supplies the output path, title and related views. Duplicate or missing roots fail generation. Add the manifest entry when introducing another sequence, then maintain calls and branches in C# rather than PUML. The existing `parking-sequence` is the working example.
+
+`CodeDiagrams.cs` creates Roslyn compilations with local project references, .NET platform references and SDK-style implicit usings. Symbol binding distinguishes aliases, overloads and cross-project calls. Each sequence starts at its annotated method. It preserves receiver/argument evaluation order, ordinary calls, expression-bodied methods, `if`/`else`, early returns, conditional expressions, short-circuit operators and explicit throws. Code after an early return appears only on the continuing path. Arguments retain the expressions at each call site; parameter values are not symbolically propagated between methods.
+
+The root body is always analyzed. `MaxDepth` (0–6) limits additional method-body expansion: 0 shows direct calls without expanding their bodies. `ExpandNamespaces` optionally restricts expansion to listed namespaces and their children. Calls outside the scope remain visible as labeled boundaries. Parking expands services and models, keeping result factories as boundary calls. Recursive calls, interfaces and overridable methods also stop at explicit boundaries; the generator does not guess runtime dispatch targets.
+
+The generated view describes **possible source paths**, not an execution trace. Lifelines group calls by their declared type, not by individual object instance. It does not prove that every combination of guards is feasible. Caller continuation assumes normal return from the callee. Property accessors, constructor/initializer bodies, external implementations, delegate execution and lambda callbacks are boundaries, and implicit/external exceptions are not traced. Callback source is shown in a note, rather than executed or drawn as one unconditional invocation. Unsupported expanded control flow (including loops, `switch`, `try` and async bodies) fails with a C# source location; reduce scope/depth or add explicit support. A 1,400-statement budget bounds path expansion.
+
+As with structural extraction, this is not an MSBuild evaluation: conditional project settings, custom compile items, generated source and package references are not resolved. Calls that cannot be bound are visibly labeled unresolved. Application compilation and tests remain independent checks. An instrumented test trace would be a separate future input for exact scenario sequences and measured timing.
+
+After changing annotations or code, run `pwsh -File tools/uml/render.ps1` to regenerate the model, PUML, interactive views and SVG previews together, then reload `index.html`. The activity/state/deployment views and six templates retain their existing maintenance policies; they have not been converted to code generation.
+
 ## How change detection works
 
 1. Parse C# with Roslyn from the installed SDK. Extract project references, namespace containment, type declarations, ordinary methods, member signatures, primary constructors, and source locations.
-2. Compare freshly generated output with the committed files. Type/signature/project changes require regeneration. Body-only changes leave structural output alone.
+2. Compare freshly generated output with the committed files. Type/signature/project changes require regeneration. Annotated entry-point bodies and transitively expanded callees drive sequence output; annotations drive use-case output. Body-only changes leave structural output alone.
 3. Compute SHA-256 fingerprints of C# tokens for each tracked file or symbol. Active-source comments and formatting are ignored. Implementation changes, new/deleted files within glob scopes, and changes to input JSON or project configuration affect the appropriate reviews.
 4. Compare each reviewed diagram with its last acknowledged source fingerprints. Editing the diagram or its tracking policy also requires a new review. Reports identify changed sources and related diagrams.
 5. Validate IDs, related-diagram links, registry targets, tracking scopes, syntax envelopes, and coverage of all 14 diagram types. CI additionally runs PlantUML's full syntax checker and renders previews.
@@ -136,7 +163,7 @@ Each manifest entry declares `entities` for shared context and `related` for nav
 
 1. Create a `.puml` file in the appropriate type folder. Include `@startuml`, a `' diagram-id: unique-id` line, and `@enduml`.
 2. Add a manifest entry with a unique `id`, `type`, `title`, `file`, `maintenance`, `status`, `project` (null unless a generated class view), `trackFiles`, `trackSymbols`, `entities`, and `related`.
-3. Choose `generated` only for supported class/component/package views. Choose `reviewed` with `status: active` for a view checked against implementation. Use `manual` with `status: template` for an illustrative starting point.
+3. Choose `generated` for supported class/component/package views, annotation-based use-case views, or a sequence with a matching `SequenceView` method. Choose `reviewed` with `status: active` for a view checked against implementation. Use `manual` with `status: template` for an illustrative starting point.
 4. For a reviewed view, add concrete tracking scopes. Example: `Garage/Services/**/*.cs`. A `*` matches within one directory; `**` spans directories; `?` matches one non-separator character. Paths use `/` and are case-sensitive, including on Windows. Exact symbols are copied from `model.generated.json` into `trackSymbols`.
 5. Link shared entity IDs and related diagrams. Add registry entities when needed. Replace illustrative values and template labels before promotion.
 6. Run `generate`, review and acknowledge the new view, then run `check --strict`, full syntax validation and rendering.

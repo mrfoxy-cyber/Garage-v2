@@ -49,7 +49,7 @@ static class Uml
                 default: throw new Exception($"Unknown command: {args[0]}");
             }
         }
-        catch (Exception e) { Console.Error.WriteLine($"UML error: {e.Message}"); return 2; }
+        catch (Exception e) { Console.Error.WriteLine($"UML error: {e.Message}"); if (args.Contains("--verbose")) Console.Error.WriteLine(e); return 2; }
     }
 
     public static Model Extract(string root, Manifest manifest)
@@ -138,7 +138,7 @@ static class Uml
             Operations = g.SelectMany(t => t.Operations).DistinctBy(o => o.Id).OrderBy(o => o.Id, StringComparer.Ordinal).ToArray(),
             Declaration = string.Join("; ", g.Select(t => t.Declaration).Distinct().Order(StringComparer.Ordinal))
         }).OrderBy(t => t.Id, StringComparer.Ordinal).ToArray();
-        return new Model(projects.ToArray(), merged, fingerprints);
+        return new Model(projects.ToArray(), merged, fingerprints, CodeDiagrams.Extract(root, manifest));
     }
 
     static string TypeName(BaseTypeDeclarationSyntax type) => type.Identifier.Text +
@@ -182,7 +182,9 @@ static class Uml
             if (d.Status is not ("active" or "template")) throw new Exception($"Invalid status: {d.Id}");
             if (!d.File.StartsWith("docs/uml/", StringComparison.Ordinal) || !d.File.EndsWith(".puml", StringComparison.Ordinal)) throw new Exception($"Invalid diagram path: {d.File}");
             At(root, d.File);
-            if (d.Maintenance == "generated" && d.Type is not ("class" or "component" or "package")) throw new Exception($"No generator for {d.Type}.");
+            if (d.Maintenance == "generated" && d.Type is not ("class" or "component" or "package" or "sequence" or "use-case")) throw new Exception($"No generator for {d.Type}.");
+            if (d.Maintenance == "generated" && (d.Type is "sequence" or "use-case") && model.CodeDiagrams?.Diagrams.ContainsKey(d.Id) != true)
+                throw new Exception($"Missing code annotations for {d.Id}.");
             if (d.Type == "class" && d.Maintenance == "generated" && !manifest.Projects.Contains(d.Project)) throw new Exception($"Unknown class diagram project: {d.Id}");
             foreach (var related in d.Related)
                 if (related == d.Id || !ids.Contains(related)) throw new Exception($"Invalid diagram link {d.Id} -> {related}");
@@ -213,7 +215,8 @@ static class Uml
     public static SortedDictionary<string, string> Outputs(string root, Manifest manifest, Model model)
     {
         var output = new SortedDictionary<string, string>(StringComparer.Ordinal);
-        output["docs/uml/model.generated.json"] = Serialize(new { version = 1, projects = model.Projects, types = model.Types });
+        output["docs/uml/model.generated.json"] = Serialize(new { version = 2, projects = model.Projects, types = model.Types,
+            useCases = model.CodeDiagrams?.UseCases ?? [], sequenceEntries = model.CodeDiagrams?.SequenceEntries ?? [] });
         var views = GraphData.Create(manifest, model);
         // Capture authored sources once: interactive metadata, PUML text and previews share this snapshot.
         var authoredSources = manifest.Diagrams.Where(d => d.Maintenance != "generated")
@@ -222,6 +225,13 @@ static class Uml
             views.Add(diagram.Id, AuthoredData.Parse(diagram, authoredSources[diagram.File]));
         foreach (var d in manifest.Diagrams.Where(d => d.Maintenance == "generated"))
         {
+            if (d.Type is "sequence" or "use-case")
+            {
+                var generated = model.CodeDiagrams!.Diagrams[d.Id];
+                output[d.File] = generated.Puml;
+                views.Add(d.Id, CodeDiagrams.View(d, generated));
+                continue;
+            }
             var lines = new List<string> { "@startuml", "' diagram-id: " + d.Id, "' Generated. Run the UML generate command; do not edit by hand.", "hide empty members", "skinparam classAttributeIconSize 0", "title " + d.Title };
             if (d.Type == "component")
             {
@@ -396,7 +406,7 @@ static class Uml
         return result;
     }
     public static SortedDictionary<string, Review> Reviews(string root) => File.Exists(At(root, "docs/uml/state/reviews.json")) ? Read<SortedDictionary<string, Review>>(At(root, "docs/uml/state/reviews.json")) : new(StringComparer.Ordinal);
-    static IEnumerable<string> SourceFiles(string directory)
+    public static IEnumerable<string> SourceFiles(string directory)
     {
         foreach (var file in Directory.EnumerateFiles(directory)) yield return file;
         foreach (var child in Directory.EnumerateDirectories(directory).Order(StringComparer.Ordinal))
@@ -442,5 +452,5 @@ record Entity(string Id, string Kind, string[] Targets);
 record ProjectModel(string Id, string Name, string File, string[] References);
 record TypeModel(string Id, string Project, string Namespace, string Name, string Kind, string Declaration, string[] Files, string[] Bases, string[] Members, OperationModel[] Operations);
 record OperationModel(string Id, string Name, string Signature);
-record Model(ProjectModel[] Projects, TypeModel[] Types, SortedDictionary<string, string> Fingerprints);
+record Model(ProjectModel[] Projects, TypeModel[] Types, SortedDictionary<string, string> Fingerprints, CodeDiagramSet? CodeDiagrams = null);
 record Review(SortedDictionary<string, string> Fingerprints, string DiagramHash, string Note);

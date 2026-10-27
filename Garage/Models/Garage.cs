@@ -1,3 +1,4 @@
+using Garage.Documentation;
 using Garage.Queries;
 using Garage.Results;
 using Garage.Vehicles;
@@ -17,6 +18,7 @@ public sealed class Garage
     public IReadOnlyList<Vehicle> Vehicles => parkingSpots
         .Select(spot => spot.Vehicle).OfType<Vehicle>().ToList().AsReadOnly();
 
+    [UseCase("inspect", "Inspect parking spaces")]
     public IReadOnlyList<ParkingSpotInfo> SpotDetails => parkingSpots
         .Select(spot => new ParkingSpotInfo(spot.Number, spot.Dimensions, spot.Vehicle is not null))
         .ToList().AsReadOnly();
@@ -119,6 +121,7 @@ public sealed class Garage
         return ParkingResult.Completed(spot, $"Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.");
     }
 
+    [UseCase("remove", "Remove parked vehicle")]
     public GarageOperationResult Remove(string registrationNumber)
     {
         ParkedVehicleInfo? match = FindVehicleByRegistration(registrationNumber);
@@ -140,6 +143,7 @@ public sealed class Garage
             : Remove(vehicle.RegistrationNumber);
     }
 
+    [UseCase("search", "Search parked vehicles")]
     public IReadOnlyList<Vehicle> Search(VehicleSearchCriteria criteria)
     {
         ArgumentNullException.ThrowIfNull(criteria);
