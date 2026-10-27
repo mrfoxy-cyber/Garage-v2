@@ -1,0 +1,58 @@
+@startuml
+' diagram-id: garage-packages
+' Generated. Run the UML generate command; do not edit by hand.
+hide empty members
+skinparam classAttributeIconSize 0
+title Garage projects and namespaces
+package "Garage.Console" as e_4e8a158f886433b7cb91 {
+  package "Garage.ConsoleApp.Display" as e_9de32f7d100bfe0b432e { }
+  package "Garage.ConsoleApp.Drafts" as e_c5b0fbf80f998c68cbcb { }
+  package "Garage.ConsoleApp.Mapping" as e_3a9eaa677578cbe9c1df { }
+  package "Garage.ConsoleApp.Menus" as e_f8d009d2fb96f407d004 { }
+  package "Garage.ConsoleApp.Prompts" as e_12eb5d1aacf60ee95820 { }
+}
+package "Garage.Terminal" as e_3bdc5d7ed9efbc4af169 {
+  package "Garage.Terminal.Forms" as e_e3884fdc3829d04d5bac { }
+  package "Garage.Terminal.Presentation" as e_d4b69e557dadeb3325cb { }
+}
+package "Garage.Tests" as e_5a229a8a577b83de6207 {
+  package "Garage.Tests" as e_0f1c02c4850cf2ad3811 { }
+  package "Garage.Tests.Fixtures" as e_acd7f5ae0bd5fccf9e3d { }
+}
+package "Garage" as e_fc55a3295fd213831954 {
+  package "Garage.Diagnostics" as e_ea481c78b81b80db5988 { }
+  package "Garage.Models" as e_08834dd45de931ba1fcd { }
+  package "Garage.Persistence.Json" as e_ca4317fe7e4fd39a8899 { }
+  package "Garage.Persistence.Json.Contracts" as e_cce5127976a13666c25f { }
+  package "Garage.Queries" as e_a6914bca9de7d0b6e7bc { }
+  package "Garage.Results" as e_322b54eab66535aad2fe { }
+  package "Garage.Services" as e_be652e04f07616dca31e { }
+  package "Garage.Specifications" as e_d524e7959b08d00fcb27 { }
+}
+package "Vehicle" as e_6baf9469d9bef8128882 {
+  package "Garage.Engines" as e_a8e8068c91680140002c { }
+  package "Garage.Engines.Electric" as e_7e26a2547468f137cb37 { }
+  package "Garage.Engines.ExternalCombustion" as e_8b7222bb985f2bd80d71 { }
+  package "Garage.Engines.InternalCombustion" as e_8b2e1d55a3a9a7f07311 { }
+  package "Garage.Engines.InternalCombustion.Piston" as e_bdff4f545c2ea10c1470 { }
+  package "Garage.Engines.InternalCombustion.Turbine" as e_384c808b250ee0d3bb5d { }
+  package "Garage.Engines.Specifications" as e_c98e764eca4aa9062ce1 { }
+  package "Garage.Factories" as e_400f8bef6cf297e681d8 { }
+  package "Garage.Vehicles" as e_b61b696f382917360ed0 { }
+  package "Garage.Vehicles.Components" as e_f034617c6a613de7c0da { }
+  package "Garage.Vehicles.Interfaces" as e_798d21f2272a791ef52a { }
+  package "Garage.Vehicles.Specifications" as e_30b3f2e833734e4b75a9 { }
+  package "Garage.Vehicles.Types" as e_9a13834fdf212e37fd93 { }
+}
+e_4e8a158f886433b7cb91 ..> e_fc55a3295fd213831954 : references
+e_3bdc5d7ed9efbc4af169 ..> e_fc55a3295fd213831954 : references
+e_5a229a8a577b83de6207 ..> e_4e8a158f886433b7cb91 : references
+e_5a229a8a577b83de6207 ..> e_3bdc5d7ed9efbc4af169 : references
+e_5a229a8a577b83de6207 ..> e_fc55a3295fd213831954 : references
+e_5a229a8a577b83de6207 ..> e_6baf9469d9bef8128882 : references
+e_fc55a3295fd213831954 ..> e_6baf9469d9bef8128882 : references
+legend bottom
+  Folder boxes: projects/namespaces; dashed arrows: project references.
+  [[../component/garage-components.puml Garage project components]]
+endlegend
+@enduml

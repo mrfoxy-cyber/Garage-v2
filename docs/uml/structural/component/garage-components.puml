@@ -1,0 +1,30 @@
+@startuml
+' diagram-id: garage-components
+' Generated. Run the UML generate command; do not edit by hand.
+hide empty members
+skinparam classAttributeIconSize 0
+title Garage project components
+component "Garage.Console" as e_4e8a158f886433b7cb91
+component "Garage.Terminal" as e_3bdc5d7ed9efbc4af169
+component "Garage.Tests" as e_5a229a8a577b83de6207
+component "Garage" as e_fc55a3295fd213831954
+component "Vehicle" as e_6baf9469d9bef8128882
+e_4e8a158f886433b7cb91 --> e_fc55a3295fd213831954 : references
+e_3bdc5d7ed9efbc4af169 --> e_fc55a3295fd213831954 : references
+e_5a229a8a577b83de6207 --> e_4e8a158f886433b7cb91 : references
+e_5a229a8a577b83de6207 --> e_3bdc5d7ed9efbc4af169 : references
+e_5a229a8a577b83de6207 --> e_fc55a3295fd213831954 : references
+e_5a229a8a577b83de6207 --> e_6baf9469d9bef8128882 : references
+e_fc55a3295fd213831954 --> e_6baf9469d9bef8128882 : references
+legend bottom
+  Solid arrow: source project references the target project.
+  [[../package/garage-packages.puml Garage projects and namespaces]]
+  [[../class/garage-classes.puml Garage classes]]
+  [[../class/vehicle-classes.puml Vehicle classes]]
+  [[../class/garage-console-classes.puml Garage.Console classes]]
+  [[../class/garage-terminal-classes.puml Garage.Terminal classes]]
+  [[../class/garage-tests-classes.puml Garage.Tests classes]]
+  [[../../interaction/sequence/parking-sequence.puml Park an existing catalog vehicle]]
+  [[../deployment/local-deployment.puml Local Garage runtime]]
+endlegend
+@enduml

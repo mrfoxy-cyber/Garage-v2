@@ -1,0 +1,19 @@
+@startuml
+' diagram-id: parking-interaction-overview
+' entities: system:garage
+title TEMPLATE: interaction overview
+start
+:ref - Select garage and vehicle;
+:ref - Parking sequence;
+if (Parking successful?) then (yes)
+  :ref - Refresh occupancy;
+else (no)
+  :ref - Display failure;
+endif
+stop
+legend bottom
+  Template only. Select and verify the constituent interactions before promotion.
+  Interaction references use PlantUML activity notation.
+  [[../sequence/parking-sequence.puml Reviewed parking sequence]]
+endlegend
+@enduml

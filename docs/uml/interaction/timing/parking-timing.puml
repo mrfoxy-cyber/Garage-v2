@@ -1,0 +1,17 @@
+@startuml
+' diagram-id: parking-timing
+' entities: system:garage
+title TEMPLATE: illustrative parking timeline
+robust "Spot occupancy" as Spot
+@0
+Spot is Empty
+@10
+Spot is Occupied
+@20
+Spot is Empty
+legend bottom
+  Template only. Times are illustrative units, not measured durations or SLAs.
+  Replace with evidence from a test or trace before promotion.
+  [[../../behavioral/state-machine/parking-spot-state.puml Reviewed spot state]]
+endlegend
+@enduml

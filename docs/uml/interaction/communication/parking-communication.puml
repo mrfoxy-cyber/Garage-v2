@@ -1,0 +1,15 @@
+@startuml
+' diagram-id: parking-communication
+' entities: system:garage
+title TEMPLATE: parking communication
+object "ui : Interface" as UI
+object "service : GarageService" as Service
+object "garage : Garage" as Garage
+UI --> Service : 1: Park(vehicle, garage, spot?)
+Service --> Garage : 1.1: Park(vehicle, spot?)
+note bottom
+  Template only. Verify guards and numbered messages against a chosen scenario.
+  Communication is expressed using objects and numbered links.
+  [[../sequence/parking-sequence.puml Reviewed parking sequence]]
+end note
+@enduml

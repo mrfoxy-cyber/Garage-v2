@@ -1,0 +1,93 @@
+{
+  "garage-use-cases": {
+    "fingerprints": {
+      "Garage.Console/Menus/ConsoleMenu.cs": "d319ed6c964b0c10755b44dfd72e40a73951698ce5e90ff783eafba7af2298bd",
+      "Garage.Console/Menus/EngineCreator.cs": "aeefc7596a769dad0eaa4e5052b0f9371ae18f06c802ae4d89a6e0334e58678b",
+      "Garage.Console/Menus/GarageActions.cs": "340162fe4ff304a576687a894508997c3b0fe9cee693aa6f3a72a4112a2a5592",
+      "Garage.Console/Menus/GarageApplication.cs": "647935359465e9974b9f54f5682fa57e178209c5ea7ee0e9d8522ff176521bc4",
+      "Garage.Console/Menus/MenuOption.cs": "68c92a0b6463a64fb1fa9934fee2dc1712b1807395058fa705dd64ec3527e6f4",
+      "Garage.Console/Menus/VehicleCreator.cs": "07f2e25e7a9e796af5dd7c5809101ae9d8a6ae4264db870522f3b41cf1d558ce",
+      "Garage.Terminal/Presentation/DashboardState.cs": "b3cb4e89b0696235323379c83f57a854c959b6569aba6655d2a015cfcc15ad9b",
+      "Garage.Terminal/Presentation/Dialogs.cs": "f5ec6877490834524752fd4d58b021d29a1b49bb4fe7417663f77d091f5be8d4",
+      "Garage.Terminal/Presentation/GarageWorkspace.Actions.cs": "e6feb40a28358006431a7a2ccb0c4fd8da51d2833b03604f33fb8a9d8c96be22",
+      "Garage.Terminal/Presentation/GarageWorkspace.Rendering.cs": "7d02c88b84bc3495254e3d16636df41d207a4524fad2a26e6f223d24abe2b615",
+      "Garage.Terminal/Presentation/GarageWorkspace.cs": "0e4df7ca67b66ecb0073f4c49839b774289e135faed576cacd7c2e190cd1eb75",
+      "Garage.Terminal/Presentation/GarageWorkspaceLayout.cs": "7ce7bd79eff2ab9fb4a25e20726d861be60a997213fec0008bbbfb13ce54c45d",
+      "Garage.Terminal/Presentation/Theme.cs": "2b06caeaccc119cd203d88e60eef8b9dceede5787d2386da019b9913b935fef4",
+      "Garage.Terminal/Presentation/VehicleDetails.cs": "d219c2757a015754c159d35431a6d7ad20d44b8121b94ab354459036f5eb5c3d",
+      "Garage.Terminal/Presentation/Workflows.cs": "dbfe8b9cc0e5aa57fde997511effb238c170acbec4c236c69c2126c6e4972f6f",
+      "Garage.Terminal/Presentation/WorkspaceButtons.cs": "858a8c7cd6ad9d323394f636e5cedb0ede780dc37451bcf31b29702a8ea46c46",
+      "Garage/Models/Garage.cs": "a972987cd57084f30817bb8434fb3664200deb911ac3eb60fb59dbdec7fdcf49",
+      "Garage/Queries/ParkedVehicleInfo.cs": "c697ba946f1a5a89add4d187697c7747deb75c046ceef369d8562ca294ecb3f1",
+      "Garage/Queries/ParkingSpotInfo.cs": "debdc44700f66ab52e36ca845e55cc3cda08741d489df2f7e466f706f495b8af",
+      "Garage/Queries/VehicleSearch.cs": "62cb4d808ff70639883963f557ac2cdb707020d81e1ac9f87418c792eb227ebd",
+      "Garage/Queries/VehicleSearchCriteria.cs": "69f357dc91bdcc189942e5da94184274db4aba8d11a38e15bc4a47bfe7574fa8",
+      "Garage/Queries/VehicleTypeGroup.cs": "59104c43a80fecfbce270dfa689c2afa10dd61e63d97db86094f1255ad350093",
+      "Garage/Services/ExpectedFailure.cs": "bfeafb197ad03e3ad99e2ef7b5398d0de82fba1f84ecb794a72c4f86eba8924c",
+      "Garage/Services/GarageService.cs": "37773af739562bea303c1a7cfc8f4fd1ee8ad0fc751b905028efcc7a6f5ea137",
+      "Garage/Services/VehicleCreationService.cs": "bc6b99673c4fd97068b11f11f45e427378708714e6c5b99915fa9e2973c829a2",
+      "tracking-policy": "7112f6c1076d3163a60bad6cdcec2af97139b5a336d930163845509aae07da4c"
+    },
+    "diagramHash": "dd462792bab61d4f37e6634959847939bc4785a2d5e64968e306a8ebed712571",
+    "note": "Checked the application README, garage service, model, queries and interface organization; the listed user capabilities match the current application."
+  },
+  "local-deployment": {
+    "fingerprints": {
+      "Garage.Console/Garage.Console.csproj": "4453541c656069947c6339c5724a94e9f997bb66dbabc2c8cd5e171a4f4b50df",
+      "Garage.Console/Program.cs": "017b1677f1b081add4d032cd90d75e87a5c3947bf7ccd7e57d6ec61d70f99dc9",
+      "Garage.Terminal/Garage.Terminal.csproj": "92cfd093510071938929ceb949f7958b483cc2ba38cdaeae950c0764bd18bb72",
+      "Garage.Terminal/Program.cs": "39898b20f4ca85f39dbcb1f8622492578fb8f5ea45884797e6158738790dabdf",
+      "Garage.Tests/Garage.Tests.csproj": "855cc673850cac3c16795a0c30928b7b90f72d0e03bfa2a6843401d6ede87d5c",
+      "Garage/Data/created-vehicles.json": "3ecbb6abde05868c7b00e507d54e8e7f10124fc90c6ad1c5c9509a5b09e69ca6",
+      "Garage/Data/example-garage.json": "b53a856fc04edc9dc08d4b6ada695c51dfcca0de239a772125d6c7bc8a925bd2",
+      "Garage/Data/example-placements.json": "078e9a532d66bde3d59102b3a272490c822bcdc3d55f9b1bfbe304b310e6c6d4",
+      "Garage/Data/example-vehicle.json": "ba1fc244fb824596222fd4412a7e53cc3864d26020e08bf0b976473342f04204",
+      "Garage/Data/vehicles.json": "79de8cb33da2467f4db7da175095072b23cc64016d620966054e8ee3b8db2072",
+      "Garage/Diagnostics/ErrorLogger.cs": "12d5de2de0b4bb36f1d267316f593c76ef250ca059376897e414ab24241c67e8",
+      "Garage/Garage.csproj": "3976a473eaec2862e97f4ee793fccb57c74479e5db6eaf050394945d10a540d0",
+      "Garage/Persistence/Json/Contracts/EngineJsonContract.cs": "330f9267ec2eca6d720cc63f59c522b2b6cba73325cf589e4a3f2480af4d95e2",
+      "Garage/Persistence/Json/Contracts/VehicleJsonContract.cs": "3473424a0590684ef2e984ce5cd81662ea67926f8100028133cff4437a4a03d8",
+      "Garage/Persistence/Json/GarageJsonLoader.cs": "05283e6fa2e475a97b84337e9cb3ca33acde0ba077192927d910714c4a91fe5a",
+      "Garage/Persistence/Json/JsonSettings.cs": "7a072e08704d78a8dceca5d9ee8b5fe8517d995c6d7220f6f872d4f08df1a699",
+      "Garage/Persistence/Json/VehicleJsonLoader.cs": "2dc165e401dd22f5494a60622208ab506797887306baa715e7c81b89b6ee4144",
+      "Garage/Persistence/Json/VehicleJsonMapper.cs": "c1d69364d3577b4f0d125880828794bb158f23c9c49c3397454b9f75ac13b291",
+      "tracking-policy": "0d7419bf3e0ee3b2a470f631b6d0dec891e4831ac851c33e8564a98b8d480b7a",
+      "Vehicle/Vehicle.csproj": "130befba0cff4f414b147bf251bca57cdc8c95d059d63f15f94ff00a15a3560d"
+    },
+    "diagramHash": "23246d9178fe465855f230466781ee2e914765197cebc22d13405383551fe596",
+    "note": "Checked console and terminal startup, .NET project references, JSON loaders, diagnostics and README; the diagram describes the local in-memory runtime."
+  },
+  "parking-activity": {
+    "fingerprints": {
+      "Garage/Models/Garage.cs": "a972987cd57084f30817bb8434fb3664200deb911ac3eb60fb59dbdec7fdcf49",
+      "Garage/Models/ParkingSpot.cs": "fee0a7d322540bb7f169a6de71a6afb47fd1bc825989cf7ac5c49c018714d330",
+      "Garage/Results/OperationError.cs": "a0543f8a76665ce9e0cb2e7e331c6d6e005989f7e3f830b3ce6342b9a18a1c32",
+      "Garage/Results/ParkingResult.cs": "cb28e5fdb91e49319068bea60bf006f596631ef97fffdde6f65406571c4334a5",
+      "Garage/Services/GarageService.cs": "37773af739562bea303c1a7cfc8f4fd1ee8ad0fc751b905028efcc7a6f5ea137",
+      "tracking-policy": "c1bcfbf0c8ba4bd577c54f5174f1cff1e55642087f354d0e0babb5c61df6ae51"
+    },
+    "diagramHash": "f7e69eba0bb51a4f7d2a4c7afb6b081b70a010c8e08991981b1e0dc67f82d235",
+    "note": "Checked catalog and garage guards, cross-garage registration checks, spot selection and numbered-spot validation against the current parking implementation."
+  },
+  "parking-sequence": {
+    "fingerprints": {
+      "Garage/Models/Garage.cs": "a972987cd57084f30817bb8434fb3664200deb911ac3eb60fb59dbdec7fdcf49",
+      "Garage/Models/ParkingSpot.cs": "fee0a7d322540bb7f169a6de71a6afb47fd1bc825989cf7ac5c49c018714d330",
+      "Garage/Results/OperationError.cs": "a0543f8a76665ce9e0cb2e7e331c6d6e005989f7e3f830b3ce6342b9a18a1c32",
+      "Garage/Results/ParkingResult.cs": "cb28e5fdb91e49319068bea60bf006f596631ef97fffdde6f65406571c4334a5",
+      "Garage/Services/GarageService.cs": "37773af739562bea303c1a7cfc8f4fd1ee8ad0fc751b905028efcc7a6f5ea137",
+      "tracking-policy": "efe0b245f8d5c47dc54c5761b169f1901f591574344665aff024311783b01bf4"
+    },
+    "diagramHash": "4cbe4f8eb93f5a42e3d2cee106217c1cdddcde4c2e8c650df7ac3dc831cd4792",
+    "note": "Checked GarageService.Park, ParkNewVehicle, Garage.Park overloads, spot assignment and parking results; the sequence summarizes current branches for non-null inputs."
+  },
+  "parking-spot-state": {
+    "fingerprints": {
+      "Garage/Models/Garage.cs": "a972987cd57084f30817bb8434fb3664200deb911ac3eb60fb59dbdec7fdcf49",
+      "Garage/Models/ParkingSpot.cs": "fee0a7d322540bb7f169a6de71a6afb47fd1bc825989cf7ac5c49c018714d330",
+      "tracking-policy": "76401e8eb393f13ff1b2fef02104d7961d909b324896d3f3f73c72fb24bcb595"
+    },
+    "diagramHash": "213fd0d7df92fd8b4e51a57fe05dee22a31ef3ad17108342a00079524ae17022",
+    "note": "Checked ParkingSpot construction, Park, Fits and Clear, plus Garage.Remove; occupancy states and rejected transitions match the current code."
+  }
+}

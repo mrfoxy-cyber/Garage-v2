@@ -1,0 +1,29 @@
+@startuml
+' diagram-id: local-deployment
+' entities: system:garage, component:console, component:terminal
+title Local Garage runtime
+node "User workstation" as Workstation {
+  node ".NET 10 process (choose an interface)" as Runtime {
+    artifact "Garage.Console executable" as Console
+    artifact "Garage.Terminal executable" as Terminal
+    artifact "Garage library" as Domain
+    artifact "Vehicle library" as Vehicles
+    Console --> Domain
+    Terminal --> Domain
+    Domain --> Vehicles
+  }
+  folder "Local JSON files" as Json
+  folder "Local diagnostic logs" as Logs
+  Domain ..> Json : load layouts and vehicles
+  Domain ..> Logs : diagnostic logging
+}
+note bottom of Runtime
+  Each interface runs as its own process.
+  Garage and vehicle state live in memory for that session.
+  JSON imports do not persist interactive changes.
+end note
+legend bottom
+  [[../component/garage-components.puml Components]]
+  [[../../behavioral/use-case/garage-use-cases.puml Use cases]]
+endlegend
+@enduml

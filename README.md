@@ -88,3 +88,15 @@ dotnet test Garage.Tests/Garage.Tests.csproj
 ~~~
 
 The tests cover vehicle validation, creation, parking and removal, searches, JSON loading, and duplicate handling.
+
+## UML diagrams
+
+The [UML guide](docs/uml/README.md) connects all 14 UML diagram types to the code through a manifest and shared identities. Class, component, and package diagrams are generated; parking workflows and the local runtime have reviewed diagrams. Other views start as clearly marked templates.
+
+~~~sh
+dotnet run --project tools/uml -- generate
+dotnet run --project tools/uml -- check
+pwsh -File tools/uml/render.ps1
+~~~
+
+Open [the diagram browser](docs/uml/index.html) after rendering. Pull requests check generated output, report diagrams affected by code changes, and attach SVG previews. See the guide for review acknowledgements and strict checks.

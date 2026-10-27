@@ -1,0 +1,18 @@
+@startuml
+' diagram-id: garage-object
+' entities: system:garage
+title TEMPLATE: illustrative object snapshot
+object "garage : Garage" as Garage {
+  GarageName = "Example Garage"
+  Capacity = 2
+}
+object "spot1 : ParkingSpot" as Spot {
+  Number = 1
+  Vehicle = null
+}
+Garage *-- Spot : parkingSpots
+note bottom
+  Template only. Replace with a verified snapshot from a test or scenario.
+  [[../class/garage-classes.puml Garage classes]]
+end note
+@enduml

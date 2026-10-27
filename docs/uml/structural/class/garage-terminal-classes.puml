@@ -1,0 +1,200 @@
+@startuml
+' diagram-id: garage-terminal-classes
+' Generated. Run the UML generate command; do not edit by hand.
+hide empty members
+skinparam classAttributeIconSize 0
+title Garage.Terminal classes
+package "Garage.Terminal.Forms" as e_8c95e3638b28daa95f26 {
+class "FactoryDefinition" as e_f4bb18770de95a491874 {
+  private FactoryDefinition(string name, string methodName)
+  private readonly string methodName
+  private static FieldDefinition Field(string name, Type type)
+  private static List<FieldDefinition> BuildFields(string methodName)
+  private static string Default(string name, Type type)
+  public List<FieldDefinition> Fields &#123;  get; &#125;
+  public object Create(Dictionary<string, object?> values, List<Engine>? engines = null)
+  public static List<FactoryDefinition> Engines &#123;  get; &#125;
+  public static List<FactoryDefinition> Vehicles &#123;  get; &#125;
+  public string Name &#123;  get; &#125;
+}
+class "FieldDefinition" as e_8b84717b913f7ea1a392 {
+  primary constructor FieldDefinition(string Name, string Label, Type Type, bool Required = true, string Initial = \"\")
+  public object? Parse(string text)
+  public static string FriendlyLabel(string name)
+  public static string Humanize(string name)
+}
+class "SearchForm" as e_9bd1a70266eae6524d8e {
+  public static VehicleSearchCriteria? Show(Dialogs dialogs, VehicleSearchCriteria current)
+}
+}
+package "Garage.Terminal.Presentation" as e_70d9678ffcb314c3c560 {
+class "DashboardState" as e_4df767f98e735fe95b15 {
+  primary constructor DashboardState(GarageService service)
+  public GarageService Service &#123;  get; &#125;
+  public IReadOnlyList<Vehicle> VisibleVehicles()
+  public VehicleGarage? Garage &#123;  get;  set; &#125;
+  public VehicleGarage? Location(Vehicle vehicle)
+  public VehicleSearchCriteria Criteria &#123;  get;  set; &#125;
+  public WorkspacePage Page &#123;  get;  set; &#125;
+  public int? Spot(Vehicle vehicle)
+  public string QuickFilter &#123;  get;  set; &#125;
+}
+class "Dialogs" as e_8837e80d9ea0086e4401 {
+  primary constructor Dialogs(IApplication app)
+  public Dictionary<string, object?>? Form(string title, IReadOnlyList<FieldDefinition> fields, string finish = \"_Continue\", IReadOnlyDictionary<string, object?>? initial = null)
+  public IReadOnlyList<int>? ChooseMany(string title, IReadOnlyList<string> choices, List<int>? selected = null)
+  public Window Modal(string title, int height = 22)
+  public bool Confirm(string title, string message, string accept = \"_Continue\")
+  public int? Choose(string title, IReadOnlyList<string> choices, int selected = 0)
+  public string? JsonFile(string title)
+  public void Message(string title, string message)
+}
+class "GarageWorkspace" as e_63ea1484b1756ebba669 {
+  internal void AdvanceWorkspaceFocus(bool backwards = false)
+  private IReadOnlyList<Vehicle> displayedVehicles
+  private IReadOnlyList<VehicleGarage> displayedGarages
+  private Vehicle? SelectedVehicle &#123; get; &#125;
+  private bool refreshing
+  private int? ChooseSpot(Vehicle? vehicle)
+  private readonly DashboardState state
+  private readonly Dialogs dialogs
+  private readonly GarageWorkspaceLayout layout
+  private readonly IApplication application
+  private readonly IReadOnlyList<View> focusOrder
+  private readonly Workflows workflows
+  private readonly WorkspaceButtons buttons
+  private static void AddColumns(DataTable data, List<string> names)
+  private void ChooseGarage()
+  private void ConnectEvents()
+  private void CreateVehicle(bool parkImmediately)
+  private void Execute(WorkspaceCommand command)
+  private void GarageResult(GarageCreationResult? result)
+  private void Guard(Action action)
+  private void Help()
+  private void ImportVehicle()
+  private void OpenDetails()
+  private void ParkVehicle()
+  private void ParkingActions()
+  private void Quit()
+  private void RefreshRows()
+  private void RemoveVehicle()
+  private void RevealVehicle(Vehicle vehicle)
+  private void Search()
+  private void SetStatus(string message)
+  private void ShowParkingSpots(VehicleGarage garage)
+  private void ShowVehicleTypeCounts(VehicleGarage garage)
+  private void UpdateDetails()
+  public GarageWorkspace(IApplication application, GarageService service)
+}
+class "GarageWorkspaceLayout" as e_b1626b8acbbb27220002 {
+  public FrameView DetailFrame &#123;  get; &#125;
+  public FrameView TableFrame &#123;  get; &#125;
+  public GarageWorkspaceLayout(Window workspace, WorkspaceButtons buttons)
+  public Label Details &#123;  get; &#125;
+  public Label Stats &#123;  get; &#125;
+  public Label Status &#123;  get; &#125;
+  public ListView Navigation &#123;  get; &#125;
+  public TableView Table &#123;  get; &#125;
+  public TextField Query &#123;  get; &#125;
+  public void ArrangeForHeight(int height)
+}
+class "Theme" as e_ad55187c4e6326e7f254 {
+  private static Scheme Create(string text, string background, string selection)
+  private static void ApplyScheme(View view, Scheme? scheme)
+  public static Button Apply(Button view, Scheme? scheme = null)
+  public static Button Button(string text, Action action)
+  public static FrameView Apply(FrameView view, Scheme? scheme = null)
+  public static Label Apply(Label view, Scheme? scheme = null)
+  public static ListView Apply(ListView view, Scheme? scheme = null)
+  public static OpenDialog Apply(OpenDialog view, Scheme? scheme = null)
+  public static TableView Apply(TableView view, Scheme? scheme = null)
+  public static TextField Apply(TextField view, Scheme? scheme = null)
+  public static View Apply(View view, Scheme? scheme = null)
+  public static Window Apply(Window view, Scheme? scheme = null)
+  public static readonly Scheme Accent
+  public static readonly Scheme Danger
+  public static readonly Scheme Input
+  public static readonly Scheme Muted
+  public static readonly Scheme Panel
+  public static readonly Scheme Surface
+}
+class "VehicleDetails" as e_2c610ddeb077913dbee3 {
+  private static string Properties(object value, List<string>? excluded = null)
+  public static string Engines(List<Engine> engines)
+  public static string Full(Vehicle vehicle)
+  public static string Summary(Vehicle vehicle)
+}
+class "Workflows" as e_27b934ba4d208135b791 {
+  primary constructor Workflows(Dialogs dialogs, GarageService service)
+  private Dimensions? ReadDimensions(string title)
+  private Engine? CreateEngine()
+  public GarageCreationResult? CreateGarage()
+  public GarageCreationResult? ImportGarage()
+  public VehicleCreationResult? CreateVehicle(VehicleGarage? garage = null, int? spotNumber = null)
+}
+class "WorkspaceButtons" as e_d9caf31e8ba77e8d47d5 {
+  public Button CreateGarage &#123;  get; &#125;
+  public Button CreateVehicle &#123;  get; &#125;
+  public Button Details &#123;  get; &#125;
+  public Button Filters &#123;  get; &#125;
+  public Button GaragePicker &#123;  get; &#125;
+  public Button Help &#123;  get; &#125;
+  public Button ImportGarage &#123;  get; &#125;
+  public Button ImportVehicle &#123;  get; &#125;
+  public Button Park &#123;  get; &#125;
+  public Button Quit &#123;  get; &#125;
+  public Button Remove &#123;  get; &#125;
+  public Button Spots &#123;  get; &#125;
+  public IReadOnlyList<View> FocusOrder(ListView navigation, TextField query, TableView table)
+  public WorkspaceButtons(Action<WorkspaceCommand> execute)
+  public void AddActionsTo(View actions)
+  public void AddHeaderTo(View header)
+  public void AddSearchTo(View content)
+  public void AddSidebarTo(View sidebar)
+}
+enum "WorkspaceCommand" as e_35eddb34a1e331aa28f3 {
+  ChooseGarage
+  CreateGarage
+  CreateVehicle
+  FocusFind
+  Help
+  ImportGarage
+  ImportVehicle
+  OpenDetails
+  ParkVehicle
+  ParkingActions
+  Quit
+  Refresh
+  RemoveVehicle
+  Search
+}
+enum "WorkspacePage" as e_5ac9d75313c00c571a75 {
+  Overview
+  Parking
+  Search
+  Vehicles
+}
+e_4df767f98e735fe95b15 -[hidden]down-> e_b1626b8acbbb27220002
+e_8837e80d9ea0086e4401 -[hidden]down-> e_ad55187c4e6326e7f254
+e_63ea1484b1756ebba669 -[hidden]down-> e_2c610ddeb077913dbee3
+e_b1626b8acbbb27220002 -[hidden]down-> e_27b934ba4d208135b791
+e_ad55187c4e6326e7f254 -[hidden]down-> e_d9caf31e8ba77e8d47d5
+e_2c610ddeb077913dbee3 -[hidden]down-> e_35eddb34a1e331aa28f3
+e_27b934ba4d208135b791 -[hidden]down-> e_5ac9d75313c00c571a75
+}
+e_8c95e3638b28daa95f26 -[hidden]down-> e_70d9678ffcb314c3c560
+legend bottom
+  <b>How to read this class diagram</b>
+  Child --|> Parent : solid line + hollow triangle = inherits from
+  Class ..|> Interface : dashed line + hollow triangle = implements
+  The triangle points to the parent class or interface.
+  C = class; A = abstract class; I = interface; E = enum; S = struct.
+  Boxes group members; folder-shaped boxes group namespaces.
+  public / + = accessible publicly; private / - = within the class
+  protected / # = class and derived classes; internal = same assembly
+  Type Name = field/property; Name(...) = method or constructor.
+  --- Related diagrams ---
+  [[../component/garage-components.puml Garage project components]]
+  [[../package/garage-packages.puml Garage projects and namespaces]]
+endlegend
+@enduml

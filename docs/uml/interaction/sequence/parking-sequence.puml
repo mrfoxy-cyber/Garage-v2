@@ -1,0 +1,54 @@
+@startuml
+' diagram-id: parking-sequence
+' entities: service:garage, model:garage, model:parking-spot, operation:park
+title Park an existing catalog vehicle
+actor User
+participant "Console or Terminal UI" as UI
+participant "GarageService" as Service
+participant "Garage" as Garage
+participant "ParkingSpot" as Spot
+User -> UI : Choose vehicle and garage
+UI -> Service : Park(vehicle, garage, spotNumber?)
+note over UI, Service
+  Scope: non-null arguments. Result branches are summarized;
+  this is not a complete call trace.
+end note
+alt Vehicle is outside catalog
+  Service --> UI : Failed(VehicleNotFound)
+else Garage is unregistered
+  Service --> UI : Failed(ValidationFailed)
+else Vehicle registration is already parked
+  Service --> UI : Failed(VehicleAlreadyParked)
+else Eligible to park
+  alt A spot number is supplied
+    Service -> Garage : Park(vehicle, spotNumber)
+  else Find first suitable spot
+    Service -> Garage : Park(vehicle)
+    Garage -> Spot : Fits(vehicle) for candidate empty spots
+    Spot --> Garage : fits / does not fit
+    note right of Garage
+      No suitable spot returns GarageFull
+      or VehicleDoesNotFit.
+      A match delegates to Park(vehicle, spot).
+    end note
+  end
+  note right of Garage
+    The numbered operation checks range,
+    occupancy, dimensions, and duplicate registration.
+  end note
+  alt Numbered spot passes validation
+    Garage -> Spot : Park(vehicle)
+    Spot --> Garage : Vehicle assigned
+    Garage --> Service : ParkingResult.Completed(spot, message)
+  else No suitable spot or validation failed
+    Garage --> Service : ParkingResult.Failed(message, error)
+  end
+  Service --> UI : ParkingResult
+end
+UI --> User : Display result message
+legend bottom
+  [[../../structural/class/garage-classes.puml Garage classes]]
+  [[../../behavioral/activity/parking-activity.puml Parking activity]]
+  [[../../behavioral/state-machine/parking-spot-state.puml Spot state]]
+endlegend
+@enduml

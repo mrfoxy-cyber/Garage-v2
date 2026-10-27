@@ -1,0 +1,16 @@
+@startuml
+' diagram-id: garage-composite
+' entities: system:garage
+title TEMPLATE: internal collaboration
+rectangle "Garage application (composite)" {
+  rectangle "ui : interface" as UI
+  rectangle "service : GarageService" as Service
+  rectangle "catalog : VehicleCatalog" as Catalog
+  UI --> Service : operations
+  Service --> Catalog : vehicles
+}
+note bottom
+  Template only. Define the intended parts, ports and connectors before promotion.
+  [[../component/garage-components.puml Components]]
+end note
+@enduml
