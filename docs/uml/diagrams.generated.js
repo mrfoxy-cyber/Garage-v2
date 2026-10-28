@@ -1,5 +1,723 @@
 globalThis.GARAGE_UML_DATA = {
-  "version": 4,
+  "version": 5,
+  "stories": [
+    {
+      "id": "create-garage",
+      "title": "Create garage",
+      "goal": "Make a garage available with the capacity chosen by the user.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/create-garage.md",
+      "requirements": [
+        "GAR-03",
+        "GAR-04",
+        "GAR-05",
+        "GAR-06",
+        "GAR-11",
+        "GAR-12",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests a new garage from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The user enters its capacity."
+        },
+        {
+          "number": 3,
+          "text": "The system validates the capacity and creates an empty garage with that limit."
+        },
+        {
+          "number": 4,
+          "text": "The system confirms that the garage is ready to use."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Invalid capacity",
+          "response": "explain the problem and allow correction without crashing or creating an invalid garage.",
+          "afterStep": null
+        },
+        {
+          "condition": "Initial vehicles",
+          "response": "the application must also support creating a garage populated from the start. Initial vehicles must satisfy the same validity, uniqueness and capacity rules as vehicles parked later. The assignment does not specify how those initial vehicles are supplied.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "A valid request creates a garage with the chosen capacity.",
+        "Its vehicle collection is stored privately using a list.",
+        "It can start empty or with valid initial vehicles without exceeding capacity.",
+        "Invalid input is handled with clear feedback."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Services.GarageService.CreateGarage(string, int)",
+          "type": "Garage.Services.GarageService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/GarageService.cs"
+        },
+        {
+          "member": "Garage.Services.GarageService.CreateGarageFromJson(string, string?)",
+          "type": "Garage.Services.GarageService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/GarageService.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "find-vehicle",
+      "title": "Find vehicle by registration",
+      "goal": "Find a specific parked vehicle using its registration number.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/find-vehicle.md",
+      "requirements": [
+        "GAR-03",
+        "GAR-09",
+        "GAR-11",
+        "GAR-12",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests registration lookup from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The user enters a registration number."
+        },
+        {
+          "number": 3,
+          "text": "The system searches the parked vehicles without distinguishing uppercase and lowercase letters."
+        },
+        {
+          "number": 4,
+          "text": "The system displays the matching vehicle and its properties."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "No match",
+          "response": "explain that no vehicle with that registration is parked.",
+          "afterStep": null
+        },
+        {
+          "condition": "Invalid input",
+          "response": "explain the problem and allow correction without crashing.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "ABC123, Abc123 and AbC123 find the same vehicle.",
+        "The result identifies the matching parked vehicle, or clearly reports no match.",
+        "Searching leaves the garage unchanged."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.FindVehicleByRegistration(string)",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "list-vehicles",
+      "title": "List parked vehicles",
+      "goal": "See which vehicles are currently parked and their properties.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/list-vehicles.md",
+      "requirements": [
+        "GAR-01",
+        "GAR-02",
+        "GAR-08",
+        "GAR-11",
+        "GAR-12"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests the list of parked vehicles from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The system retrieves the vehicles currently in the garage."
+        },
+        {
+          "number": 3,
+          "text": "The system displays each vehicle\u0027s registration, type and vehicle properties."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Empty garage",
+          "response": "explain that no vehicles are parked.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "Every parked vehicle is included once.",
+        "The user can distinguish vehicles and inspect their properties.",
+        "Vehicles outside the garage are not included.",
+        "Listing leaves the garage unchanged."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.Vehicles",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "list-vehicle-types",
+      "title": "List vehicle types and counts",
+      "goal": "See how many vehicles of each type are parked in the garage.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/list-vehicle-types.md",
+      "requirements": [
+        "GAR-02",
+        "GAR-08",
+        "GAR-11",
+        "GAR-12"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests a summary by vehicle type from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The system groups the parked vehicles by type and counts each group."
+        },
+        {
+          "number": 3,
+          "text": "The system displays the vehicle types present and their counts."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Empty garage",
+          "response": "explain that no vehicles are parked.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "Each displayed count reflects the vehicles currently parked of that type.",
+        "The counts add up to the number of parked vehicles.",
+        "Vehicles outside the garage are not counted.",
+        "Viewing the summary leaves the garage unchanged."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.VehiclesByType",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "navigate-menus",
+      "title": "Navigate garage menus",
+      "goal": "Reach the required garage functions through the console interface.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/navigate-menus.md",
+      "requirements": [
+        "GAR-11",
+        "GAR-12",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The system presents the main menu and its available choices."
+        },
+        {
+          "number": 2,
+          "text": "The user selects a function or submenu."
+        },
+        {
+          "number": 3,
+          "text": "The system opens the requested interaction and shows the available choices."
+        },
+        {
+          "number": 4,
+          "text": "The user can continue with a function or return to the main menu."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Invalid choice",
+          "response": "explain the available choices and allow another selection without crashing.",
+          "afterStep": null
+        },
+        {
+          "condition": "A garage is needed",
+          "response": "explain that a garage must first be created before the requested operation can continue.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "All required functions are reachable through text-based main and submenus.",
+        "Garage creation with user-specified capacity and application exit are reachable.",
+        "Invalid navigation does not crash the application or change garage contents."
+      ],
+      "implementations": [],
+      "diagrams": [
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "park-vehicle",
+      "title": "Park vehicle",
+      "goal": "Put a vehicle in the garage when there is capacity available.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/park-vehicle.md",
+      "requirements": [
+        "GAR-03",
+        "GAR-05",
+        "GAR-07",
+        "GAR-11",
+        "GAR-12",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests parking from the console menu and supplies or selects a vehicle."
+        },
+        {
+          "number": 2,
+          "text": "The system checks the vehicle details, registration uniqueness and available capacity."
+        },
+        {
+          "number": 3,
+          "text": "The system adds the vehicle to the garage."
+        },
+        {
+          "number": 4,
+          "text": "The system confirms that the vehicle is parked."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Invalid details",
+          "response": "explain the problem and allow correction without crashing.",
+          "afterStep": 2
+        },
+        {
+          "condition": "Duplicate registration",
+          "response": "reject the request and preserve the vehicles already parked.",
+          "afterStep": 2
+        },
+        {
+          "condition": "Garage full",
+          "response": "explain that no capacity is available and leave the garage unchanged.",
+          "afterStep": 2
+        }
+      ],
+      "done": [
+        "A valid vehicle is added when capacity is available.",
+        "Parking does not exceed the chosen garage capacity or introduce a duplicate registration.",
+        "A rejected request leaves the existing vehicles unchanged.",
+        "The user receives a clear success or failure message."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Services.GarageService.Park(Garage.Vehicles.Vehicle, Garage.Models.Garage, int?)",
+          "type": "Garage.Services.GarageService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/GarageService.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "parking-sequence",
+        "parking-activity",
+        "parking-spot-state",
+        "garage-use-cases",
+        "parking-story-activity"
+      ]
+    },
+    {
+      "id": "quit-application",
+      "title": "Quit application",
+      "goal": "End the running garage application through its interface.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/quit-application.md",
+      "requirements": [
+        "GAR-11",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user chooses the exit option from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The system ends the menu interaction and shuts down normally."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Invalid menu choice",
+          "response": "keep the application running, explain the available choices and allow another selection.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "The user can end the application without forcibly closing the console.",
+        "Choosing exit terminates the running application normally."
+      ],
+      "implementations": [],
+      "diagrams": [
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "remove-vehicle",
+      "title": "Remove vehicle",
+      "goal": "Take a parked vehicle out of the garage and make its capacity available again.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/remove-vehicle.md",
+      "requirements": [
+        "GAR-07",
+        "GAR-09",
+        "GAR-11",
+        "GAR-12",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests vehicle removal from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The user identifies the parked vehicle."
+        },
+        {
+          "number": 3,
+          "text": "The system finds the vehicle and removes it from the garage."
+        },
+        {
+          "number": 4,
+          "text": "The system confirms that the vehicle has been removed."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Vehicle not found",
+          "response": "explain that no matching vehicle is parked and leave the garage unchanged.",
+          "afterStep": null
+        },
+        {
+          "condition": "Invalid input",
+          "response": "explain the problem and allow correction without crashing.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "The identified vehicle is no longer parked in the garage.",
+        "Its capacity is available for another vehicle.",
+        "Other parked vehicles remain unchanged.",
+        "Registration lookup ignores letter case, and success or failure is clearly reported."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.Remove(string)",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "search-vehicles",
+      "title": "Search parked vehicles",
+      "goal": "Find parked vehicles matching one or several chosen properties.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/search-vehicles.md",
+      "requirements": [
+        "GAR-01",
+        "GAR-10",
+        "GAR-11",
+        "GAR-12",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests vehicle search from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The user supplies one or more criteria using shared vehicle properties and, when wanted, vehicle type."
+        },
+        {
+          "number": 3,
+          "text": "The system finds parked vehicles that match all supplied criteria."
+        },
+        {
+          "number": 4,
+          "text": "The system displays the matching vehicles and their properties."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "One criterion",
+          "response": "search using just that criterion, such as colour.",
+          "afterStep": null
+        },
+        {
+          "condition": "Combined criteria",
+          "response": "apply the criteria together, such as black vehicles with four wheels, or pink motorcycles with three wheels.",
+          "afterStep": null
+        },
+        {
+          "condition": "No matches",
+          "response": "clearly report that no parked vehicles match.",
+          "afterStep": null
+        },
+        {
+          "condition": "Invalid values",
+          "response": "explain the problem and allow correction without crashing.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "Each shared vehicle property can be used for searching, alone or in combination with the others.",
+        "Type filtering can be combined with shared-property criteria.",
+        "Every result matches all supplied criteria, and the garage remains unchanged."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.Search(Garage.Queries.VehicleSearchCriteria)",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "create-garage-with-dimensions",
+      "title": "Create garage with sized spaces",
+      "goal": "Create a garage whose spaces have individual length, width and height limits.",
+      "actor": "Garage user.",
+      "priority": "optional",
+      "source": "UseCases/optional/create-garage-with-dimensions.md",
+      "requirements": [
+        "OPT-08"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user supplies the garage name and the dimensions of its parking spaces."
+        },
+        {
+          "number": 2,
+          "text": "The system validates the name and space dimensions."
+        },
+        {
+          "number": 3,
+          "text": "The system registers the garage with the supplied spaces and confirms success."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Invalid dimensions",
+          "response": "explain the problem and leave the garage collection unchanged.",
+          "afterStep": null
+        },
+        {
+          "condition": "Duplicate name",
+          "response": "reject creation and preserve the existing garage.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "Every created space retains its configured dimensions.",
+        "A rejected request does not add a partial garage.",
+        "Sized spaces remain an optional extension of the basic capacity-based garage."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Services.GarageService.CreateGarage(string, System.Collections.Generic.IReadOnlyList\u003CGarage.Vehicles.Components.Dimensions\u003E)",
+          "type": "Garage.Services.GarageService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/GarageService.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "create-vehicle",
+      "title": "Create or import catalogue vehicle",
+      "goal": "Add a valid vehicle to the shared catalogue before parking it, with optional immediate parking.",
+      "actor": "Garage user.",
+      "priority": "optional",
+      "source": "UseCases/optional/create-vehicle.md",
+      "requirements": [
+        "OPT-10",
+        "OPT-12"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user enters vehicle details or selects a vehicle JSON file."
+        },
+        {
+          "number": 2,
+          "text": "The system validates the vehicle and checks registration uniqueness."
+        },
+        {
+          "number": 3,
+          "text": "If the user selected a garage, the system attempts to park the vehicle there."
+        },
+        {
+          "number": 4,
+          "text": "The system adds the vehicle to the catalogue and confirms success."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Invalid details or file",
+          "response": "explain the problem and leave the catalogue unchanged.",
+          "afterStep": null
+        },
+        {
+          "condition": "Duplicate registration",
+          "response": "reject the vehicle and preserve the existing catalogue.",
+          "afterStep": null
+        },
+        {
+          "condition": "Parking rejected",
+          "response": "explain the failure and do not register the new vehicle in the catalogue.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "Successful creation adds exactly one valid vehicle with a unique registration.",
+        "A vehicle may remain unparked in the catalogue.",
+        "Immediate parking must succeed before catalogue registration is committed."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Services.VehicleCreationService.Create(System.Func\u003CGarage.Vehicles.Vehicle\u003E, Garage.Models.Garage?, int?)",
+          "type": "Garage.Services.VehicleCreationService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/VehicleCreationService.cs"
+        },
+        {
+          "member": "Garage.Services.VehicleCreationService.FromJson(string, Garage.Models.Garage?, int?)",
+          "type": "Garage.Services.VehicleCreationService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/VehicleCreationService.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "inspect-spaces",
+      "title": "Inspect parking spaces",
+      "goal": "See each numbered parking space, its dimensions and whether it is occupied.",
+      "actor": "Garage user.",
+      "priority": "optional",
+      "source": "UseCases/optional/inspect-spaces.md",
+      "requirements": [
+        "OPT-03",
+        "OPT-08"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user selects a garage and requests its parking-space details."
+        },
+        {
+          "number": 2,
+          "text": "The system retrieves the numbered spaces and occupancy information."
+        },
+        {
+          "number": 3,
+          "text": "The system displays the available space details."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "No selected garage",
+          "response": "explain that a garage must be selected first.",
+          "afterStep": null
+        },
+        {
+          "condition": "Unsized space",
+          "response": "show the space and occupancy without inventing dimension limits.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "Each space is listed once with its number and current occupancy.",
+        "Configured dimensions are shown when available.",
+        "Inspection leaves parking assignments unchanged."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.SpotDetails",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    }
+  ],
   "diagrams": [
     {
       "id": "garage-classes",
@@ -11,10 +729,12 @@ globalThis.GARAGE_UML_DATA = {
         "garage-components",
         "garage-packages"
       ],
+      "storyIds": [],
+      "origin": "code",
       "source": "structural/class/garage-classes.puml",
       "svg": "structural/class/garage-classes.svg",
-      "puml": "@startuml\n\u0027 diagram-id: garage-classes\n\u0027 Generated. Run the UML generate command; do not edit by hand.\nhide empty members\nskinparam classAttributeIconSize 0\ntitle Garage classes\npackage \u0022Garage.Diagnostics\u0022 as e_dbf42b10f0c8e363433c {\nclass \u0022ErrorLogger\u0022 as e_da6e02197dc94806bac4 {\n  private const int LabelWidth\n  private static string LogField(string label, object? value)\n  public static bool TryLog(Exception exception, string? operation = null, object? relatedObject = null)\n}\n}\npackage \u0022Garage.Documentation\u0022 as e_58bc520a9f4d579b96d9 {\nclass \u0022SequenceViewAttribute\u0022 as e_921fac54fe9e9970ce7f {\n  primary constructor SequenceViewAttribute(string id)\n  public int MaxDepth \u0026#123;  get;  set; \u0026#125;\n  public string Id \u0026#123;  get; \u0026#125;\n  public string[] ExpandNamespaces \u0026#123;  get;  set; \u0026#125;\n}\nclass \u0022UseCaseAttribute\u0022 as e_70ee0bedbf2ab27c1a4a {\n  primary constructor UseCaseAttribute(string id, string title)\n  public string Actor \u0026#123;  get;  set; \u0026#125;\n  public string Id \u0026#123;  get; \u0026#125;\n  public string Title \u0026#123;  get; \u0026#125;\n}\n}\npackage \u0022Garage.Models\u0022 as e_b9ddcf58f7305c147c98 {\nclass \u0022Garage\u0022 as e_7dfee8d41ffeed65ee04 {\n  [UseCase(\\\u0022remove\\\u0022, \\\u0022Remove parked vehicle\\\u0022)] public GarageOperationResult Remove(string registrationNumber)\n  [UseCase(\\\u0022search\\\u0022, \\\u0022Search parked vehicles\\\u0022)] public IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)\n  private Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles, IReadOnlyList\u003CDimensions\u003E? spotDimensions)\n  private bool RegistrationExists(string registrationNumber)\n  private readonly List\u003CParkingSpot\u003E parkingSpots\n  private static ParkingResult DuplicateRegistration(Vehicle vehicle)\n  public Garage(string garageName, IReadOnlyList\u003CDimensions\u003E spotDimensions, List\u003CVehicle\u003E? initialVehicles = null)\n  public Garage(string garageName, List\u003CVehicle\u003E vehicles)\n  public Garage(string garageName, int capacity)\n  public Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles)\n  public GarageOperationResult RemoveAtSpot(int spotNumber)\n  public IReadOnlyList\u003CParkedVehicleInfo\u003E ParkedVehicles \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003CParkingSpotInfo\u003E SpotDetails \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003CVehicle\u003E Vehicles \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003CVehicleTypeGroup\u003E VehiclesByType \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003Cint\u003E AvailableSpotsFor(Vehicle vehicle)\n  public ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber)\n  public ParkingResult Park(Vehicle vehicle)\n  public ParkingResult Park(Vehicle vehicle, int spot)\n  public const int MaximumGarageCapacity\n  public int AvailableSpaces \u0026#123; get; \u0026#125;\n  public int Capacity \u0026#123;  get; \u0026#125;\n  public int OccupiedSpaces \u0026#123; get; \u0026#125;\n  public string GarageName \u0026#123;  get; \u0026#125;\n}\nclass \u0022ParkingSpot\u0022 as e_811191dd1ddf83d5085a {\n  public Dimensions? Dimensions \u0026#123;  get; \u0026#125;\n  public ParkingSpot(int number, Dimensions? dimensions)\n  public Vehicle? Vehicle \u0026#123;  get; private set; \u0026#125;\n  public bool Fits(Vehicle vehicle)\n  public int Number \u0026#123;  get; \u0026#125;\n  public void Clear()\n  public void Park(Vehicle vehicle)\n}\nclass \u0022VehicleCatalog\u0022 as e_8007237a91b460f18c21 {\n  internal void Add(Vehicle vehicle)\n  private readonly List\u003CVehicle\u003E vehicles\n  public IReadOnlyList\u003CVehicle\u003E Vehicles \u0026#123; get; \u0026#125;\n  public VehicleCatalog(List\u003CVehicle\u003E? initialVehicles = null)\n  public bool ContainsRegistration(string registrationNumber)\n}\n}\npackage \u0022Garage.Persistence.Json\u0022 as e_476c3ab7c0020fdf9044 {\nclass \u0022GarageJsonLoader\u0022 as e_903b8aec249a8f7a706d {\n  private static Dimensions ToDimensions(SpotSizeSpecification size, string location)\n  private static GaragePlacementSpecification ReadPlacementSpecification(string path)\n  private static GarageSpecification ReadGarageSpecification(string path)\n  private static string ReadJson(string path)\n  private static void ApplyPlacements(VehicleGarage garage, string placementPath)\n  public static VehicleGarage Load(string configurationPath, string? placementPath = null)\n}\nclass \u0022JsonSettings\u0022 as e_4ee1080be52a7f58e2dc {\n  private static JsonSerializerOptions Create()\n  public static JsonSerializerOptions Options \u0026#123;  get; \u0026#125;\n}\nclass \u0022VehicleJsonLoader\u0022 as e_4562483796623659cd4a {\n  public static List\u003CVehicle\u003E LoadVehicles(string? filePath = null)\n  public static Vehicle LoadVehicle(string filePath)\n}\nclass \u0022VehicleJsonMapper\u0022 as e_7166fdfe73ef51bfec0f {\n  private static Airplane CreateAirplane(VehicleJsonContract seed)\n  private static Boat CreateBoat(VehicleJsonContract seed)\n  private static BoatType Require(BoatType? value, VehicleJsonContract seed, string propertyName)\n  private static BodyType Require(BodyType? value, VehicleJsonContract seed, string propertyName)\n  private static Bus CreateBus(VehicleJsonContract seed)\n  private static Car CreateCar(VehicleJsonContract seed)\n  private static Engine CreateEngine(EngineJsonContract seed)\n  private static FuelType Require(FuelType? value, EngineJsonContract seed, string propertyName)\n  private static InvalidDataException MissingProperty(VehicleJsonContract seed, string propertyName)\n  private static List\u003CEngine\u003E CreateEngines(VehicleJsonContract vehicle)\n  private static Motorcycle CreateMotorcycle(VehicleJsonContract seed)\n  private static MotorcycleType Require(MotorcycleType? value, VehicleJsonContract seed, string propertyName)\n  private static Truck CreateTruck(VehicleJsonContract seed)\n  private static bool Require(bool? value, VehicleJsonContract seed, string propertyName)\n  private static double Require(double? value, EngineJsonContract seed, string propertyName)\n  private static double Require(double? value, VehicleJsonContract seed, string propertyName)\n  private static int Require(int? value, EngineJsonContract seed, string propertyName)\n  private static int Require(int? value, VehicleJsonContract seed, string propertyName)\n  private static string Require(string? value, EngineJsonContract seed, string propertyName)\n  private static string Require(string? value, VehicleJsonContract seed, string propertyName)\n  public static Vehicle Create(VehicleJsonContract seed)\n}\ne_903b8aec249a8f7a706d -[hidden]down-\u003E e_7166fdfe73ef51bfec0f\n}\npackage \u0022Garage.Persistence.Json.Contracts\u0022 as e_8204406925242146cdfc {\nclass \u0022EngineJsonContract\u0022 as e_ed20c6e09ee59dfe8f2b {\n  public FuelType? FuelType \u0026#123;  get;  init; \u0026#125;\n  public double? BoilerPressureBar \u0026#123;  get;  init; \u0026#125;\n  public double? BypassRatio \u0026#123;  get;  init; \u0026#125;\n  public double? PowerKw \u0026#123;  get;  init; \u0026#125;\n  public double? ThrustKn \u0026#123;  get;  init; \u0026#125;\n  public double? Voltage \u0026#123;  get;  init; \u0026#125;\n  public int? CylinderCount \u0026#123;  get;  init; \u0026#125;\n  public int? DisplacementCc \u0026#123;  get;  init; \u0026#125;\n  public int? HorsePower \u0026#123;  get;  init; \u0026#125;\n  public int? RotorCount \u0026#123;  get;  init; \u0026#125;\n  public int? ShaftHorsePower \u0026#123;  get;  init; \u0026#125;\n  public required string Model \u0026#123;  get;  init; \u0026#125;\n  public required string SerialNumber \u0026#123;  get;  init; \u0026#125;\n  public required string Type \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022VehicleJsonContract\u0022 as e_4dcd30dc05bd52c59667 {\n  public BoatType? BoatType \u0026#123;  get;  init; \u0026#125;\n  public BodyType? BodyType \u0026#123;  get;  init; \u0026#125;\n  public List\u003CEngineJsonContract\u003E Engines \u0026#123;  get;  init; \u0026#125;\n  public MotorcycleType? MotorcycleType \u0026#123;  get;  init; \u0026#125;\n  public bool? HasCabin \u0026#123;  get;  init; \u0026#125;\n  public bool? HasDualControls \u0026#123;  get;  init; \u0026#125;\n  public bool? HasSidecar \u0026#123;  get;  init; \u0026#125;\n  public double? DraftMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumAltitudeMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumLoadKg \u0026#123;  get;  init; \u0026#125;\n  public double? WingspanMeters \u0026#123;  get;  init; \u0026#125;\n  public int? CabinCrewSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? CabinPassengerSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? CrewSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? DriverSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? DriverSeats \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfAxles \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfDoors \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfSeats \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfWheels \u0026#123;  get;  init; \u0026#125;\n  public int? PassengerCapacity \u0026#123;  get;  init; \u0026#125;\n  public int? PassengerSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? PilotSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? StandingPassengerCapacity \u0026#123;  get;  init; \u0026#125;\n  public required CountryCode CountryCode \u0026#123;  get;  init; \u0026#125;\n  public required VehicleColor Color \u0026#123;  get;  init; \u0026#125;\n  public required double HeightMeters \u0026#123;  get;  init; \u0026#125;\n  public required double LengthMeters \u0026#123;  get;  init; \u0026#125;\n  public required double WeightKg \u0026#123;  get;  init; \u0026#125;\n  public required double WidthMeters \u0026#123;  get;  init; \u0026#125;\n  public required int ManufacturingYear \u0026#123;  get;  init; \u0026#125;\n  public required string Manufacturer \u0026#123;  get;  init; \u0026#125;\n  public required string Model \u0026#123;  get;  init; \u0026#125;\n  public required string RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n  public required string Type \u0026#123;  get;  init; \u0026#125;\n  public string? AirframeSerialNumber \u0026#123;  get;  init; \u0026#125;\n  public string? Hin \u0026#123;  get;  init; \u0026#125;\n  public string? Vin \u0026#123;  get;  init; \u0026#125;\n}\n}\npackage \u0022Garage.Queries\u0022 as e_2fd8126a30ec979b387a {\nclass \u0022ParkedVehicleInfo\u0022 as e_a63aa2e3b7d62db15b04 {\n  primary constructor ParkedVehicleInfo(int SpotNumber, Vehicle Vehicle)\n}\nclass \u0022ParkingSpotInfo\u0022 as e_7ebc156d8765fc753f71 {\n  primary constructor ParkingSpotInfo(int SpotNumber, Dimensions? Dimensions, bool IsOccupied)\n}\nclass \u0022VehicleSearch\u0022 as e_786fb28f30ca0563d04e {\n  private static bool MatchesMeasurement(double actual, double expected)\n  public static bool Matches(Vehicle vehicle, VehicleSearchCriteria criteria)\n}\nclass \u0022VehicleSearchCriteria\u0022 as e_c0c4dd04000b12cbf930 {\n  public BoatType? BoatType \u0026#123;  get;  init; \u0026#125;\n  public BodyType? BodyType \u0026#123;  get;  init; \u0026#125;\n  public Garage.Engines.FuelType? FuelType \u0026#123;  get;  init; \u0026#125;\n  public IReadOnlyList\u003CType\u003E VehicleTypes \u0026#123;  get;  init; \u0026#125;\n  public MotorcycleType? MotorcycleType \u0026#123;  get;  init; \u0026#125;\n  public VehicleColor? Color \u0026#123;  get;  init; \u0026#125;\n  public bool? HasSidecar \u0026#123;  get;  init; \u0026#125;\n  public double? CylinderVolumeCc \u0026#123;  get;  init; \u0026#125;\n  public double? DraftMeters \u0026#123;  get;  init; \u0026#125;\n  public double? LengthMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumAltitudeMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumLoadKg \u0026#123;  get;  init; \u0026#125;\n  public double? WingspanMeters \u0026#123;  get;  init; \u0026#125;\n  public int? ManufacturingYear \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfAxles \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfEngines \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfSeats \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfWheels \u0026#123;  get;  init; \u0026#125;\n  public int? StandingPassengerCapacity \u0026#123;  get;  init; \u0026#125;\n  public string? Manufacturer \u0026#123;  get;  init; \u0026#125;\n  public string? Model \u0026#123;  get;  init; \u0026#125;\n  public string? RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022VehicleTypeGroup\u0022 as e_35e800f198b950258c82 {\n  primary constructor VehicleTypeGroup(string VehicleType, IReadOnlyList\u003CParkedVehicleInfo\u003E Vehicles)\n}\ne_a63aa2e3b7d62db15b04 -[hidden]down-\u003E e_c0c4dd04000b12cbf930\ne_7ebc156d8765fc753f71 -[hidden]down-\u003E e_35e800f198b950258c82\n}\npackage \u0022Garage.Results\u0022 as e_42481b28c8686aad515e {\nclass \u0022GarageCreationResult\u0022 as e_7a8fe0cab2cc81d3135a {\n  private GarageCreationResult(VehicleGarage? garage, string message, OperationError error)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public VehicleGarage? Garage \u0026#123;  get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public static GarageCreationResult Completed(VehicleGarage garage)\n  public static GarageCreationResult Failed(string message, OperationError error = OperationError.ValidationFailed)\n  public string Message \u0026#123;  get; \u0026#125;\n}\nclass \u0022GarageOperationResult\u0022 as e_a7bb27afefc092f6c63e {\n  private GarageOperationResult(int? spotNumber, string message, OperationError error)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public int? SpotNumber \u0026#123;  get; \u0026#125;\n  public static GarageOperationResult Completed(int spotNumber, string message)\n  public static GarageOperationResult Failed(string message, OperationError error)\n  public string Message \u0026#123;  get; \u0026#125;\n}\nenum \u0022OperationError\u0022 as e_68ff88246a3b0f165654 {\n  Cancelled\n  DuplicateGarageName\n  DuplicateRegistration\n  FileAccessDenied\n  FileNotFound\n  FileReadFailed\n  GarageFull\n  InvalidJson\n  None\n  SpotEmpty\n  SpotOccupied\n  SpotOutOfRange\n  UnsupportedOperation\n  ValidationFailed\n  VehicleAlreadyParked\n  VehicleDoesNotFit\n  VehicleNotFound\n}\nclass \u0022ParkingResult\u0022 as e_3f3a1c4fa9997c8247b6 {\n  private ParkingResult(int? spotNumber, string message, OperationError error)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public int? SpotNumber \u0026#123;  get; \u0026#125;\n  public static ParkingResult Completed(int spotNumber, string message)\n  public static ParkingResult Failed(string message, OperationError error)\n  public string Message \u0026#123;  get; \u0026#125;\n}\nclass \u0022VehicleCreationResult\u0022 as e_8bad896b706bf4731d84 {\n  private VehicleCreationResult(Vehicle? vehicle, string message, OperationError error, ParkingResult? parking = null)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public ParkingResult? Parking \u0026#123;  get; \u0026#125;\n  public Vehicle? Vehicle \u0026#123;  get; \u0026#125;\n  public bool Cancelled \u0026#123; get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public static VehicleCreationResult Cancel()\n  public static VehicleCreationResult Completed(Vehicle vehicle, ParkingResult? parking = null, string? message = null)\n  public static VehicleCreationResult Failed(string message, OperationError error = OperationError.ValidationFailed)\n  public string Message \u0026#123;  get; \u0026#125;\n}\ne_7a8fe0cab2cc81d3135a -[hidden]down-\u003E e_3f3a1c4fa9997c8247b6\ne_a7bb27afefc092f6c63e -[hidden]down-\u003E e_8bad896b706bf4731d84\n}\npackage \u0022Garage.Services\u0022 as e_9fc3ece9d1004ca21814 {\nclass \u0022ExpectedFailure\u0022 as e_fd3daa564fa221428833 {\n  public static OperationError Code(Exception exception)\n  public static bool IsExpected(Exception exception)\n}\nclass \u0022GarageService\u0022 as e_6dd2ac09b188a18419a6 {\n  [UseCase(\\\u0022create-garage\\\u0022, \\\u0022Create or import garage\\\u0022)] public GarageCreationResult CreateGarage(string name, int capacity)\n  [UseCase(\\\u0022create-garage\\\u0022, \\\u0022Create or import garage\\\u0022)] public GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)\n  [UseCase(\\\u0022park-vehicle\\\u0022, \\\u0022Park vehicle\\\u0022)] [SequenceView(\\\u0022parking-sequence\\\u0022, MaxDepth = 3, ExpandNamespaces = new[] \u0026#123; \\\u0022Garage.Services\\\u0022, \\\u0022Garage.Models\\\u0022 \u0026#125;)] public ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)\n  private GarageCreationResult CreateAndRegister(Func\u003CVehicleGarage\u003E factory)\n  private GarageCreationResult RegisterGarage(VehicleGarage garage)\n  private ParkingResult ParkNewVehicle(Vehicle vehicle, VehicleGarage garage, int? spotNumber)\n  private readonly List\u003CVehicleGarage\u003E garages\n  public GarageCreationResult CreateGarage(string name, IReadOnlyList\u003CDimensions\u003E sizes)\n  public GarageService(List\u003CVehicleGarage\u003E initialGarages, List\u003CVehicle\u003E initialVehicles)\n  public IReadOnlyList\u003CVehicle\u003E GetParkableVehicles(VehicleGarage garage, int? spotNumber = null)\n  public IReadOnlyList\u003CVehicleGarage\u003E Garages \u0026#123; get; \u0026#125;\n  public VehicleCatalog Catalog \u0026#123;  get; \u0026#125;\n  public VehicleCreationService VehicleCreation \u0026#123;  get; \u0026#125;\n  public bool ContainsGarage(string name)\n  public bool IsParked(Vehicle vehicle)\n}\nclass \u0022VehicleCreationService\u0022 as e_30eac2cea220d48d859f {\n  [UseCase(\\\u0022create-vehicle\\\u0022, \\\u0022Create or import vehicle\\\u0022)] public VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)\n  [UseCase(\\\u0022create-vehicle\\\u0022, \\\u0022Create or import vehicle\\\u0022)] public VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)\n  internal VehicleCreationService(VehicleCatalog catalog, Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park)\n  private readonly Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park\n  private readonly VehicleCatalog catalog\n}\n}\npackage \u0022Garage.Specifications\u0022 as e_c9f6e67955b27c88b5f3 {\nclass \u0022GaragePlacementSpecification\u0022 as e_4e294155336cf7b2de83 {\n  public IReadOnlyList\u003CSpotAssignment\u003E? Assignments \u0026#123;  get;  init; \u0026#125;\n  public string? GarageName \u0026#123;  get;  init; \u0026#125;\n  public string? VehiclesFile \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022GarageSpecification\u0022 as e_78586a18a36e889092ac {\n  public IReadOnlyList\u003CSpotSpecification\u003E? Spots \u0026#123;  get;  init; \u0026#125;\n  public SpotSizeSpecification? DefaultSpotSize \u0026#123;  get;  init; \u0026#125;\n  public int Capacity \u0026#123;  get;  init; \u0026#125;\n  public string? GarageName \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SpotAssignment\u0022 as e_1aea9a100b328e430774 {\n  public int SpotNumber \u0026#123;  get;  init; \u0026#125;\n  public string? RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SpotSizeSpecification\u0022 as e_62a255ce3df8795d721f {\n  public double HeightMeters \u0026#123;  get;  init; \u0026#125;\n  public double LengthMeters \u0026#123;  get;  init; \u0026#125;\n  public double WidthMeters \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SpotSpecification\u0022 as e_bf4e409810d4cca546f1 {\n  public SpotSizeSpecification? Size \u0026#123;  get;  init; \u0026#125;\n  public int SpotNumber \u0026#123;  get;  init; \u0026#125;\n}\ne_4e294155336cf7b2de83 -[hidden]down-\u003E e_62a255ce3df8795d721f\ne_78586a18a36e889092ac -[hidden]down-\u003E e_bf4e409810d4cca546f1\n}\ne_dbf42b10f0c8e363433c -[hidden]down-\u003E e_58bc520a9f4d579b96d9\ne_58bc520a9f4d579b96d9 -[hidden]down-\u003E e_b9ddcf58f7305c147c98\ne_b9ddcf58f7305c147c98 -[hidden]down-\u003E e_476c3ab7c0020fdf9044\ne_476c3ab7c0020fdf9044 -[hidden]down-\u003E e_8204406925242146cdfc\ne_8204406925242146cdfc -[hidden]down-\u003E e_2fd8126a30ec979b387a\ne_2fd8126a30ec979b387a -[hidden]down-\u003E e_42481b28c8686aad515e\ne_42481b28c8686aad515e -[hidden]down-\u003E e_9fc3ece9d1004ca21814\ne_9fc3ece9d1004ca21814 -[hidden]down-\u003E e_c9f6e67955b27c88b5f3\nlegend bottom\n  \u003Cb\u003EHow to read this class diagram\u003C/b\u003E\n  Child --|\u003E Parent : solid line \u002B hollow triangle = inherits from\n  Class ..|\u003E Interface : dashed line \u002B hollow triangle = implements\n  The triangle points to the parent class or interface.\n  C = class; A = abstract class; I = interface; E = enum; S = struct.\n  Boxes group members; folder-shaped boxes group namespaces.\n  public / \u002B = accessible publicly; private / - = within the class\n  protected / # = class and derived classes; internal = same assembly\n  Type Name = field/property; Name(...) = method or constructor.\n  --- Related diagrams ---\n  [[../component/garage-components.puml Garage project components]]\n  [[../package/garage-packages.puml Garage projects and namespaces]]\nendlegend\n@enduml\n",
-      "pumlHash": "f806f654b2899dbfe2c47ee23b47d917ae51d2e3dbbc8ed661ad55cc763af066"
+      "puml": "@startuml\n\u0027 diagram-id: garage-classes\n\u0027 Generated. Run the UML generate command; do not edit by hand.\nhide empty members\nskinparam classAttributeIconSize 0\ntitle Garage classes\npackage \u0022Garage.Diagnostics\u0022 as e_dbf42b10f0c8e363433c {\nclass \u0022ErrorLogger\u0022 as e_da6e02197dc94806bac4 {\n  private const int LabelWidth\n  private static string LogField(string label, object? value)\n  public static bool TryLog(Exception exception, string? operation = null, object? relatedObject = null)\n}\n}\npackage \u0022Garage.Documentation\u0022 as e_58bc520a9f4d579b96d9 {\nclass \u0022SequenceViewAttribute\u0022 as e_921fac54fe9e9970ce7f {\n  primary constructor SequenceViewAttribute(string id)\n  public int MaxDepth \u0026#123;  get;  set; \u0026#125;\n  public string Id \u0026#123;  get; \u0026#125;\n  public string[] ExpandNamespaces \u0026#123;  get;  set; \u0026#125;\n}\nclass \u0022UseCaseAttribute\u0022 as e_70ee0bedbf2ab27c1a4a {\n  primary constructor UseCaseAttribute(string id)\n  public string Id \u0026#123;  get; \u0026#125;\n}\n}\npackage \u0022Garage.Models\u0022 as e_b9ddcf58f7305c147c98 {\nclass \u0022Garage\u0022 as e_7dfee8d41ffeed65ee04 {\n  [UseCase(\\\u0022find-vehicle\\\u0022)] public ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber)\n  [UseCase(\\\u0022remove-vehicle\\\u0022)] public GarageOperationResult Remove(string registrationNumber)\n  [UseCase(\\\u0022search-vehicles\\\u0022)] public IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)\n  private Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles, IReadOnlyList\u003CDimensions\u003E? spotDimensions)\n  private bool RegistrationExists(string registrationNumber)\n  private readonly List\u003CParkingSpot\u003E parkingSpots\n  private static ParkingResult DuplicateRegistration(Vehicle vehicle)\n  public Garage(string garageName, IReadOnlyList\u003CDimensions\u003E spotDimensions, List\u003CVehicle\u003E? initialVehicles = null)\n  public Garage(string garageName, List\u003CVehicle\u003E vehicles)\n  public Garage(string garageName, int capacity)\n  public Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles)\n  public GarageOperationResult RemoveAtSpot(int spotNumber)\n  public IReadOnlyList\u003CParkedVehicleInfo\u003E ParkedVehicles \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003CParkingSpotInfo\u003E SpotDetails \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003CVehicle\u003E Vehicles \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003CVehicleTypeGroup\u003E VehiclesByType \u0026#123; get; \u0026#125;\n  public IReadOnlyList\u003Cint\u003E AvailableSpotsFor(Vehicle vehicle)\n  public ParkingResult Park(Vehicle vehicle)\n  public ParkingResult Park(Vehicle vehicle, int spot)\n  public const int MaximumGarageCapacity\n  public int AvailableSpaces \u0026#123; get; \u0026#125;\n  public int Capacity \u0026#123;  get; \u0026#125;\n  public int OccupiedSpaces \u0026#123; get; \u0026#125;\n  public string GarageName \u0026#123;  get; \u0026#125;\n}\nclass \u0022ParkingSpot\u0022 as e_811191dd1ddf83d5085a {\n  public Dimensions? Dimensions \u0026#123;  get; \u0026#125;\n  public ParkingSpot(int number, Dimensions? dimensions)\n  public Vehicle? Vehicle \u0026#123;  get; private set; \u0026#125;\n  public bool Fits(Vehicle vehicle)\n  public int Number \u0026#123;  get; \u0026#125;\n  public void Clear()\n  public void Park(Vehicle vehicle)\n}\nclass \u0022VehicleCatalog\u0022 as e_8007237a91b460f18c21 {\n  internal void Add(Vehicle vehicle)\n  private readonly List\u003CVehicle\u003E vehicles\n  public IReadOnlyList\u003CVehicle\u003E Vehicles \u0026#123; get; \u0026#125;\n  public VehicleCatalog(List\u003CVehicle\u003E? initialVehicles = null)\n  public bool ContainsRegistration(string registrationNumber)\n}\n}\npackage \u0022Garage.Persistence.Json\u0022 as e_476c3ab7c0020fdf9044 {\nclass \u0022GarageJsonLoader\u0022 as e_903b8aec249a8f7a706d {\n  private static Dimensions ToDimensions(SpotSizeSpecification size, string location)\n  private static GaragePlacementSpecification ReadPlacementSpecification(string path)\n  private static GarageSpecification ReadGarageSpecification(string path)\n  private static string ReadJson(string path)\n  private static void ApplyPlacements(VehicleGarage garage, string placementPath)\n  public static VehicleGarage Load(string configurationPath, string? placementPath = null)\n}\nclass \u0022JsonSettings\u0022 as e_4ee1080be52a7f58e2dc {\n  private static JsonSerializerOptions Create()\n  public static JsonSerializerOptions Options \u0026#123;  get; \u0026#125;\n}\nclass \u0022VehicleJsonLoader\u0022 as e_4562483796623659cd4a {\n  public static List\u003CVehicle\u003E LoadVehicles(string? filePath = null)\n  public static Vehicle LoadVehicle(string filePath)\n}\nclass \u0022VehicleJsonMapper\u0022 as e_7166fdfe73ef51bfec0f {\n  private static Airplane CreateAirplane(VehicleJsonContract seed)\n  private static Boat CreateBoat(VehicleJsonContract seed)\n  private static BoatType Require(BoatType? value, VehicleJsonContract seed, string propertyName)\n  private static BodyType Require(BodyType? value, VehicleJsonContract seed, string propertyName)\n  private static Bus CreateBus(VehicleJsonContract seed)\n  private static Car CreateCar(VehicleJsonContract seed)\n  private static Engine CreateEngine(EngineJsonContract seed)\n  private static FuelType Require(FuelType? value, EngineJsonContract seed, string propertyName)\n  private static InvalidDataException MissingProperty(VehicleJsonContract seed, string propertyName)\n  private static List\u003CEngine\u003E CreateEngines(VehicleJsonContract vehicle)\n  private static Motorcycle CreateMotorcycle(VehicleJsonContract seed)\n  private static MotorcycleType Require(MotorcycleType? value, VehicleJsonContract seed, string propertyName)\n  private static Truck CreateTruck(VehicleJsonContract seed)\n  private static bool Require(bool? value, VehicleJsonContract seed, string propertyName)\n  private static double Require(double? value, EngineJsonContract seed, string propertyName)\n  private static double Require(double? value, VehicleJsonContract seed, string propertyName)\n  private static int Require(int? value, EngineJsonContract seed, string propertyName)\n  private static int Require(int? value, VehicleJsonContract seed, string propertyName)\n  private static string Require(string? value, EngineJsonContract seed, string propertyName)\n  private static string Require(string? value, VehicleJsonContract seed, string propertyName)\n  public static Vehicle Create(VehicleJsonContract seed)\n}\ne_903b8aec249a8f7a706d -[hidden]down-\u003E e_7166fdfe73ef51bfec0f\n}\npackage \u0022Garage.Persistence.Json.Contracts\u0022 as e_8204406925242146cdfc {\nclass \u0022EngineJsonContract\u0022 as e_ed20c6e09ee59dfe8f2b {\n  public FuelType? FuelType \u0026#123;  get;  init; \u0026#125;\n  public double? BoilerPressureBar \u0026#123;  get;  init; \u0026#125;\n  public double? BypassRatio \u0026#123;  get;  init; \u0026#125;\n  public double? PowerKw \u0026#123;  get;  init; \u0026#125;\n  public double? ThrustKn \u0026#123;  get;  init; \u0026#125;\n  public double? Voltage \u0026#123;  get;  init; \u0026#125;\n  public int? CylinderCount \u0026#123;  get;  init; \u0026#125;\n  public int? DisplacementCc \u0026#123;  get;  init; \u0026#125;\n  public int? HorsePower \u0026#123;  get;  init; \u0026#125;\n  public int? RotorCount \u0026#123;  get;  init; \u0026#125;\n  public int? ShaftHorsePower \u0026#123;  get;  init; \u0026#125;\n  public required string Model \u0026#123;  get;  init; \u0026#125;\n  public required string SerialNumber \u0026#123;  get;  init; \u0026#125;\n  public required string Type \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022VehicleJsonContract\u0022 as e_4dcd30dc05bd52c59667 {\n  public BoatType? BoatType \u0026#123;  get;  init; \u0026#125;\n  public BodyType? BodyType \u0026#123;  get;  init; \u0026#125;\n  public List\u003CEngineJsonContract\u003E Engines \u0026#123;  get;  init; \u0026#125;\n  public MotorcycleType? MotorcycleType \u0026#123;  get;  init; \u0026#125;\n  public bool? HasCabin \u0026#123;  get;  init; \u0026#125;\n  public bool? HasDualControls \u0026#123;  get;  init; \u0026#125;\n  public bool? HasSidecar \u0026#123;  get;  init; \u0026#125;\n  public double? DraftMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumAltitudeMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumLoadKg \u0026#123;  get;  init; \u0026#125;\n  public double? WingspanMeters \u0026#123;  get;  init; \u0026#125;\n  public int? CabinCrewSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? CabinPassengerSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? CrewSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? DriverSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? DriverSeats \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfAxles \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfDoors \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfSeats \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfWheels \u0026#123;  get;  init; \u0026#125;\n  public int? PassengerCapacity \u0026#123;  get;  init; \u0026#125;\n  public int? PassengerSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? PilotSeatCount \u0026#123;  get;  init; \u0026#125;\n  public int? StandingPassengerCapacity \u0026#123;  get;  init; \u0026#125;\n  public required CountryCode CountryCode \u0026#123;  get;  init; \u0026#125;\n  public required VehicleColor Color \u0026#123;  get;  init; \u0026#125;\n  public required double HeightMeters \u0026#123;  get;  init; \u0026#125;\n  public required double LengthMeters \u0026#123;  get;  init; \u0026#125;\n  public required double WeightKg \u0026#123;  get;  init; \u0026#125;\n  public required double WidthMeters \u0026#123;  get;  init; \u0026#125;\n  public required int ManufacturingYear \u0026#123;  get;  init; \u0026#125;\n  public required string Manufacturer \u0026#123;  get;  init; \u0026#125;\n  public required string Model \u0026#123;  get;  init; \u0026#125;\n  public required string RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n  public required string Type \u0026#123;  get;  init; \u0026#125;\n  public string? AirframeSerialNumber \u0026#123;  get;  init; \u0026#125;\n  public string? Hin \u0026#123;  get;  init; \u0026#125;\n  public string? Vin \u0026#123;  get;  init; \u0026#125;\n}\n}\npackage \u0022Garage.Queries\u0022 as e_2fd8126a30ec979b387a {\nclass \u0022ParkedVehicleInfo\u0022 as e_a63aa2e3b7d62db15b04 {\n  primary constructor ParkedVehicleInfo(int SpotNumber, Vehicle Vehicle)\n}\nclass \u0022ParkingSpotInfo\u0022 as e_7ebc156d8765fc753f71 {\n  primary constructor ParkingSpotInfo(int SpotNumber, Dimensions? Dimensions, bool IsOccupied)\n}\nclass \u0022VehicleSearch\u0022 as e_786fb28f30ca0563d04e {\n  private static bool MatchesMeasurement(double actual, double expected)\n  public static bool Matches(Vehicle vehicle, VehicleSearchCriteria criteria)\n}\nclass \u0022VehicleSearchCriteria\u0022 as e_c0c4dd04000b12cbf930 {\n  public BoatType? BoatType \u0026#123;  get;  init; \u0026#125;\n  public BodyType? BodyType \u0026#123;  get;  init; \u0026#125;\n  public Garage.Engines.FuelType? FuelType \u0026#123;  get;  init; \u0026#125;\n  public IReadOnlyList\u003CType\u003E VehicleTypes \u0026#123;  get;  init; \u0026#125;\n  public MotorcycleType? MotorcycleType \u0026#123;  get;  init; \u0026#125;\n  public VehicleColor? Color \u0026#123;  get;  init; \u0026#125;\n  public bool? HasSidecar \u0026#123;  get;  init; \u0026#125;\n  public double? CylinderVolumeCc \u0026#123;  get;  init; \u0026#125;\n  public double? DraftMeters \u0026#123;  get;  init; \u0026#125;\n  public double? LengthMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumAltitudeMeters \u0026#123;  get;  init; \u0026#125;\n  public double? MaximumLoadKg \u0026#123;  get;  init; \u0026#125;\n  public double? WingspanMeters \u0026#123;  get;  init; \u0026#125;\n  public int? ManufacturingYear \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfAxles \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfEngines \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfSeats \u0026#123;  get;  init; \u0026#125;\n  public int? NumberOfWheels \u0026#123;  get;  init; \u0026#125;\n  public int? StandingPassengerCapacity \u0026#123;  get;  init; \u0026#125;\n  public string? Manufacturer \u0026#123;  get;  init; \u0026#125;\n  public string? Model \u0026#123;  get;  init; \u0026#125;\n  public string? RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022VehicleTypeGroup\u0022 as e_35e800f198b950258c82 {\n  primary constructor VehicleTypeGroup(string VehicleType, IReadOnlyList\u003CParkedVehicleInfo\u003E Vehicles)\n}\ne_a63aa2e3b7d62db15b04 -[hidden]down-\u003E e_c0c4dd04000b12cbf930\ne_7ebc156d8765fc753f71 -[hidden]down-\u003E e_35e800f198b950258c82\n}\npackage \u0022Garage.Results\u0022 as e_42481b28c8686aad515e {\nclass \u0022GarageCreationResult\u0022 as e_7a8fe0cab2cc81d3135a {\n  private GarageCreationResult(VehicleGarage? garage, string message, OperationError error)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public VehicleGarage? Garage \u0026#123;  get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public static GarageCreationResult Completed(VehicleGarage garage)\n  public static GarageCreationResult Failed(string message, OperationError error = OperationError.ValidationFailed)\n  public string Message \u0026#123;  get; \u0026#125;\n}\nclass \u0022GarageOperationResult\u0022 as e_a7bb27afefc092f6c63e {\n  private GarageOperationResult(int? spotNumber, string message, OperationError error)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public int? SpotNumber \u0026#123;  get; \u0026#125;\n  public static GarageOperationResult Completed(int spotNumber, string message)\n  public static GarageOperationResult Failed(string message, OperationError error)\n  public string Message \u0026#123;  get; \u0026#125;\n}\nenum \u0022OperationError\u0022 as e_68ff88246a3b0f165654 {\n  Cancelled\n  DuplicateGarageName\n  DuplicateRegistration\n  FileAccessDenied\n  FileNotFound\n  FileReadFailed\n  GarageFull\n  InvalidJson\n  None\n  SpotEmpty\n  SpotOccupied\n  SpotOutOfRange\n  UnsupportedOperation\n  ValidationFailed\n  VehicleAlreadyParked\n  VehicleDoesNotFit\n  VehicleNotFound\n}\nclass \u0022ParkingResult\u0022 as e_3f3a1c4fa9997c8247b6 {\n  private ParkingResult(int? spotNumber, string message, OperationError error)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public int? SpotNumber \u0026#123;  get; \u0026#125;\n  public static ParkingResult Completed(int spotNumber, string message)\n  public static ParkingResult Failed(string message, OperationError error)\n  public string Message \u0026#123;  get; \u0026#125;\n}\nclass \u0022VehicleCreationResult\u0022 as e_8bad896b706bf4731d84 {\n  private VehicleCreationResult(Vehicle? vehicle, string message, OperationError error, ParkingResult? parking = null)\n  public OperationError Error \u0026#123;  get; \u0026#125;\n  public ParkingResult? Parking \u0026#123;  get; \u0026#125;\n  public Vehicle? Vehicle \u0026#123;  get; \u0026#125;\n  public bool Cancelled \u0026#123; get; \u0026#125;\n  public bool Success \u0026#123; get; \u0026#125;\n  public static VehicleCreationResult Cancel()\n  public static VehicleCreationResult Completed(Vehicle vehicle, ParkingResult? parking = null, string? message = null)\n  public static VehicleCreationResult Failed(string message, OperationError error = OperationError.ValidationFailed)\n  public string Message \u0026#123;  get; \u0026#125;\n}\ne_7a8fe0cab2cc81d3135a -[hidden]down-\u003E e_3f3a1c4fa9997c8247b6\ne_a7bb27afefc092f6c63e -[hidden]down-\u003E e_8bad896b706bf4731d84\n}\npackage \u0022Garage.Services\u0022 as e_9fc3ece9d1004ca21814 {\nclass \u0022ExpectedFailure\u0022 as e_fd3daa564fa221428833 {\n  public static OperationError Code(Exception exception)\n  public static bool IsExpected(Exception exception)\n}\nclass \u0022GarageService\u0022 as e_6dd2ac09b188a18419a6 {\n  [UseCase(\\\u0022create-garage\\\u0022)] public GarageCreationResult CreateGarage(string name, int capacity)\n  [UseCase(\\\u0022create-garage\\\u0022)] public GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)\n  [UseCase(\\\u0022create-garage-with-dimensions\\\u0022)] public GarageCreationResult CreateGarage(string name, IReadOnlyList\u003CDimensions\u003E sizes)\n  [UseCase(\\\u0022park-vehicle\\\u0022)] [SequenceView(\\\u0022parking-sequence\\\u0022, MaxDepth = 3, ExpandNamespaces = new[] \u0026#123; \\\u0022Garage.Services\\\u0022, \\\u0022Garage.Models\\\u0022 \u0026#125;)] public ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)\n  private GarageCreationResult CreateAndRegister(Func\u003CVehicleGarage\u003E factory)\n  private GarageCreationResult RegisterGarage(VehicleGarage garage)\n  private ParkingResult ParkNewVehicle(Vehicle vehicle, VehicleGarage garage, int? spotNumber)\n  private readonly List\u003CVehicleGarage\u003E garages\n  public GarageService(List\u003CVehicleGarage\u003E initialGarages, List\u003CVehicle\u003E initialVehicles)\n  public IReadOnlyList\u003CVehicle\u003E GetParkableVehicles(VehicleGarage garage, int? spotNumber = null)\n  public IReadOnlyList\u003CVehicleGarage\u003E Garages \u0026#123; get; \u0026#125;\n  public VehicleCatalog Catalog \u0026#123;  get; \u0026#125;\n  public VehicleCreationService VehicleCreation \u0026#123;  get; \u0026#125;\n  public bool ContainsGarage(string name)\n  public bool IsParked(Vehicle vehicle)\n}\nclass \u0022VehicleCreationService\u0022 as e_30eac2cea220d48d859f {\n  [UseCase(\\\u0022create-vehicle\\\u0022)] public VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)\n  [UseCase(\\\u0022create-vehicle\\\u0022)] public VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)\n  internal VehicleCreationService(VehicleCatalog catalog, Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park)\n  private readonly Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park\n  private readonly VehicleCatalog catalog\n}\n}\npackage \u0022Garage.Specifications\u0022 as e_c9f6e67955b27c88b5f3 {\nclass \u0022GaragePlacementSpecification\u0022 as e_4e294155336cf7b2de83 {\n  public IReadOnlyList\u003CSpotAssignment\u003E? Assignments \u0026#123;  get;  init; \u0026#125;\n  public string? GarageName \u0026#123;  get;  init; \u0026#125;\n  public string? VehiclesFile \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022GarageSpecification\u0022 as e_78586a18a36e889092ac {\n  public IReadOnlyList\u003CSpotSpecification\u003E? Spots \u0026#123;  get;  init; \u0026#125;\n  public SpotSizeSpecification? DefaultSpotSize \u0026#123;  get;  init; \u0026#125;\n  public int Capacity \u0026#123;  get;  init; \u0026#125;\n  public string? GarageName \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SpotAssignment\u0022 as e_1aea9a100b328e430774 {\n  public int SpotNumber \u0026#123;  get;  init; \u0026#125;\n  public string? RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SpotSizeSpecification\u0022 as e_62a255ce3df8795d721f {\n  public double HeightMeters \u0026#123;  get;  init; \u0026#125;\n  public double LengthMeters \u0026#123;  get;  init; \u0026#125;\n  public double WidthMeters \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SpotSpecification\u0022 as e_bf4e409810d4cca546f1 {\n  public SpotSizeSpecification? Size \u0026#123;  get;  init; \u0026#125;\n  public int SpotNumber \u0026#123;  get;  init; \u0026#125;\n}\ne_4e294155336cf7b2de83 -[hidden]down-\u003E e_62a255ce3df8795d721f\ne_78586a18a36e889092ac -[hidden]down-\u003E e_bf4e409810d4cca546f1\n}\ne_dbf42b10f0c8e363433c -[hidden]down-\u003E e_58bc520a9f4d579b96d9\ne_58bc520a9f4d579b96d9 -[hidden]down-\u003E e_b9ddcf58f7305c147c98\ne_b9ddcf58f7305c147c98 -[hidden]down-\u003E e_476c3ab7c0020fdf9044\ne_476c3ab7c0020fdf9044 -[hidden]down-\u003E e_8204406925242146cdfc\ne_8204406925242146cdfc -[hidden]down-\u003E e_2fd8126a30ec979b387a\ne_2fd8126a30ec979b387a -[hidden]down-\u003E e_42481b28c8686aad515e\ne_42481b28c8686aad515e -[hidden]down-\u003E e_9fc3ece9d1004ca21814\ne_9fc3ece9d1004ca21814 -[hidden]down-\u003E e_c9f6e67955b27c88b5f3\nlegend bottom\n  \u003Cb\u003EHow to read this class diagram\u003C/b\u003E\n  Child --|\u003E Parent : solid line \u002B hollow triangle = inherits from\n  Class ..|\u003E Interface : dashed line \u002B hollow triangle = implements\n  The triangle points to the parent class or interface.\n  C = class; A = abstract class; I = interface; E = enum; S = struct.\n  Boxes group members; folder-shaped boxes group namespaces.\n  public / \u002B = accessible publicly; private / - = within the class\n  protected / # = class and derived classes; internal = same assembly\n  Type Name = field/property; Name(...) = method or constructor.\n  --- Related diagrams ---\n  [[../component/garage-components.puml Garage project components]]\n  [[../package/garage-packages.puml Garage projects and namespaces]]\nendlegend\n@enduml\n",
+      "pumlHash": "333ecec4bb5789acef691937bde3f7991992cc5b629d24f2636d2f64dd5aac0d"
     },
     {
       "id": "vehicle-classes",
@@ -26,6 +746,8 @@ globalThis.GARAGE_UML_DATA = {
         "garage-components",
         "garage-packages"
       ],
+      "storyIds": [],
+      "origin": "code",
       "source": "structural/class/vehicle-classes.puml",
       "svg": "structural/class/vehicle-classes.svg",
       "puml": "@startuml\n\u0027 diagram-id: vehicle-classes\n\u0027 Generated. Run the UML generate command; do not edit by hand.\nhide empty members\nskinparam classAttributeIconSize 0\ntitle Vehicle classes\npackage \u0022Garage.Engines\u0022 as e_d25b35cc5e9cbf957375 {\nabstract class \u0022Engine\u0022 as e_ae79f14028ac38341ec2 {\n  public abstract EngineSpecification SpecificationDetails \u0026#123;  get; \u0026#125;\n  public bool Equals(Engine? other)\n  public override bool Equals(object? obj)\n  public override int GetHashCode()\n  public required string Model \u0026#123;  get;  init; \u0026#125;\n  public required string SerialNumber \u0026#123;  get;  init; \u0026#125;\n  public virtual FuelType? FuelType \u0026#123; get; \u0026#125;\n  public virtual double? CylinderVolumeCc \u0026#123; get; \u0026#125;\n}\nenum \u0022FuelType\u0022 as e_e57f68dac3de5e01515e {\n  AviationGasoline\n  Biofuel\n  Coal\n  Diesel\n  Electricity\n  Ethanol\n  Gasoline\n  Hydrogen\n  JetFuel\n  Kerosene\n  LPG\n  Wood\n}\n}\npackage \u0022Garage.Engines.Electric\u0022 as e_4fb15c92477ef3d25afd {\nabstract class \u0022ElectricEngine\u0022 as e_e2bfb432fcb5dc617e4a {\n  public override EngineSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required ElectricEngineSpecification Specification \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022ElectricMotor\u0022 as e_1cd2a85a51fcdcddbbba {\n}\n}\npackage \u0022Garage.Engines.ExternalCombustion\u0022 as e_ffc24e302ec4a41892fb {\nabstract class \u0022ExternalCombustionEngine\u0022 as e_991da71dd6e56149634c {\n  protected abstract ExternalCombustionEngineSpecification CombustionSpecification \u0026#123;  get; \u0026#125;\n  public override FuelType? FuelType \u0026#123; get; \u0026#125;\n}\nclass \u0022SteamEngine\u0022 as e_8b0c519c6865a53d4708 {\n  protected override ExternalCombustionEngineSpecification CombustionSpecification \u0026#123; get; \u0026#125;\n  public override EngineSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required SteamEngineSpecification Specification \u0026#123;  get;  init; \u0026#125;\n}\n}\npackage \u0022Garage.Engines.InternalCombustion\u0022 as e_925b26288a3167c917a5 {\nabstract class \u0022InternalCombustionEngine\u0022 as e_2c1fcb11be9df520808b {\n  protected abstract InternalCombustionEngineSpecification CombustionSpecification \u0026#123;  get; \u0026#125;\n  public override FuelType? FuelType \u0026#123; get; \u0026#125;\n}\nclass \u0022RotaryEngine\u0022 as e_b1c0e497c00b9b143fb7 {\n  protected override InternalCombustionEngineSpecification CombustionSpecification \u0026#123; get; \u0026#125;\n  public override EngineSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required RotaryEngineSpecification Specification \u0026#123;  get;  init; \u0026#125;\n}\n}\npackage \u0022Garage.Engines.InternalCombustion.Piston\u0022 as e_817e8ec22c96df6329fd {\nclass \u0022FlatEngine\u0022 as e_2b692529df7fd0dee460 {\n}\nclass \u0022InlineEngine\u0022 as e_3465f28790c681aa4afd {\n}\nabstract class \u0022PistonEngine\u0022 as e_0d01c86c193d7267889e {\n  protected override InternalCombustionEngineSpecification CombustionSpecification \u0026#123; get; \u0026#125;\n  public override EngineSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public override double? CylinderVolumeCc \u0026#123; get; \u0026#125;\n  public required PistonEngineSpecification Specification \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022VEngine\u0022 as e_12495ccd87dd4ff66765 {\n}\ne_2b692529df7fd0dee460 -[hidden]down-\u003E e_12495ccd87dd4ff66765\n}\npackage \u0022Garage.Engines.InternalCombustion.Turbine\u0022 as e_e1d0347b640935145973 {\nabstract class \u0022TurbineEngine\u0022 as e_a7217f414ac87c733352 {\n  protected abstract TurbineEngineSpecification TurbineSpecification \u0026#123;  get; \u0026#125;\n  protected override InternalCombustionEngineSpecification CombustionSpecification \u0026#123; get; \u0026#125;\n}\nclass \u0022TurbofanEngine\u0022 as e_84b7c157e26ee0d2b8b9 {\n  protected override TurbineEngineSpecification TurbineSpecification \u0026#123; get; \u0026#125;\n  public override EngineSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required TurbofanEngineSpecification Specification \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022TurbojetEngine\u0022 as e_2fed3a099c36d18e506b {\n  protected override TurbineEngineSpecification TurbineSpecification \u0026#123; get; \u0026#125;\n  public override EngineSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required TurbineEngineSpecification Specification \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022TurbopropEngine\u0022 as e_e60172641e602fc44c6d {\n  protected override TurbineEngineSpecification TurbineSpecification \u0026#123; get; \u0026#125;\n  public override EngineSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required TurbopropEngineSpecification Specification \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022TurboshaftEngine\u0022 as e_5577f74ad1f062a49b93 {\n  protected override TurbineEngineSpecification TurbineSpecification \u0026#123; get; \u0026#125;\n  public override EngineSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required TurboshaftEngineSpecification Specification \u0026#123;  get;  init; \u0026#125;\n}\ne_a7217f414ac87c733352 -[hidden]down-\u003E e_e60172641e602fc44c6d\ne_84b7c157e26ee0d2b8b9 -[hidden]down-\u003E e_5577f74ad1f062a49b93\n}\npackage \u0022Garage.Engines.Specifications\u0022 as e_096a61039dfdbf71d93c {\nclass \u0022ElectricEngineSpecification\u0022 as e_b332c28c8fc6332f04ac {\n  public required double PowerKw \u0026#123;  get;  init; \u0026#125;\n  public required double Voltage \u0026#123;  get;  init; \u0026#125;\n}\nabstract class \u0022EngineSpecification\u0022 as e_ed6d36f0b54c5731b9f7 {\n}\nabstract class \u0022ExternalCombustionEngineSpecification\u0022 as e_70fcbd8b2f8c14d33128 {\n  public required FuelType FuelType \u0026#123;  get;  init; \u0026#125;\n}\nabstract class \u0022InternalCombustionEngineSpecification\u0022 as e_1106589992520cf7cde2 {\n  public required FuelType FuelType \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022PistonEngineSpecification\u0022 as e_79f82df70d4b4b6c05a8 {\n  public const double MaximumCylinderVolumeCc\n  public double? CylinderVolumeCc \u0026#123; get; \u0026#125;\n  public required int CylinderCount \u0026#123;  get;  init; \u0026#125;\n  public required int DisplacementCc \u0026#123;  get;  init; \u0026#125;\n  public required int HorsePower \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022RotaryEngineSpecification\u0022 as e_edcd3119332684aca799 {\n  public required int DisplacementCc \u0026#123;  get;  init; \u0026#125;\n  public required int HorsePower \u0026#123;  get;  init; \u0026#125;\n  public required int RotorCount \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022SteamEngineSpecification\u0022 as e_ce97cf9635118f1e941a {\n  public required double BoilerPressureBar \u0026#123;  get;  init; \u0026#125;\n  public required int HorsePower \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022TurbineEngineSpecification\u0022 as e_52775f84595874f0a8a1 {\n  public required double ThrustKn \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022TurbofanEngineSpecification\u0022 as e_f7bee5bce899d5ed7f80 {\n  public required double BypassRatio \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022TurbopropEngineSpecification\u0022 as e_946c9257d3797b3dffde {\n  public required int ShaftHorsePower \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022TurboshaftEngineSpecification\u0022 as e_57e192654551bae89d6d {\n  public required int ShaftHorsePower \u0026#123;  get;  init; \u0026#125;\n}\ne_b332c28c8fc6332f04ac -[hidden]down-\u003E e_1106589992520cf7cde2\ne_ed6d36f0b54c5731b9f7 -[hidden]down-\u003E e_79f82df70d4b4b6c05a8\ne_70fcbd8b2f8c14d33128 -[hidden]down-\u003E e_edcd3119332684aca799\ne_1106589992520cf7cde2 -[hidden]down-\u003E e_ce97cf9635118f1e941a\ne_79f82df70d4b4b6c05a8 -[hidden]down-\u003E e_52775f84595874f0a8a1\ne_edcd3119332684aca799 -[hidden]down-\u003E e_f7bee5bce899d5ed7f80\ne_ce97cf9635118f1e941a -[hidden]down-\u003E e_946c9257d3797b3dffde\ne_52775f84595874f0a8a1 -[hidden]down-\u003E e_57e192654551bae89d6d\n}\npackage \u0022Garage.Factories\u0022 as e_6714d1b223fd6cf1cb95 {\nclass \u0022AirplaneFactory\u0022 as e_4d5bdc8ef7f02f4ee42b {\n  public static Airplane CreateAirplane(string registrationNumber, CountryCode countryCode, string manufacturer, string model, int manufacturingYear, VehicleColor color, double weightKg, int numberOfWheels, double lengthMeters, double wingspanMeters, double heightMeters, string airframeSerialNumber, int passengerSeatCount, int crewSeatCount, int pilotSeatCount, bool hasDualControls, double maximumAltitudeMeters, List\u003CEngine\u003E engines)\n}\nclass \u0022BoatFactory\u0022 as e_3b4168af4d9f254e4fea {\n  public static Boat CreateBoat(string registrationNumber, CountryCode countryCode, string manufacturer, string model, int manufacturingYear, VehicleColor color, double weightKg, double lengthMeters, double widthMeters, double heightMeters, string hin, double draftMeters, BoatType boatType, int passengerCapacity, int driverSeats, bool hasCabin, int cabinPassengerSeatCount, int cabinCrewSeatCount, List\u003CEngine\u003E engines)\n}\nclass \u0022BusFactory\u0022 as e_183ac3637c0b736646bd {\n  public static Bus CreateBus(string registrationNumber, CountryCode countryCode, string manufacturer, string model, int manufacturingYear, VehicleColor color, double weightKg, double lengthMeters, double widthMeters, double heightMeters, string vin, int numberOfDoors, int numberOfWheels, int passengerSeatCount, int standingPassengerCapacity, int driverSeatCount, List\u003CEngine\u003E engines)\n}\nclass \u0022CarFactory\u0022 as e_edf19b92fe50f78077f1 {\n  public static Car CreateCar(string registrationNumber, CountryCode countryCode, string manufacturer, string model, int manufacturingYear, VehicleColor color, double weightKg, double length, double width, double height, string vin, BodyType bodyType, int numberOfDoors, int numberOfSeats, List\u003CEngine\u003E engines)\n}\nclass \u0022EngineFactory\u0022 as e_ba79c8ef67c9d99b21cf {\n  public static ElectricMotor CreateElectricMotor(string serialNumber, string model, double powerKw, double voltage)\n  public static FlatEngine CreateFlatEngine(string serialNumber, string model, FuelType fuelType, int horsePower, int displacementCc, int cylinderCount)\n  public static InlineEngine CreateInlineEngine(string serialNumber, string model, FuelType fuelType, int horsePower, int displacementCc, int cylinderCount)\n  public static RotaryEngine CreateRotaryEngine(string serialNumber, string model, FuelType fuelType, int horsePower, int displacementCc, int rotorCount)\n  public static SteamEngine CreateSteamEngine(string serialNumber, string model, FuelType fuelType, int horsePower, double boilerPressureBar)\n  public static TurbofanEngine CreateTurbofanEngine(string serialNumber, string model, FuelType fuelType, double thrustKn, double bypassRatio)\n  public static TurbojetEngine CreateTurbojetEngine(string serialNumber, string model, FuelType fuelType, double thrustKn)\n  public static TurbopropEngine CreateTurbopropEngine(string serialNumber, string model, FuelType fuelType, double thrustKn, int shaftHorsePower)\n  public static TurboshaftEngine CreateTurboshaftEngine(string serialNumber, string model, FuelType fuelType, double thrustKn, int shaftHorsePower)\n  public static VEngine CreateVEngine(string serialNumber, string model, FuelType fuelType, int horsePower, int displacementCc, int cylinderCount)\n}\nclass \u0022MotorcycleFactory\u0022 as e_5e787d7cde3854bfc03e {\n  public static Motorcycle CreateMotorcycle(string registrationNumber, CountryCode countryCode, string manufacturer, string model, int manufacturingYear, VehicleColor color, double weightKg, double lengthMeters, double widthMeters, double heightMeters, string vin, MotorcycleType motorcycleType, bool hasSidecar, int numberOfWheels, int passengerCapacity, int driverSeats, List\u003CEngine\u003E engines)\n}\nclass \u0022TruckFactory\u0022 as e_e28964516950258a9ab7 {\n  public static Truck CreateTruck(string registrationNumber, CountryCode countryCode, string manufacturer, string model, int manufacturingYear, VehicleColor color, double weightKg, double lengthMeters, double widthMeters, double heightMeters, string vin, int numberOfWheels, int numberOfAxles, double maximumLoadKg, List\u003CEngine\u003E engines)\n}\ne_4d5bdc8ef7f02f4ee42b -[hidden]down-\u003E e_edf19b92fe50f78077f1\ne_3b4168af4d9f254e4fea -[hidden]down-\u003E e_ba79c8ef67c9d99b21cf\ne_183ac3637c0b736646bd -[hidden]down-\u003E e_5e787d7cde3854bfc03e\ne_edf19b92fe50f78077f1 -[hidden]down-\u003E e_e28964516950258a9ab7\n}\npackage \u0022Garage.Vehicles\u0022 as e_7a01edd2efb5f776436d {\nclass \u0022Airplane\u0022 as e_6e1c6ae4aa34cb104638 {\n  protected override bool IsValidRegistration(string number, CountryCode countryCode)\n  public int DriverSeats \u0026#123; get; \u0026#125;\n  public int NumberOfSeats \u0026#123; get; \u0026#125;\n  public int NumberOfWheels \u0026#123; get; \u0026#125;\n  public int PassengerCapacity \u0026#123; get; \u0026#125;\n  public override VehicleSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required AirplaneSpecification Specification \u0026#123;  get;  init; \u0026#125;\n  public required string AirframeSerialNumber \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022Boat\u0022 as e_a60f2ba8c3cb1a130852 {\n  protected override bool IsValidRegistration(string number, CountryCode countryCode)\n  protected override string NormalizeRegistrationNumber(string number)\n  public bool HasCabin \u0026#123; get; \u0026#125;\n  public int DriverSeats \u0026#123; get; \u0026#125;\n  public int NumberOfSeats \u0026#123; get; \u0026#125;\n  public int PassengerCapacity \u0026#123; get; \u0026#125;\n  public override VehicleSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required BoatSpecification Specification \u0026#123;  get;  init; \u0026#125;\n  public required string Hin \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022Bus\u0022 as e_f698e2b8112a02be9f1c {\n  public int DriverSeats \u0026#123; get; \u0026#125;\n  public int NumberOfSeats \u0026#123; get; \u0026#125;\n  public int NumberOfWheels \u0026#123; get; \u0026#125;\n  public int PassengerCapacity \u0026#123; get; \u0026#125;\n  public override VehicleSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required BusSpecification Specification \u0026#123;  get;  init; \u0026#125;\n  public required string Vin \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022Car\u0022 as e_5f959af5bcd52f63d62d {\n  public int DriverSeats \u0026#123; get; \u0026#125;\n  public int NumberOfSeats \u0026#123; get; \u0026#125;\n  public int NumberOfWheels \u0026#123; get; \u0026#125;\n  public int PassengerCapacity \u0026#123; get; \u0026#125;\n  public override VehicleSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required CarSpecification Specification \u0026#123;  get;  init; \u0026#125;\n  public required string Vin \u0026#123;  get;  init; \u0026#125;\n}\nenum \u0022CountryCode\u0022 as e_8f3a8cf604495529ae18 {\n  AUT\n  BEL\n  BGR\n  CYP\n  CZE\n  DEU\n  DNK\n  ESP\n  EST\n  FIN\n  FRA\n  GRC\n  HRV\n  HUN\n  IRL\n  ITA\n  LTU\n  LUX\n  LVA\n  MLT\n  NLD\n  POL\n  PRT\n  ROU\n  SVK\n  SVN\n  SWE\n  Unspecified = 0\n}\nclass \u0022Motorcycle\u0022 as e_9e77deeb038d305e1c3b {\n  public int DriverSeats \u0026#123; get; \u0026#125;\n  public int NumberOfSeats \u0026#123; get; \u0026#125;\n  public int NumberOfWheels \u0026#123; get; \u0026#125;\n  public int PassengerCapacity \u0026#123; get; \u0026#125;\n  public override VehicleSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required MotorcycleSpecification Specification \u0026#123;  get;  init; \u0026#125;\n  public required string Vin \u0026#123;  get;  init; \u0026#125;\n}\nabstract class \u0022RoadVehicle\u0022 as e_c00a88d44cf9b2461058 {\n  protected override bool IsValidRegistration(string number, CountryCode countryCode)\n  protected override string NormalizeRegistrationNumber(string number)\n}\nclass \u0022Truck\u0022 as e_265f6af68f126139ab3c {\n  public int NumberOfWheels \u0026#123; get; \u0026#125;\n  public override VehicleSpecification SpecificationDetails \u0026#123; get; \u0026#125;\n  public required TruckSpecification Specification \u0026#123;  get;  init; \u0026#125;\n  public required string Vin \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022Validation\u0022 as e_015be3bf1fadcb1002f2 {\n  public static bool IsValidAircraftRegistration(string number, CountryCode countryCode)\n  public static bool IsValidAircraftRegistration(string number, string countryCode)\n  public static bool IsValidBoatRegistration(string number, CountryCode countryCode)\n  public static bool IsValidBoatRegistration(string number, string countryCode)\n  public static bool IsValidRoadRegistration(string number, CountryCode countryCode)\n  public static bool IsValidRoadRegistration(string number, string countryCode)\n}\nabstract class \u0022Vehicle\u0022 as e_64fc59041a92c53abae8 {\n  private CountryCode _countryCode\n  private string _registrationNumber\n  private void ValidateRegistration(string number, CountryCode countryCode)\n  protected abstract bool IsValidRegistration(string number, CountryCode countryCode)\n  protected virtual string NormalizeRegistrationNumber(string number)\n  public abstract VehicleSpecification SpecificationDetails \u0026#123;  get; \u0026#125;\n  public required CountryCode CountryCode \u0026#123;  get;  init; \u0026#125;\n  public required VehicleColor Color \u0026#123;  get;  set; \u0026#125;\n  public required int ManufacturingYear \u0026#123;  get;  init; \u0026#125;\n  public required string Manufacturer \u0026#123;  get;  init; \u0026#125;\n  public required string Model \u0026#123;  get;  init; \u0026#125;\n  public required string RegistrationNumber \u0026#123;  get;  init; \u0026#125;\n}\ne_6e1c6ae4aa34cb104638 -[hidden]down-\u003E e_5f959af5bcd52f63d62d\ne_a60f2ba8c3cb1a130852 -[hidden]down-\u003E e_8f3a8cf604495529ae18\ne_f698e2b8112a02be9f1c -[hidden]down-\u003E e_9e77deeb038d305e1c3b\ne_5f959af5bcd52f63d62d -[hidden]down-\u003E e_c00a88d44cf9b2461058\ne_8f3a8cf604495529ae18 -[hidden]down-\u003E e_265f6af68f126139ab3c\ne_9e77deeb038d305e1c3b -[hidden]down-\u003E e_015be3bf1fadcb1002f2\ne_c00a88d44cf9b2461058 -[hidden]down-\u003E e_64fc59041a92c53abae8\n}\npackage \u0022Garage.Vehicles.Components\u0022 as e_ec8af7eb5f1134aedadb {\nclass \u0022Cabin\u0022 as e_a4f64df3ab9b69db8eae {\n  public required int CrewSeatCount \u0026#123;  get;  init; \u0026#125;\n  public required int PassengerSeatCount \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022Cockpit\u0022 as e_13513ce3fde29fdb95b2 {\n  public required bool HasDualControls \u0026#123;  get;  init; \u0026#125;\n  public required int PilotSeats \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022Dimensions\u0022 as e_b285304969a490df6686 {\n  private static double RequirePositiveFinite(double value, string parameterName)\n  public Dimensions(double lengthMeters, double widthMeters, double heightMeters)\n  public double HeightMeters \u0026#123;  get; \u0026#125;\n  public double LengthMeters \u0026#123;  get; \u0026#125;\n  public double WidthMeters \u0026#123;  get; \u0026#125;\n}\n}\npackage \u0022Garage.Vehicles.Interfaces\u0022 as e_1c123c19fb8748529e58 {\ninterface \u0022IHasSeats\u0022 as e_22c96d3aa988db44e416 {\n  int NumberOfSeats \u0026#123;  get; \u0026#125;\n}\ninterface \u0022IHasWheels\u0022 as e_5107e5f96563651d2d33 {\n  int NumberOfWheels \u0026#123;  get; \u0026#125;\n}\ninterface \u0022IManufacturer\u0022 as e_133714b905fc57118d3d {\n  int ManufacturingYear \u0026#123;  get; \u0026#125;\n  string Manufacturer \u0026#123;  get; \u0026#125;\n  string Model \u0026#123;  get; \u0026#125;\n}\ninterface \u0022IPassengerCarrier\u0022 as e_b00eca92cd243ead1474 {\n  int DriverSeats \u0026#123;  get; \u0026#125;\n  int PassengerCapacity \u0026#123;  get; \u0026#125;\n}\ne_22c96d3aa988db44e416 -[hidden]down-\u003E e_b00eca92cd243ead1474\n}\npackage \u0022Garage.Vehicles.Specifications\u0022 as e_c0638d087a5b4938a1d1 {\nclass \u0022AirplaneSpecification\u0022 as e_fbe3ba53db3a6de40189 {\n  public AirplaneSpecification(Cabin cabin, Cockpit? cockpit)\n  public Cabin Cabin \u0026#123;  get; \u0026#125;\n  public Cockpit? Cockpit \u0026#123;  get; \u0026#125;\n  public required double MaximumAltitudeMeters \u0026#123;  get;  init; \u0026#125;\n  public required double WingspanMeters \u0026#123;  get;  init; \u0026#125;\n  public required int NumberOfWheels \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022BoatSpecification\u0022 as e_5494664b0e8fd2e923cb {\n  public BoatSpecification(int passengerCapacity, int driverSeats, Cabin? cabin)\n  public Cabin? Cabin \u0026#123;  get; \u0026#125;\n  public int DriverSeats \u0026#123;  get; \u0026#125;\n  public int PassengerCapacity \u0026#123;  get; \u0026#125;\n  public required BoatType BoatType \u0026#123;  get;  init; \u0026#125;\n  public required double DraftMeters \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022BusSpecification\u0022 as e_d94e67b74f45d9631bff {\n  public BusSpecification(int numberOfDoors, int numberOfWheels, int standingPassengerCapacity, Cabin cabin)\n  public Cabin Cabin \u0026#123;  get; \u0026#125;\n  public int NumberOfDoors \u0026#123;  get; \u0026#125;\n  public int NumberOfWheels \u0026#123;  get; \u0026#125;\n  public int StandingPassengerCapacity \u0026#123;  get; \u0026#125;\n}\nclass \u0022CarSpecification\u0022 as e_6a369f27d243afc60e27 {\n  public required BodyType BodyType \u0026#123;  get;  init; \u0026#125;\n  public required Cabin Cabin \u0026#123;  get;  init; \u0026#125;\n  public required int NumberOfDoors \u0026#123;  get;  init; \u0026#125;\n  public required int NumberOfWheels \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022MotorcycleSpecification\u0022 as e_bfb34f245ebe3d2308d7 {\n  public required MotorcycleType MotorcycleType \u0026#123;  get;  init; \u0026#125;\n  public required bool HasSidecar \u0026#123;  get;  init; \u0026#125;\n  public required int DriverSeats \u0026#123;  get;  init; \u0026#125;\n  public required int NumberOfWheels \u0026#123;  get;  init; \u0026#125;\n  public required int PassengerCapacity \u0026#123;  get;  init; \u0026#125;\n}\nclass \u0022TruckSpecification\u0022 as e_018c1136635e0dcf3674 {\n  public TruckSpecification(int numberOfWheels, int numberOfAxles, double maximumLoadKg)\n  public double MaximumLoadKg \u0026#123;  get; \u0026#125;\n  public int NumberOfAxles \u0026#123;  get; \u0026#125;\n  public int NumberOfWheels \u0026#123;  get; \u0026#125;\n}\nabstract class \u0022VehicleSpecification\u0022 as e_f3998b237239dfd595c1 {\n  private List\u003CEngine\u003E engines\n  public Engine? FindEngine(string serialNumber)\n  public List\u003CEngine\u003E Engines \u0026#123;  get;  init; \u0026#125;\n  public bool RemoveEngine(Engine engine)\n  public const double MaximumLengthMeters\n  public const int MaximumNumberOfEngines\n  public const int MaximumNumberOfSeats\n  public const int MaximumNumberOfWheels\n  public int FindEngineIndex(string serialNumber)\n  public required Dimensions Dimensions \u0026#123;  get;  init; \u0026#125;\n  public required double WeightKg \u0026#123;  get;  init; \u0026#125;\n  public void AddEngine(Engine engine)\n}\ne_fbe3ba53db3a6de40189 -[hidden]down-\u003E e_6a369f27d243afc60e27\ne_5494664b0e8fd2e923cb -[hidden]down-\u003E e_bfb34f245ebe3d2308d7\ne_d94e67b74f45d9631bff -[hidden]down-\u003E e_018c1136635e0dcf3674\ne_6a369f27d243afc60e27 -[hidden]down-\u003E e_f3998b237239dfd595c1\n}\npackage \u0022Garage.Vehicles.Types\u0022 as e_eebf32dba0ee7e64863b {\nenum \u0022BoatType\u0022 as e_eff6b39cac3d97925d6c {\n  CargoShip\n  Ferry\n  FishingBoat\n  Motorboat\n  Sailboat\n  Yacht\n}\nenum \u0022BodyType\u0022 as e_16f48e923e1dc3b4cdbe {\n  Convertible\n  Coupe\n  Hatchback\n  Pickup\n  SUV\n  Sedan\n  Van\n}\nenum \u0022MotorcycleType\u0022 as e_f8625f19fea770129ee7 {\n  Cruiser\n  OffRoad\n  Scooter\n  Sport\n  Standard\n  Touring\n}\nenum \u0022VehicleColor\u0022 as e_f3b2621f6499e69c84e1 {\n  Black\n  Blue\n  Brown\n  Gray\n  Green\n  Orange\n  Pink\n  Purple\n  Red\n  Silver\n  White\n  Yellow\n}\ne_eff6b39cac3d97925d6c -[hidden]down-\u003E e_f3b2621f6499e69c84e1\n}\ne_d25b35cc5e9cbf957375 -[hidden]down-\u003E e_4fb15c92477ef3d25afd\ne_4fb15c92477ef3d25afd -[hidden]down-\u003E e_ffc24e302ec4a41892fb\ne_ffc24e302ec4a41892fb -[hidden]down-\u003E e_925b26288a3167c917a5\ne_925b26288a3167c917a5 -[hidden]down-\u003E e_817e8ec22c96df6329fd\ne_817e8ec22c96df6329fd -[hidden]down-\u003E e_e1d0347b640935145973\ne_e1d0347b640935145973 -[hidden]down-\u003E e_096a61039dfdbf71d93c\ne_096a61039dfdbf71d93c -[hidden]down-\u003E e_6714d1b223fd6cf1cb95\ne_6714d1b223fd6cf1cb95 -[hidden]down-\u003E e_7a01edd2efb5f776436d\ne_7a01edd2efb5f776436d -[hidden]down-\u003E e_ec8af7eb5f1134aedadb\ne_ec8af7eb5f1134aedadb -[hidden]down-\u003E e_1c123c19fb8748529e58\ne_1c123c19fb8748529e58 -[hidden]down-\u003E e_c0638d087a5b4938a1d1\ne_c0638d087a5b4938a1d1 -[hidden]down-\u003E e_eebf32dba0ee7e64863b\ne_ae79f14028ac38341ec2 \u003C|-- e_e2bfb432fcb5dc617e4a\ne_e2bfb432fcb5dc617e4a \u003C|-- e_1cd2a85a51fcdcddbbba\ne_ae79f14028ac38341ec2 \u003C|-- e_991da71dd6e56149634c\ne_991da71dd6e56149634c \u003C|-- e_8b0c519c6865a53d4708\ne_ae79f14028ac38341ec2 \u003C|-- e_2c1fcb11be9df520808b\ne_0d01c86c193d7267889e \u003C|-- e_2b692529df7fd0dee460\ne_0d01c86c193d7267889e \u003C|-- e_3465f28790c681aa4afd\ne_2c1fcb11be9df520808b \u003C|-- e_0d01c86c193d7267889e\ne_0d01c86c193d7267889e \u003C|-- e_12495ccd87dd4ff66765\ne_2c1fcb11be9df520808b \u003C|-- e_b1c0e497c00b9b143fb7\ne_2c1fcb11be9df520808b \u003C|-- e_a7217f414ac87c733352\ne_a7217f414ac87c733352 \u003C|-- e_84b7c157e26ee0d2b8b9\ne_a7217f414ac87c733352 \u003C|-- e_2fed3a099c36d18e506b\ne_a7217f414ac87c733352 \u003C|-- e_e60172641e602fc44c6d\ne_a7217f414ac87c733352 \u003C|-- e_5577f74ad1f062a49b93\ne_ed6d36f0b54c5731b9f7 \u003C|-- e_b332c28c8fc6332f04ac\ne_ed6d36f0b54c5731b9f7 \u003C|-- e_70fcbd8b2f8c14d33128\ne_ed6d36f0b54c5731b9f7 \u003C|-- e_1106589992520cf7cde2\ne_1106589992520cf7cde2 \u003C|-- e_79f82df70d4b4b6c05a8\ne_1106589992520cf7cde2 \u003C|-- e_edcd3119332684aca799\ne_70fcbd8b2f8c14d33128 \u003C|-- e_ce97cf9635118f1e941a\ne_1106589992520cf7cde2 \u003C|-- e_52775f84595874f0a8a1\ne_52775f84595874f0a8a1 \u003C|-- e_f7bee5bce899d5ed7f80\ne_52775f84595874f0a8a1 \u003C|-- e_946c9257d3797b3dffde\ne_52775f84595874f0a8a1 \u003C|-- e_57e192654551bae89d6d\ne_22c96d3aa988db44e416 \u003C|.. e_6e1c6ae4aa34cb104638\ne_5107e5f96563651d2d33 \u003C|.. e_6e1c6ae4aa34cb104638\ne_b00eca92cd243ead1474 \u003C|.. e_6e1c6ae4aa34cb104638\ne_64fc59041a92c53abae8 \u003C|-- e_6e1c6ae4aa34cb104638\ne_22c96d3aa988db44e416 \u003C|.. e_a60f2ba8c3cb1a130852\ne_b00eca92cd243ead1474 \u003C|.. e_a60f2ba8c3cb1a130852\ne_64fc59041a92c53abae8 \u003C|-- e_a60f2ba8c3cb1a130852\ne_22c96d3aa988db44e416 \u003C|.. e_f698e2b8112a02be9f1c\ne_5107e5f96563651d2d33 \u003C|.. e_f698e2b8112a02be9f1c\ne_b00eca92cd243ead1474 \u003C|.. e_f698e2b8112a02be9f1c\ne_c00a88d44cf9b2461058 \u003C|-- e_f698e2b8112a02be9f1c\ne_22c96d3aa988db44e416 \u003C|.. e_5f959af5bcd52f63d62d\ne_5107e5f96563651d2d33 \u003C|.. e_5f959af5bcd52f63d62d\ne_b00eca92cd243ead1474 \u003C|.. e_5f959af5bcd52f63d62d\ne_c00a88d44cf9b2461058 \u003C|-- e_5f959af5bcd52f63d62d\ne_22c96d3aa988db44e416 \u003C|.. e_9e77deeb038d305e1c3b\ne_5107e5f96563651d2d33 \u003C|.. e_9e77deeb038d305e1c3b\ne_b00eca92cd243ead1474 \u003C|.. e_9e77deeb038d305e1c3b\ne_c00a88d44cf9b2461058 \u003C|-- e_9e77deeb038d305e1c3b\ne_64fc59041a92c53abae8 \u003C|-- e_c00a88d44cf9b2461058\ne_f3998b237239dfd595c1 \u003C|-- e_fbe3ba53db3a6de40189\ne_f3998b237239dfd595c1 \u003C|-- e_5494664b0e8fd2e923cb\ne_f3998b237239dfd595c1 \u003C|-- e_d94e67b74f45d9631bff\ne_f3998b237239dfd595c1 \u003C|-- e_6a369f27d243afc60e27\ne_f3998b237239dfd595c1 \u003C|-- e_bfb34f245ebe3d2308d7\ne_f3998b237239dfd595c1 \u003C|-- e_018c1136635e0dcf3674\ne_5107e5f96563651d2d33 \u003C|.. e_265f6af68f126139ab3c\ne_c00a88d44cf9b2461058 \u003C|-- e_265f6af68f126139ab3c\ne_133714b905fc57118d3d \u003C|.. e_64fc59041a92c53abae8\nlegend bottom\n  \u003Cb\u003EHow to read this class diagram\u003C/b\u003E\n  Child --|\u003E Parent : solid line \u002B hollow triangle = inherits from\n  Class ..|\u003E Interface : dashed line \u002B hollow triangle = implements\n  The triangle points to the parent class or interface.\n  C = class; A = abstract class; I = interface; E = enum; S = struct.\n  Boxes group members; folder-shaped boxes group namespaces.\n  public / \u002B = accessible publicly; private / - = within the class\n  protected / # = class and derived classes; internal = same assembly\n  Type Name = field/property; Name(...) = method or constructor.\n  --- Related diagrams ---\n  [[../component/garage-components.puml Garage project components]]\n  [[../package/garage-packages.puml Garage projects and namespaces]]\nendlegend\n@enduml\n",
@@ -41,6 +763,8 @@ globalThis.GARAGE_UML_DATA = {
         "garage-components",
         "garage-packages"
       ],
+      "storyIds": [],
+      "origin": "code",
       "source": "structural/class/garage-console-classes.puml",
       "svg": "structural/class/garage-console-classes.svg",
       "puml": "@startuml\n\u0027 diagram-id: garage-console-classes\n\u0027 Generated. Run the UML generate command; do not edit by hand.\nhide empty members\nskinparam classAttributeIconSize 0\ntitle Garage.Console classes\npackage \u0022Garage.ConsoleApp.Display\u0022 as e_59b1556f96699cd705e9 {\nclass \u0022ConsoleScreen\u0022 as e_07cf79b641d13dc76b0c {\n  public static void Clear()\n}\nclass \u0022EngineDisplay\u0022 as e_298e502601fbe6c55deb {\n  public static void PrintEngine(Engine engine)\n}\nclass \u0022VehicleDisplay\u0022 as e_bdcbe980f2e5d618842a {\n  public static void PrintVehicle(int spotNumber, Vehicle vehicle)\n}\n}\npackage \u0022Garage.ConsoleApp.Drafts\u0022 as e_086e18aa53ffee783a28 {\nclass \u0022AirplaneDraft\u0022 as e_864f060c4ab7fa5dd82e {\n  public bool? HasDualControls \u0026#123;  get;  set; \u0026#125;\n  public double? MaximumAltitudeMeters \u0026#123;  get;  set; \u0026#125;\n  public double? WingspanMeters \u0026#123;  get;  set; \u0026#125;\n  public int? CrewSeats \u0026#123;  get;  set; \u0026#125;\n  public int? NumberOfWheels \u0026#123;  get;  set; \u0026#125;\n  public int? PassengerSeats \u0026#123;  get;  set; \u0026#125;\n  public int? PilotSeats \u0026#123;  get;  set; \u0026#125;\n  public override List\u003Cstring\u003E GetMissingFields()\n  public override void Clear()\n  public string? AirframeSerialNumber \u0026#123;  get;  set; \u0026#125;\n}\nclass \u0022BoatDraft\u0022 as e_99aff731f56013415ac3 {\n  public BoatType? BoatType \u0026#123;  get;  set; \u0026#125;\n  public bool? HasCabin \u0026#123;  get;  set; \u0026#125;\n  public double? DraftMeters \u0026#123;  get;  set; \u0026#125;\n  public int? CabinCrewSeats \u0026#123;  get;  set; \u0026#125;\n  public int? CabinPassengerSeats \u0026#123;  get;  set; \u0026#125;\n  public int? DriverSeats \u0026#123;  get;  set; \u0026#125;\n  public int? PassengerCapacity \u0026#123;  get;  set; \u0026#125;\n  public override List\u003Cstring\u003E GetMissingFields()\n  public override void Clear()\n  public string? Hin \u0026#123;  get;  set; \u0026#125;\n}\nclass \u0022BusDraft\u0022 as e_ba1d98237eb4558f147d {\n  public int? DriverSeats \u0026#123;  get;  set; \u0026#125;\n  public int? NumberOfDoors \u0026#123;  get;  set; \u0026#125;\n  public int? NumberOfWheels \u0026#123;  get;  set; \u0026#125;\n  public int? PassengerSeats \u0026#123;  get;  set; \u0026#125;\n  public int? StandingPassengerCapacity \u0026#123;  get;  set; \u0026#125;\n  public override List\u003Cstring\u003E GetMissingFields()\n  public override void Clear()\n  public string? Vin \u0026#123;  get;  set; \u0026#125;\n}\nclass \u0022CarDraft\u0022 as e_ada39b33d0c8484f9ea1 {\n  public BodyType? BodyType \u0026#123;  get;  set; \u0026#125;\n  public int? NumberOfDoors \u0026#123;  get;  set; \u0026#125;\n  public int? NumberOfSeats \u0026#123;  get;  set; \u0026#125;\n  public override List\u003Cstring\u003E GetMissingFields()\n  public override void Clear()\n  public string BodyTypeText \u0026#123; get; \u0026#125;\n  public string DoorsText \u0026#123; get; \u0026#125;\n  public string SeatsText \u0026#123; get; \u0026#125;\n  public string VinText \u0026#123; get; \u0026#125;\n  public string? Vin \u0026#123;  get;  set; \u0026#125;\n}\nclass \u0022EngineCreatorResult\u0022 as e_a47a1ae21140c79fc270 {\n  primary constructor EngineCreatorResult(bool Success, bool Cancelled, List\u003CEngine\u003E Engines, string Message)\n  public static EngineCreatorResult Cancel()\n  public static EngineCreatorResult Completed(List\u003CEngine\u003E engines)\n  public static EngineCreatorResult Failed(string message)\n}\nclass \u0022EngineDraft\u0022 as e_749995555dad532f7222 {\n  private static void AddMissingField(List\u003Cstring\u003E missing, string fieldName)\n  private void RequireDisplacement(List\u003Cstring\u003E missing)\n  private void RequireFuel(List\u003Cstring\u003E missing)\n  private void RequireHorsePower(List\u003Cstring\u003E missing)\n  private void RequireTurbineFields(List\u003Cstring\u003E missing)\n  public EngineKind? Kind \u0026#123;  get;  set; \u0026#125;\n  public FuelType? FuelType \u0026#123;  get;  set; \u0026#125;\n  public List\u003Cstring\u003E GetMissingFields()\n  public double? BoilerPressureBar \u0026#123;  get;  set; \u0026#125;\n  public double? BypassRatio \u0026#123;  get;  set; \u0026#125;\n  public double? PowerKw \u0026#123;  get;  set; \u0026#125;\n  public double? ThrustKn \u0026#123;  get;  set; \u0026#125;\n  public double? Voltage \u0026#123;  get;  set; \u0026#125;\n  public int? CylinderCount \u0026#123;  get;  set; \u0026#125;\n  public int? DisplacementCc \u0026#123;  get;  set; \u0026#125;\n  public int? HorsePower \u0026#123;  get;  set; \u0026#125;\n  public int? RotorCount \u0026#123;  get;  set; \u0026#125;\n  public int? ShaftHorsePower \u0026#123;  get;  set; \u0026#125;\n  public string BoilerPressureText \u0026#123; get; \u0026#125;\n  public string BypassRatioText \u0026#123; get; \u0026#125;\n  public string CylinderCountText \u0026#123; get; \u0026#125;\n  public string DisplacementText \u0026#123; get; \u0026#125;\n  public string FuelTypeText \u0026#123; get; \u0026#125;\n  public string HorsePowerText \u0026#123; get; \u0026#125;\n  public string ModelText \u0026#123; get; \u0026#125;\n  public string PowerText \u0026#123; get; \u0026#125;\n  public string RotorCountText \u0026#123; get; \u0026#125;\n  public string SerialNumberText \u0026#123; get; \u0026#125;\n  public string ShaftHorsePowerText \u0026#123; get; \u0026#125;\n  public string ThrustText \u0026#123; get; \u0026#125;\n  public string VoltageText \u0026#123; get; \u0026#125;\n  public string? Model \u0026#123;  get;  set; \u0026#125;\n  public string? SerialNumber \u0026#123;  get;  set; \u0026#125;\n  public void Clear()\n}\nenum \u0022EngineKind\u0022 as e_2f28041c9d228153b3bc {\n  ElectricMotor\n  Flat\n  Inline\n  Rotary\n  Steam\n  Turbofan\n  Turbojet\n  Turboprop\n  Turboshaft\n  VEngine\n}\nclass \u0022MotorcycleDraft\u0022 as e_a82c3665fb512b06b70d {\n  public MotorcycleType? MotorcycleType \u0026#123;  get;  set; \u0026#125;\n  public bool? HasSidecar \u0026#123;  get;  set; \u0026#125;\n  public int? DriverSeats \u0026#123;  get;  set; \u0026#125;\n  public int? NumberOfWheels \u0026#123;  get;  set; \u0026#125;\n  public int? PassengerCapacity \u0026#123;  get;  set; \u0026#125;\n  public override List\u003Cstring\u003E GetMissingFields()\n  public override void Clear()\n  public string? Vin \u0026#123;  get;  set; \u0026#125;\n}\nclass \u0022TruckDraft\u0022 as e_1a1c7793acc5882d6d18 {\n  public double? MaximumLoadKg \u0026#123;  get;  set; \u0026#125;\n  public int? NumberOfAxles \u0026#123;  get;  set; \u0026#125;\n  public int? NumberOfWheels \u0026#123;  get;  set; \u0026#125;\n  public override List\u003Cstring\u003E GetMissingFields()\n  public override void Clear()\n  public string? Vin \u0026#123;  get;  set; \u0026#125;\n}\nabstract class \u0022VehicleDraft\u0022 as e_0e613a1cb16635d59608 {\n  private List\u003CEngine\u003E engines\n  public CountryCode? CountryCode \u0026#123;  get;  set; \u0026#125;\n  public List\u003CEngine\u003E Engines \u0026#123; get; \u0026#125;\n  public VehicleColor? Color \u0026#123;  get;  set; \u0026#125;\n  public bool RemoveEngine(Engine engine)\n  public double? HeightMeters \u0026#123;  get;  set; \u0026#125;\n  public double? LengthMeters \u0026#123;  get;  set; \u0026#125;\n  public double? WeightKg \u0026#123;  get;  set; \u0026#125;\n  public double? WidthMeters \u0026#123;  get;  set; \u0026#125;\n  public int? ManufacturingYear \u0026#123;  get;  set; \u0026#125;\n  public string ColorText \u0026#123; get; \u0026#125;\n  public string DimensionsText \u0026#123; get; \u0026#125;\n  public string EnginesText \u0026#123; get; \u0026#125;\n  public string ManufacturerText \u0026#123; get; \u0026#125;\n  public string ModelText \u0026#123; get; \u0026#125;\n  public string RegistrationText \u0026#123; get; \u0026#125;\n  public string WeightText \u0026#123; get; \u0026#125;\n  public string YearText \u0026#123; get; \u0026#125;\n  public string? Manufacturer \u0026#123;  get;  set; \u0026#125;\n  public string? Model \u0026#123;  get;  set; \u0026#125;\n  public string? RegistrationNumber \u0026#123;  get;  set; \u0026#125;\n  public virtual List\u003Cstring\u003E GetMissingFields()\n  public virtual void Clear()\n  public void AddEngines(List\u003CEngine\u003E newEngines)\n}\ne_864f060c4ab7fa5dd82e -[hidden]down-\u003E e_ada39b33d0c8484f9ea1\ne_99aff731f56013415ac3 -[hidden]down-\u003E e_a47a1ae21140c79fc270\ne_ba1d98237eb4558f147d -[hidden]down-\u003E e_749995555dad532f7222\ne_ada39b33d0c8484f9ea1 -[hidden]down-\u003E e_2f28041c9d228153b3bc\ne_a47a1ae21140c79fc270 -[hidden]down-\u003E e_a82c3665fb512b06b70d\ne_749995555dad532f7222 -[hidden]down-\u003E e_1a1c7793acc5882d6d18\ne_2f28041c9d228153b3bc -[hidden]down-\u003E e_0e613a1cb16635d59608\n}\npackage \u0022Garage.ConsoleApp.Mapping\u0022 as e_472d4347054781c1284e {\nclass \u0022EngineDraftMapper\u0022 as e_bb63af8411799b4db7a5 {\n  public EngineCreatorResult CreateEngine(EngineDraft draft)\n}\nclass \u0022VehicleDraftMapper\u0022 as e_b1cd5a7a50defcb1217e {\n  public Airplane CreateAirplane(AirplaneDraft draft)\n  public Boat CreateBoat(BoatDraft draft)\n  public Bus CreateBus(BusDraft draft)\n  public Car CreateCar(CarDraft draft)\n  public Motorcycle CreateMotorcycle(MotorcycleDraft draft)\n  public Truck CreateTruck(TruckDraft draft)\n}\n}\npackage \u0022Garage.ConsoleApp.Menus\u0022 as e_e5e0b215ae1e59df7146 {\nclass \u0022ConsoleMenu\u0022 as e_4d91ba0dd97c69bd6593 {\n  private readonly List\u003CMenuOption\u003E options\n  private void Display()\n  public ConsoleMenu(string title, List\u003CMenuOption\u003E options, string backOptionText = \\\u0022Back\\\u0022)\n  public string BackOptionText \u0026#123;  get; \u0026#125;\n  public string Title \u0026#123;  get; \u0026#125;\n  public void Show()\n}\nclass \u0022EngineCreator\u0022 as e_935d2cd052ef64b5ab41 {\n  private List\u003CMenuOption\u003E CreateOptions(EngineCreatedHandler handleCreatedEngine)\n  private readonly EngineDraft draft\n  private readonly EngineDraftMapper engineActions\n  private void AddDisplacementOption(ref List\u003CMenuOption\u003E options)\n  private void AddFuelOption(ref List\u003CMenuOption\u003E options)\n  private void AddHorsePowerOption(ref List\u003CMenuOption\u003E options)\n  private void AddTurbineOptions(ref List\u003CMenuOption\u003E options)\n  private void ChooseBoilerPressure()\n  private void ChooseBypassRatio()\n  private void ChooseCylinderCount()\n  private void ChooseDisplacement()\n  private void ChooseFuelType()\n  private void ChooseHorsePower()\n  private void ChooseModel()\n  private void ChoosePower()\n  private void ChooseRotorCount()\n  private void ChooseSerialNumber()\n  private void ChooseShaftHorsePower()\n  private void ChooseThrust()\n  private void ChooseVoltage()\n  private void ClearFields()\n  private void CreateEngine(EngineCreatedHandler handleCreatedEngine)\n  public void ShowCreateEngineMenu(EngineCreatedHandler handleCreatedEngine)\n}\nclass \u0022GarageActions\u0022 as e_843a620e0241f7d51d56 {\n  private Vehicle? SelectVehicle(int? spotNumber = null)\n  private readonly GarageService service\n  private readonly VehicleGarage garage\n  private static void ShowVehicleSpecificFilters(SearchCriteriaCreator criteriaCreator)\n  private void Park(Vehicle vehicle)\n  private void Park(Vehicle vehicle, int spot)\n  private void ShowOpenSpots()\n  private void ShowSearchResults(VehicleSearchCriteria criteria)\n  public GarageActions(VehicleGarage garage, GarageService service)\n  public void FindVehicleByRegistration()\n  public void ListParkedVehicles()\n  public void ListParkingSpots()\n  public void ListVehicleTypes()\n  public void ParkVehicle()\n  public void ParkVehicleAtSpot()\n  public void RemoveVehicle()\n  public void SearchVehicles()\n}\nclass \u0022GarageApplication\u0022 as e_c17527f25cd385304828 {\n  private readonly GarageService service\n  private readonly VehicleCreator vehicleCreator\n  private static Dimensions ReadSpotDimensions()\n  private void ChooseGarage()\n  private void CreateGarage()\n  private void CreateGarage(bool useSpotDimensions)\n  private void CreateGarageFromJson()\n  private void CreateGarageWithSizedSpots()\n  private void OpenGarage(VehicleGarage garage)\n  public GarageApplication(GarageService service)\n  public void Run()\n}\nclass \u0022MenuOption\u0022 as e_ddef3b3219073f491098 {\n  private readonly Action action\n  private readonly MenuTextProvider textProvider\n  public MenuOption(MenuTextProvider textProvider, Action action)\n  public MenuOption(string text, Action action)\n  public MenuOption(string text, ConsoleMenu submenu)\n  public override string ToString()\n  public string Text \u0026#123; get; \u0026#125;\n  public void Execute()\n}\nclass \u0022VehicleCreator\u0022 as e_243c9cea10eedfdba2fe {\n  private VehicleGarage? targetGarage\n  private int? targetSpotNumber\n  private readonly AirplaneDraft airplaneDraft\n  private readonly BoatDraft boatDraft\n  private readonly BusDraft busDraft\n  private readonly CarDraft carDraft\n  private readonly EngineCreator engineCreator\n  private readonly GarageService service\n  private readonly MotorcycleDraft motorcycleDraft\n  private readonly TruckDraft truckDraft\n  private readonly VehicleDraftMapper vehicleActions\n  private static List\u003CMenuOption\u003E CreateCommonOptions(VehicleDraft draft, string middleDimensionName)\n  private static MenuOption BoolOption(string label, BoolValueGetter getter, BoolValueSetter setter)\n  private static MenuOption DoubleOption(string label, string unit, DoubleValueGetter getter, DoubleValueSetter setter, double minimum, double maximum)\n  private static MenuOption IntOption(string label, IntValueGetter getter, IntValueSetter setter, int minimum, int maximum)\n  private static MenuOption TextOption(string label, TextValueGetter getter, TextValueSetter setter)\n  private static double ReadMeasurement(string prompt)\n  private static string ValueText(object? value, string? unit = null)\n  private static void ListDraftEngines(VehicleDraft draft)\n  private static void RemoveDraftEngine(VehicleDraft draft)\n  private void AddEngine(VehicleDraft draft)\n  private void CreateVehicle(VehicleDraft draft, VehicleFactory factory)\n  private void CreateVehicleFromJson()\n  private void ListVehicles()\n  private void ShowAirplaneMenu()\n  private void ShowBoatMenu()\n  private void ShowBusMenu()\n  private void ShowCarMenu()\n  private void ShowDraftMenu(string title, VehicleDraft draft, List\u003CMenuOption\u003E typeOptions, Action createVehicle, string middleDimensionName = \\\u0022Width\\\u0022)\n  private void ShowMenuCore(VehicleGarage? garage, int? spotNumber)\n  private void ShowMotorcycleMenu()\n  private void ShowTruckMenu()\n  public VehicleCreator(GarageService service)\n  public void ShowMenu()\n  public void ShowMenuForGarage(VehicleGarage garage)\n  public void ShowMenuForGarageAtSpot(VehicleGarage garage)\n}\ne_4d91ba0dd97c69bd6593 -[hidden]down-\u003E e_c17527f25cd385304828\ne_935d2cd052ef64b5ab41 -[hidden]down-\u003E e_ddef3b3219073f491098\ne_843a620e0241f7d51d56 -[hidden]down-\u003E e_243c9cea10eedfdba2fe\n}\npackage \u0022Garage.ConsoleApp.Prompts\u0022 as e_48a075bf0e95828cc9b8 {\nclass \u0022ConsoleInput\u0022 as e_84cce6e30aadda581c97 {\n  public static Enum ReadEnum(Type enumType, string prompt)\n  public static Enum? ReadEnumOrCancel(Type enumType, string prompt, string cancelOptionText = \\\u0022Cancel\\\u0022)\n  public static Enum? ReadOptionalEnum(Type enumType, string prompt)\n  public static bool ReadBoolean(string prompt)\n  public static double ReadDouble(string prompt, double minimum, double maximum)\n  public static double? ReadOptionalDouble(string prompt, double minimum, double maximum)\n  public static int ReadInt(string prompt, int minimum, int maximum)\n  public static int? ReadOptionalInt(string prompt, int minimum, int maximum)\n  public static string ReadRequiredString(string prompt)\n  public static string? ReadOptionalString(string prompt)\n  public static void Pause()\n}\nclass \u0022SearchCriteriaCreator\u0022 as e_c0ae39a64486662aad26 {\n  private BoatType? boatType\n  private BodyType? bodyType\n  private FuelType? fuelType\n  private List\u003CType\u003E CreateSelectedVehicleTypes()\n  private MotorcycleType? motorcycleType\n  private VehicleColor? color\n  private bool? hasSidecar\n  private double? cylinderVolumeCc\n  private double? draftMeters\n  private double? lengthMeters\n  private double? maximumAltitudeMeters\n  private double? maximumLoadKg\n  private double? wingspanMeters\n  private int? manufacturingYear\n  private int? numberOfAxles\n  private int? numberOfEngines\n  private int? numberOfSeats\n  private int? numberOfWheels\n  private int? standingPassengerCapacity\n  private readonly List\u003CType\u003E availableVehicleTypes\n  private readonly List\u003Cbool\u003E selectedVehicleTypes\n  private string? manufacturer\n  private string? model\n  private string? registrationNumber\n  public VehicleSearchCriteria Create()\n  public string BoatTypeText \u0026#123; get; \u0026#125;\n  public string BodyTypeText \u0026#123; get; \u0026#125;\n  public string ColorText \u0026#123; get; \u0026#125;\n  public string CylinderVolumeText \u0026#123; get; \u0026#125;\n  public string DraftText \u0026#123; get; \u0026#125;\n  public string FuelTypeText \u0026#123; get; \u0026#125;\n  public string HasSidecarText \u0026#123; get; \u0026#125;\n  public string LengthText \u0026#123; get; \u0026#125;\n  public string ManufacturerText \u0026#123; get; \u0026#125;\n  public string ManufacturingYearText \u0026#123; get; \u0026#125;\n  public string MaximumAltitudeText \u0026#123; get; \u0026#125;\n  public string MaximumLoadText \u0026#123; get; \u0026#125;\n  public string ModelText \u0026#123; get; \u0026#125;\n  public string MotorcycleTypeText \u0026#123; get; \u0026#125;\n  public string NumberOfAxlesText \u0026#123; get; \u0026#125;\n  public string NumberOfEnginesText \u0026#123; get; \u0026#125;\n  public string NumberOfSeatsText \u0026#123; get; \u0026#125;\n  public string NumberOfWheelsText \u0026#123; get; \u0026#125;\n  public string RegistrationNumberText \u0026#123; get; \u0026#125;\n  public string StandingPassengerCapacityText \u0026#123; get; \u0026#125;\n  public string VehicleTypesText \u0026#123;  get; \u0026#125;\n  public string WingspanText \u0026#123; get; \u0026#125;\n  public void ChooseBoatType()\n  public void ChooseBodyType()\n  public void ChooseColor()\n  public void ChooseCylinderVolume()\n  public void ChooseDraft()\n  public void ChooseFuelType()\n  public void ChooseHasSidecar()\n  public void ChooseLength()\n  public void ChooseManufacturer()\n  public void ChooseManufacturingYear()\n  public void ChooseMaximumAltitude()\n  public void ChooseMaximumLoad()\n  public void ChooseModel()\n  public void ChooseMotorcycleType()\n  public void ChooseNumberOfAxles()\n  public void ChooseNumberOfEngines()\n  public void ChooseNumberOfSeats()\n  public void ChooseNumberOfWheels()\n  public void ChooseRegistrationNumber()\n  public void ChooseStandingPassengerCapacity()\n  public void ChooseVehicleTypes()\n  public void ChooseWingspan()\n  public void Clear()\n}\n}\ne_59b1556f96699cd705e9 -[hidden]down-\u003E e_086e18aa53ffee783a28\ne_086e18aa53ffee783a28 -[hidden]down-\u003E e_472d4347054781c1284e\ne_472d4347054781c1284e -[hidden]down-\u003E e_e5e0b215ae1e59df7146\ne_e5e0b215ae1e59df7146 -[hidden]down-\u003E e_48a075bf0e95828cc9b8\ne_0e613a1cb16635d59608 \u003C|-- e_864f060c4ab7fa5dd82e\ne_0e613a1cb16635d59608 \u003C|-- e_99aff731f56013415ac3\ne_0e613a1cb16635d59608 \u003C|-- e_ba1d98237eb4558f147d\ne_0e613a1cb16635d59608 \u003C|-- e_ada39b33d0c8484f9ea1\ne_0e613a1cb16635d59608 \u003C|-- e_a82c3665fb512b06b70d\ne_0e613a1cb16635d59608 \u003C|-- e_1a1c7793acc5882d6d18\nlegend bottom\n  \u003Cb\u003EHow to read this class diagram\u003C/b\u003E\n  Child --|\u003E Parent : solid line \u002B hollow triangle = inherits from\n  Class ..|\u003E Interface : dashed line \u002B hollow triangle = implements\n  The triangle points to the parent class or interface.\n  C = class; A = abstract class; I = interface; E = enum; S = struct.\n  Boxes group members; folder-shaped boxes group namespaces.\n  public / \u002B = accessible publicly; private / - = within the class\n  protected / # = class and derived classes; internal = same assembly\n  Type Name = field/property; Name(...) = method or constructor.\n  --- Related diagrams ---\n  [[../component/garage-components.puml Garage project components]]\n  [[../package/garage-packages.puml Garage projects and namespaces]]\nendlegend\n@enduml\n",
@@ -56,6 +780,8 @@ globalThis.GARAGE_UML_DATA = {
         "garage-components",
         "garage-packages"
       ],
+      "storyIds": [],
+      "origin": "code",
       "source": "structural/class/garage-terminal-classes.puml",
       "svg": "structural/class/garage-terminal-classes.svg",
       "puml": "@startuml\n\u0027 diagram-id: garage-terminal-classes\n\u0027 Generated. Run the UML generate command; do not edit by hand.\nhide empty members\nskinparam classAttributeIconSize 0\ntitle Garage.Terminal classes\npackage \u0022Garage.Terminal.Forms\u0022 as e_8c95e3638b28daa95f26 {\nclass \u0022FactoryDefinition\u0022 as e_f4bb18770de95a491874 {\n  private FactoryDefinition(string name, string methodName)\n  private readonly string methodName\n  private static FieldDefinition Field(string name, Type type)\n  private static List\u003CFieldDefinition\u003E BuildFields(string methodName)\n  private static string Default(string name, Type type)\n  public List\u003CFieldDefinition\u003E Fields \u0026#123;  get; \u0026#125;\n  public object Create(Dictionary\u003Cstring, object?\u003E values, List\u003CEngine\u003E? engines = null)\n  public static List\u003CFactoryDefinition\u003E Engines \u0026#123;  get; \u0026#125;\n  public static List\u003CFactoryDefinition\u003E Vehicles \u0026#123;  get; \u0026#125;\n  public string Name \u0026#123;  get; \u0026#125;\n}\nclass \u0022FieldDefinition\u0022 as e_8b84717b913f7ea1a392 {\n  primary constructor FieldDefinition(string Name, string Label, Type Type, bool Required = true, string Initial = \\\u0022\\\u0022)\n  public object? Parse(string text)\n  public static string FriendlyLabel(string name)\n  public static string Humanize(string name)\n}\nclass \u0022SearchForm\u0022 as e_9bd1a70266eae6524d8e {\n  public static VehicleSearchCriteria? Show(Dialogs dialogs, VehicleSearchCriteria current)\n}\n}\npackage \u0022Garage.Terminal.Presentation\u0022 as e_70d9678ffcb314c3c560 {\nclass \u0022DashboardState\u0022 as e_4df767f98e735fe95b15 {\n  primary constructor DashboardState(GarageService service)\n  public GarageService Service \u0026#123;  get; \u0026#125;\n  public IReadOnlyList\u003CVehicle\u003E VisibleVehicles()\n  public VehicleGarage? Garage \u0026#123;  get;  set; \u0026#125;\n  public VehicleGarage? Location(Vehicle vehicle)\n  public VehicleSearchCriteria Criteria \u0026#123;  get;  set; \u0026#125;\n  public WorkspacePage Page \u0026#123;  get;  set; \u0026#125;\n  public int? Spot(Vehicle vehicle)\n  public string QuickFilter \u0026#123;  get;  set; \u0026#125;\n}\nclass \u0022Dialogs\u0022 as e_8837e80d9ea0086e4401 {\n  primary constructor Dialogs(IApplication app)\n  public Dictionary\u003Cstring, object?\u003E? Form(string title, IReadOnlyList\u003CFieldDefinition\u003E fields, string finish = \\\u0022_Continue\\\u0022, IReadOnlyDictionary\u003Cstring, object?\u003E? initial = null)\n  public IReadOnlyList\u003Cint\u003E? ChooseMany(string title, IReadOnlyList\u003Cstring\u003E choices, List\u003Cint\u003E? selected = null)\n  public Window Modal(string title, int height = 22)\n  public bool Confirm(string title, string message, string accept = \\\u0022_Continue\\\u0022)\n  public int? Choose(string title, IReadOnlyList\u003Cstring\u003E choices, int selected = 0)\n  public string? JsonFile(string title)\n  public void Message(string title, string message)\n}\nclass \u0022GarageWorkspace\u0022 as e_63ea1484b1756ebba669 {\n  internal void AdvanceWorkspaceFocus(bool backwards = false)\n  private IReadOnlyList\u003CVehicle\u003E displayedVehicles\n  private IReadOnlyList\u003CVehicleGarage\u003E displayedGarages\n  private Vehicle? SelectedVehicle \u0026#123; get; \u0026#125;\n  private bool refreshing\n  private int? ChooseSpot(Vehicle? vehicle)\n  private readonly DashboardState state\n  private readonly Dialogs dialogs\n  private readonly GarageWorkspaceLayout layout\n  private readonly IApplication application\n  private readonly IReadOnlyList\u003CView\u003E focusOrder\n  private readonly Workflows workflows\n  private readonly WorkspaceButtons buttons\n  private static void AddColumns(DataTable data, List\u003Cstring\u003E names)\n  private void ChooseGarage()\n  private void ConnectEvents()\n  private void CreateVehicle(bool parkImmediately)\n  private void Execute(WorkspaceCommand command)\n  private void GarageResult(GarageCreationResult? result)\n  private void Guard(Action action)\n  private void Help()\n  private void ImportVehicle()\n  private void OpenDetails()\n  private void ParkVehicle()\n  private void ParkingActions()\n  private void Quit()\n  private void RefreshRows()\n  private void RemoveVehicle()\n  private void RevealVehicle(Vehicle vehicle)\n  private void Search()\n  private void SetStatus(string message)\n  private void ShowParkingSpots(VehicleGarage garage)\n  private void ShowVehicleTypeCounts(VehicleGarage garage)\n  private void UpdateDetails()\n  public GarageWorkspace(IApplication application, GarageService service)\n}\nclass \u0022GarageWorkspaceLayout\u0022 as e_b1626b8acbbb27220002 {\n  public FrameView DetailFrame \u0026#123;  get; \u0026#125;\n  public FrameView TableFrame \u0026#123;  get; \u0026#125;\n  public GarageWorkspaceLayout(Window workspace, WorkspaceButtons buttons)\n  public Label Details \u0026#123;  get; \u0026#125;\n  public Label Stats \u0026#123;  get; \u0026#125;\n  public Label Status \u0026#123;  get; \u0026#125;\n  public ListView Navigation \u0026#123;  get; \u0026#125;\n  public TableView Table \u0026#123;  get; \u0026#125;\n  public TextField Query \u0026#123;  get; \u0026#125;\n  public void ArrangeForHeight(int height)\n}\nclass \u0022Theme\u0022 as e_ad55187c4e6326e7f254 {\n  private static Scheme Create(string text, string background, string selection)\n  private static void ApplyScheme(View view, Scheme? scheme)\n  public static Button Apply(Button view, Scheme? scheme = null)\n  public static Button Button(string text, Action action)\n  public static FrameView Apply(FrameView view, Scheme? scheme = null)\n  public static Label Apply(Label view, Scheme? scheme = null)\n  public static ListView Apply(ListView view, Scheme? scheme = null)\n  public static OpenDialog Apply(OpenDialog view, Scheme? scheme = null)\n  public static TableView Apply(TableView view, Scheme? scheme = null)\n  public static TextField Apply(TextField view, Scheme? scheme = null)\n  public static View Apply(View view, Scheme? scheme = null)\n  public static Window Apply(Window view, Scheme? scheme = null)\n  public static readonly Scheme Accent\n  public static readonly Scheme Danger\n  public static readonly Scheme Input\n  public static readonly Scheme Muted\n  public static readonly Scheme Panel\n  public static readonly Scheme Surface\n}\nclass \u0022VehicleDetails\u0022 as e_2c610ddeb077913dbee3 {\n  private static string Properties(object value, List\u003Cstring\u003E? excluded = null)\n  public static string Engines(List\u003CEngine\u003E engines)\n  public static string Full(Vehicle vehicle)\n  public static string Summary(Vehicle vehicle)\n}\nclass \u0022Workflows\u0022 as e_27b934ba4d208135b791 {\n  primary constructor Workflows(Dialogs dialogs, GarageService service)\n  private Dimensions? ReadDimensions(string title)\n  private Engine? CreateEngine()\n  public GarageCreationResult? CreateGarage()\n  public GarageCreationResult? ImportGarage()\n  public VehicleCreationResult? CreateVehicle(VehicleGarage? garage = null, int? spotNumber = null)\n}\nclass \u0022WorkspaceButtons\u0022 as e_d9caf31e8ba77e8d47d5 {\n  public Button CreateGarage \u0026#123;  get; \u0026#125;\n  public Button CreateVehicle \u0026#123;  get; \u0026#125;\n  public Button Details \u0026#123;  get; \u0026#125;\n  public Button Filters \u0026#123;  get; \u0026#125;\n  public Button GaragePicker \u0026#123;  get; \u0026#125;\n  public Button Help \u0026#123;  get; \u0026#125;\n  public Button ImportGarage \u0026#123;  get; \u0026#125;\n  public Button ImportVehicle \u0026#123;  get; \u0026#125;\n  public Button Park \u0026#123;  get; \u0026#125;\n  public Button Quit \u0026#123;  get; \u0026#125;\n  public Button Remove \u0026#123;  get; \u0026#125;\n  public Button Spots \u0026#123;  get; \u0026#125;\n  public IReadOnlyList\u003CView\u003E FocusOrder(ListView navigation, TextField query, TableView table)\n  public WorkspaceButtons(Action\u003CWorkspaceCommand\u003E execute)\n  public void AddActionsTo(View actions)\n  public void AddHeaderTo(View header)\n  public void AddSearchTo(View content)\n  public void AddSidebarTo(View sidebar)\n}\nenum \u0022WorkspaceCommand\u0022 as e_35eddb34a1e331aa28f3 {\n  ChooseGarage\n  CreateGarage\n  CreateVehicle\n  FocusFind\n  Help\n  ImportGarage\n  ImportVehicle\n  OpenDetails\n  ParkVehicle\n  ParkingActions\n  Quit\n  Refresh\n  RemoveVehicle\n  Search\n}\nenum \u0022WorkspacePage\u0022 as e_5ac9d75313c00c571a75 {\n  Overview\n  Parking\n  Search\n  Vehicles\n}\ne_4df767f98e735fe95b15 -[hidden]down-\u003E e_b1626b8acbbb27220002\ne_8837e80d9ea0086e4401 -[hidden]down-\u003E e_ad55187c4e6326e7f254\ne_63ea1484b1756ebba669 -[hidden]down-\u003E e_2c610ddeb077913dbee3\ne_b1626b8acbbb27220002 -[hidden]down-\u003E e_27b934ba4d208135b791\ne_ad55187c4e6326e7f254 -[hidden]down-\u003E e_d9caf31e8ba77e8d47d5\ne_2c610ddeb077913dbee3 -[hidden]down-\u003E e_35eddb34a1e331aa28f3\ne_27b934ba4d208135b791 -[hidden]down-\u003E e_5ac9d75313c00c571a75\n}\ne_8c95e3638b28daa95f26 -[hidden]down-\u003E e_70d9678ffcb314c3c560\nlegend bottom\n  \u003Cb\u003EHow to read this class diagram\u003C/b\u003E\n  Child --|\u003E Parent : solid line \u002B hollow triangle = inherits from\n  Class ..|\u003E Interface : dashed line \u002B hollow triangle = implements\n  The triangle points to the parent class or interface.\n  C = class; A = abstract class; I = interface; E = enum; S = struct.\n  Boxes group members; folder-shaped boxes group namespaces.\n  public / \u002B = accessible publicly; private / - = within the class\n  protected / # = class and derived classes; internal = same assembly\n  Type Name = field/property; Name(...) = method or constructor.\n  --- Related diagrams ---\n  [[../component/garage-components.puml Garage project components]]\n  [[../package/garage-packages.puml Garage projects and namespaces]]\nendlegend\n@enduml\n",
@@ -71,6 +797,8 @@ globalThis.GARAGE_UML_DATA = {
         "garage-components",
         "garage-packages"
       ],
+      "storyIds": [],
+      "origin": "code",
       "source": "structural/class/garage-tests-classes.puml",
       "svg": "structural/class/garage-tests-classes.svg",
       "puml": "@startuml\n\u0027 diagram-id: garage-tests-classes\n\u0027 Generated. Run the UML generate command; do not edit by hand.\nhide empty members\nskinparam classAttributeIconSize 0\ntitle Garage.Tests classes\npackage \u0022Garage.Tests\u0022 as e_c6d222290b958a69f4fc {\nclass \u0022ConsoleOutputCollection\u0022 as e_e0d9a07c0cb376b75c76 {\n}\nclass \u0022CreationResultTests\u0022 as e_09b11f5e5768ac6dbe89 {\n  [Fact] public void CreateGarage_DuplicateAndInvalidCapacityReturnFailure()\n  [Fact] public void CreateGarage_ReturnsRegisteredGarage()\n  [Fact] public void CreateVehicle_ReturnsCreatedVehicleOrValidationFailure()\n  [Fact] public void Park_ReturnsParkingResultWithDisplaySpotNumber()\n}\nclass \u0022GarageConstructionTests\u0022 as e_4635a4048dcd5b79e794 {\n  [Fact] public void Constructor_ParksInitialVehicles()\n  [Fact] public void Constructor_RejectsDuplicateRegistrationsIgnoringCase()\n  [Fact] public void Constructor_RejectsNullVehicleInInitialArray()\n  [Fact] public void Constructor_SetsCapacity()\n}\nclass \u0022GarageJsonLoaderTests\u0022 as e_ed41b0f7b38a8a6c261c {\n  [Fact] public void Load_CreatesGarageWithCustomSpotSizeAndAssignments()\n  [Fact] public void Load_RejectsDuplicateCustomSpotNumbers()\n  [Fact] public void Load_RejectsVehicleThatDoesNotFitItsAssignedSpot()\n  private const string VehicleJson\n  private static string CreateDirectory()\n  private static string Write(string directory, string name, string content)\n}\nclass \u0022GarageParkingTests\u0022 as e_e8bf0c7380d36cd94bb7 {\n  [Fact] public void Constructor_RejectsMissingSpotDimensions()\n  [Fact] public void ParkAtSpot_FailsWhenSpotIsOccupied()\n  [Fact] public void ParkAtSpot_RejectsNullVehicle()\n  [Fact] public void ParkAtSpot_RejectsVehicleThatDoesNotFitAndKeepsSpotFree()\n  [Fact] public void ParkAtSpot_UsesRequestedSpot()\n  [Fact] public void Park_AddsVehicleAndUpdatesSpaceCounts()\n  [Fact] public void Park_FailsWhenGarageIsFull()\n  [Fact] public void Park_RejectsDuplicateRegistrationIgnoringCase()\n  [Fact] public void Park_RejectsNullVehicle()\n  [Fact] public void Park_SkipsOpenSpotThatIsTooSmall()\n  [Fact] public void ParkingMenu_OnlyOffersVehiclesThatFitTheChosenSpot()\n  [Fact] public void Remove_MakesSizedSpotAvailableAgain()\n  [Theory] [InlineData(0, 2, 2)] [InlineData(-1, 2, 2)] [InlineData(double.NaN, 2, 2)] [InlineData(2, double.PositiveInfinity, 2)] [InlineData(2, 2, double.NegativeInfinity)] public void Dimensions_RejectsInvalidMeasurements(double lengthMeters, double widthMeters, double heightMeters)\n}\nclass \u0022GarageRemovalTests\u0022 as e_ad74eb1aad8d12911fbc {\n  [Fact] public void FindVehicleByRegistration_IgnoresCase()\n  [Fact] public void Remove_RemovesVehicleAndFreesSpace()\n  [Fact] public void Remove_ReturnsFailureForUnknownRegistration()\n}\nclass \u0022GarageSearchTests\u0022 as e_ae1ae414f68a417632a9 {\n  [Fact] public void Search_CombinesAircraftAndGeneralFilters()\n  [Fact] public void Search_CombinesCriteriaWithAndLogic()\n  [Fact] public void Search_FiltersOnVehicleSpecificProperties()\n  [Fact] public void Search_ReturnsEmptyCollectionWhenNothingMatches()\n  [Fact] public void VehiclesByType_GroupsAndCountsVehicles()\n}\nclass \u0022GarageServiceTests\u0022 as e_e302f831203183bedd05 {\n  [Fact] public void AddGarage_RejectsDuplicateNameWithoutChangingCollection()\n  [Fact] public void Constructor_RejectsDuplicateInitialGarages()\n  [Fact] public void ImportGarage_FailedLoadDoesNotRegisterGarage()\n}\nclass \u0022GarageServiceWorkflowTests\u0022 as e_7d704edb220eb773ff35 {\n  [Fact] public void CatalogAndGarageCollections_CannotBeMutatedByCallers()\n  [Fact] public void Catalog_RejectsDuplicateRegistrationInInitialData()\n  [Fact] public void CreateAndPark_OccupiedSpotKeepsExistingVehicleAndCatalog()\n  [Fact] public void CreateAndPark_RegistersTheSameVehicleInCatalogAndGarage()\n  [Fact] public void CreateAndPark_RejectsGarageOutsideTheService()\n  [Fact] public void CreateAndPark_VehicleThatDoesNotFitDoesNotChangeEitherCollection()\n  [Fact] public void CreateVehicle_RejectsRegistrationAlreadyInAnotherGarage()\n  [Fact] public void FromJson_InvalidFileReturnsErrorWithoutChangingState()\n  [Fact] public void FromJson_MissingFileReturnsSpecificError()\n  [Fact] public void Park_RejectsVehicleOutsideTheCatalog()\n  [Fact] public void Park_VehicleMustBeRemovedBeforeParkingInAnotherGarage()\n  [Fact] public void ResultFactories_RejectInconsistentSuccessAndFailure()\n}\nclass \u0022RegistrationValidationTests\u0022 as e_013d62cc3d4938063035 {\n  [Fact] public void Airplane_UsesItsCountryPrefix()\n  [Fact] public void Boat_UsesBoatRulesInsteadOfRoadRules()\n  [Fact] public void Draft_RequiresCountryAndClearsItAfterUse()\n  [Fact] public void Factory_UsesTheExplicitCountry()\n  [Theory] [InlineData(\\\u0022\\\u0022)] [InlineData(\\\u0022 \\\u0022)] [InlineData(\\\u0022---\\\u0022)] [InlineData(\\\u0022MATCH1\\\u0022)] [InlineData(\\\u0022ABC1234\\\u0022)] public void RoadVehicle_RejectsInvalidRegistrations(string number)\n  [Theory] [InlineData(\\\u0022ABC123\\\u0022)] [InlineData(\\\u0022ABC12D\\\u0022)] [InlineData(\\\u0022 abc-123 \\\u0022)] public void RoadVehicle_NormalizesSupportedRegistrations(string number)\n  [Theory] [InlineData(\\\u0022vehicles.json\\\u0022, 30)] [InlineData(\\\u0022created-vehicles.json\\\u0022, 12)] public void SampleData_LoadsWithValidRegistrations(string fileName, int expectedCount)\n  [Theory] [InlineData(CountryCode.Unspecified)] [InlineData((CountryCode)999)] public void Vehicle_RejectsMissingOrUndefinedCountry(CountryCode countryCode)\n  [Theory] [InlineData(true)] [InlineData(false)] public void Initializer_ValidatesUsingBothPropertiesRegardlessOfOrder(bool countryFirst)\n  private static Car CreateCar(string number, CountryCode countryCode, bool countryFirst)\n}\nclass \u0022TerminalWorkspaceTests\u0022 as e_7a284b855abcc173bd5e {\n  [Fact] public void Dashboard_FiltersCatalogAndRetainsGarageLocations()\n  [Fact] public void EngineForms_MapEverySupportedEngineFactory()\n  [Fact] public void FactoryForm_MapsValidCarValuesThroughDomainFactory()\n  [Fact] public void FactoryForms_CoverAllVehicleAndEngineTypes()\n  [Fact] public void Fields_ParseOptionalEnumsAndFiniteMeasurements()\n  [Fact] public void VehicleForms_CreateEverySupportedVehicleType()\n  [Fact] public void Workspace_LayoutAndKeyboardTraversalReachTheVehicleTable()\n}\nclass \u0022VehicleEngineTests\u0022 as e_22af7dcc0b6b9b0ae884 {\n  [Fact] public void AddEngine_PreservesExistingEngineAndAddsNewEngine()\n  [Fact] public void AddEngine_RejectsEngineBeyondCapacity()\n  [Fact] public void PrintVehicle_ReflectsAddedAndRemovedEngines()\n  [Fact] public void RemoveEngine_RemovesOnlySelectedEngine()\n  private static List\u003CVehicle\u003E CreateVehicles()\n  private static string CaptureVehicle(Vehicle vehicle)\n}\nclass \u0022VehicleJsonLoaderTests\u0022 as e_a5047bde016988483b34 {\n  [Fact] public void LoadVehicles_RejectsNullJsonRoot()\n  [Fact] public void LoadVehicles_RejectsNullVehicle()\n}\nclass \u0022VehicleJsonTests\u0022 as e_5e5a9c52cbc3151cccc9 {\n  [Fact] public void LoadVehicle_CreatesCarAndEngineFromObject()\n  [Theory] [InlineData(\\\u0022null\\\u0022)] [InlineData(\\\u0022[]\\\u0022)] [InlineData(\\\u0022\u0026#123;invalid\u0026#125;\\\u0022)] [InlineData(\\\u0022\u0026#123;\\\\\\\u0022type\\\\\\\u0022:\\\\\\\u0022Car\\\\\\\u0022\u0026#125;\\\u0022)] public void LoadVehicle_RejectsInvalidDocument(string json)\n}\nclass \u0022VehicleValidationTests\u0022 as e_6f5adbe00f276c7971db {\n  [Fact] public void Airplane_RejectsDualControlsWithOnePilotSeat()\n  [Fact] public void Boat_RejectsMoreCabinSeatsThanPassengerCapacity()\n  [Fact] public void Bus_AllowsZeroDriverSeatsForAutonomousBus()\n  [Fact] public void Bus_RejectsZeroTotalPassengerCapacity()\n  [Fact] public void Truck_RejectsFewerThanTwoWheelsPerAxle()\n}\ne_e0d9a07c0cb376b75c76 -[hidden]down-\u003E e_ed41b0f7b38a8a6c261c\ne_09b11f5e5768ac6dbe89 -[hidden]down-\u003E e_e8bf0c7380d36cd94bb7\ne_4635a4048dcd5b79e794 -[hidden]down-\u003E e_ad74eb1aad8d12911fbc\ne_ed41b0f7b38a8a6c261c -[hidden]down-\u003E e_ae1ae414f68a417632a9\ne_e8bf0c7380d36cd94bb7 -[hidden]down-\u003E e_e302f831203183bedd05\ne_ad74eb1aad8d12911fbc -[hidden]down-\u003E e_7d704edb220eb773ff35\ne_ae1ae414f68a417632a9 -[hidden]down-\u003E e_013d62cc3d4938063035\ne_e302f831203183bedd05 -[hidden]down-\u003E e_7a284b855abcc173bd5e\ne_7d704edb220eb773ff35 -[hidden]down-\u003E e_22af7dcc0b6b9b0ae884\ne_013d62cc3d4938063035 -[hidden]down-\u003E e_a5047bde016988483b34\ne_7a284b855abcc173bd5e -[hidden]down-\u003E e_5e5a9c52cbc3151cccc9\ne_22af7dcc0b6b9b0ae884 -[hidden]down-\u003E e_6f5adbe00f276c7971db\n}\npackage \u0022Garage.Tests.Fixtures\u0022 as e_4fd4f2cee5741b4a98b4 {\nclass \u0022EngineFixtures\u0022 as e_e1d2eb7a6478a677145a {\n  public static FlatEngine CreateFlatEngine(string serialNumber = \\\u0022FLAT123\\\u0022, string model = \\\u0022Aircraft flat 4\\\u0022, FuelType fuelType = FuelType.AviationGasoline, int horsePower = 180, int displacementCc = 5_900, int cylinderCount = 4)\n  public static InlineEngine CreateEngine(string serialNumber = \\\u0022ENG123\\\u0022, string model = \\\u0022Inline 4\\\u0022, FuelType fuelType = FuelType.Gasoline, int horsePower = 150, int displacementCc = 2_000, int cylinderCount = 4)\n}\nclass \u0022VehicleFixtures\u0022 as e_c1a9f6cbd56987559128 {\n  public static Airplane CreateAirplane(int pilotSeats = 2, bool hasDualControls = true, Engine? engine = null, string registrationNumber = \\\u0022SE-ABC\\\u0022, CountryCode countryCode = CountryCode.SWE)\n  public static Boat CreateBoat(int passengerCapacity = 8, int cabinPassengerSeats = 4, Engine? engine = null, string registrationNumber = \\\u0022SFB-2345\\\u0022, CountryCode countryCode = CountryCode.SWE)\n  public static Bus CreateBus(int passengerSeats = 30, int standingCapacity = 20, int driverSeats = 1, Engine? engine = null)\n  public static Car CreateCar(string registrationNumber = \\\u0022ABC123\\\u0022, VehicleColor color = VehicleColor.Black, string manufacturer = \\\u0022Volvo\\\u0022, int manufacturingYear = 2020, Engine? engine = null, CountryCode countryCode = CountryCode.SWE)\n  public static Motorcycle CreateMotorcycle(string registrationNumber = \\\u0022MCY123\\\u0022, VehicleColor color = VehicleColor.Red, int numberOfWheels = 2, Engine? engine = null)\n  public static Truck CreateTruck(int numberOfWheels = 6, int numberOfAxles = 3, double maximumLoadKg = 25_000, Engine? engine = null)\n}\n}\ne_c6d222290b958a69f4fc -[hidden]down-\u003E e_4fd4f2cee5741b4a98b4\nlegend bottom\n  \u003Cb\u003EHow to read this class diagram\u003C/b\u003E\n  Child --|\u003E Parent : solid line \u002B hollow triangle = inherits from\n  Class ..|\u003E Interface : dashed line \u002B hollow triangle = implements\n  The triangle points to the parent class or interface.\n  C = class; A = abstract class; I = interface; E = enum; S = struct.\n  Boxes group members; folder-shaped boxes group namespaces.\n  public / \u002B = accessible publicly; private / - = within the class\n  protected / # = class and derived classes; internal = same assembly\n  Type Name = field/property; Name(...) = method or constructor.\n  --- Related diagrams ---\n  [[../component/garage-components.puml Garage project components]]\n  [[../package/garage-packages.puml Garage projects and namespaces]]\nendlegend\n@enduml\n",
@@ -92,6 +820,8 @@ globalThis.GARAGE_UML_DATA = {
         "parking-sequence",
         "local-deployment"
       ],
+      "storyIds": [],
+      "origin": "code",
       "source": "structural/component/garage-components.puml",
       "svg": "structural/component/garage-components.svg",
       "puml": "@startuml\n\u0027 diagram-id: garage-components\n\u0027 Generated. Run the UML generate command; do not edit by hand.\nhide empty members\nskinparam classAttributeIconSize 0\ntitle Garage project components\ncomponent \u0022Garage.Console\u0022 as e_4e8a158f886433b7cb91\ncomponent \u0022Garage.Terminal\u0022 as e_3bdc5d7ed9efbc4af169\ncomponent \u0022Garage.Tests\u0022 as e_5a229a8a577b83de6207\ncomponent \u0022Garage\u0022 as e_fc55a3295fd213831954\ncomponent \u0022Vehicle\u0022 as e_6baf9469d9bef8128882\ne_4e8a158f886433b7cb91 --\u003E e_fc55a3295fd213831954 : references\ne_3bdc5d7ed9efbc4af169 --\u003E e_fc55a3295fd213831954 : references\ne_5a229a8a577b83de6207 --\u003E e_4e8a158f886433b7cb91 : references\ne_5a229a8a577b83de6207 --\u003E e_3bdc5d7ed9efbc4af169 : references\ne_5a229a8a577b83de6207 --\u003E e_fc55a3295fd213831954 : references\ne_5a229a8a577b83de6207 --\u003E e_6baf9469d9bef8128882 : references\ne_fc55a3295fd213831954 --\u003E e_6baf9469d9bef8128882 : references\nlegend bottom\n  Solid arrow: source project references the target project.\n  [[../package/garage-packages.puml Garage projects and namespaces]]\n  [[../class/garage-classes.puml Garage classes]]\n  [[../class/vehicle-classes.puml Vehicle classes]]\n  [[../class/garage-console-classes.puml Garage.Console classes]]\n  [[../class/garage-terminal-classes.puml Garage.Terminal classes]]\n  [[../class/garage-tests-classes.puml Garage.Tests classes]]\n  [[../../interaction/sequence/parking-sequence.puml Park an existing catalog vehicle]]\n  [[../deployment/local-deployment.puml Local Garage runtime]]\nendlegend\n@enduml\n",
@@ -106,6 +836,8 @@ globalThis.GARAGE_UML_DATA = {
       "related": [
         "garage-components"
       ],
+      "storyIds": [],
+      "origin": "code",
       "source": "structural/package/garage-packages.puml",
       "svg": "structural/package/garage-packages.svg",
       "puml": "@startuml\n\u0027 diagram-id: garage-packages\n\u0027 Generated. Run the UML generate command; do not edit by hand.\nhide empty members\nskinparam classAttributeIconSize 0\ntitle Garage projects and namespaces\npackage \u0022Garage.Console\u0022 as e_4e8a158f886433b7cb91 {\n  package \u0022Garage.ConsoleApp.Display\u0022 as e_9de32f7d100bfe0b432e { }\n  package \u0022Garage.ConsoleApp.Drafts\u0022 as e_c5b0fbf80f998c68cbcb { }\n  package \u0022Garage.ConsoleApp.Mapping\u0022 as e_3a9eaa677578cbe9c1df { }\n  package \u0022Garage.ConsoleApp.Menus\u0022 as e_f8d009d2fb96f407d004 { }\n  package \u0022Garage.ConsoleApp.Prompts\u0022 as e_12eb5d1aacf60ee95820 { }\n}\npackage \u0022Garage.Terminal\u0022 as e_3bdc5d7ed9efbc4af169 {\n  package \u0022Garage.Terminal.Forms\u0022 as e_e3884fdc3829d04d5bac { }\n  package \u0022Garage.Terminal.Presentation\u0022 as e_d4b69e557dadeb3325cb { }\n}\npackage \u0022Garage.Tests\u0022 as e_5a229a8a577b83de6207 {\n  package \u0022Garage.Tests\u0022 as e_0f1c02c4850cf2ad3811 { }\n  package \u0022Garage.Tests.Fixtures\u0022 as e_acd7f5ae0bd5fccf9e3d { }\n}\npackage \u0022Garage\u0022 as e_fc55a3295fd213831954 {\n  package \u0022Garage.Diagnostics\u0022 as e_ea481c78b81b80db5988 { }\n  package \u0022Garage.Documentation\u0022 as e_f5de614a19fdf3030dcd { }\n  package \u0022Garage.Models\u0022 as e_08834dd45de931ba1fcd { }\n  package \u0022Garage.Persistence.Json\u0022 as e_ca4317fe7e4fd39a8899 { }\n  package \u0022Garage.Persistence.Json.Contracts\u0022 as e_cce5127976a13666c25f { }\n  package \u0022Garage.Queries\u0022 as e_a6914bca9de7d0b6e7bc { }\n  package \u0022Garage.Results\u0022 as e_322b54eab66535aad2fe { }\n  package \u0022Garage.Services\u0022 as e_be652e04f07616dca31e { }\n  package \u0022Garage.Specifications\u0022 as e_d524e7959b08d00fcb27 { }\n}\npackage \u0022Vehicle\u0022 as e_6baf9469d9bef8128882 {\n  package \u0022Garage.Engines\u0022 as e_a8e8068c91680140002c { }\n  package \u0022Garage.Engines.Electric\u0022 as e_7e26a2547468f137cb37 { }\n  package \u0022Garage.Engines.ExternalCombustion\u0022 as e_8b7222bb985f2bd80d71 { }\n  package \u0022Garage.Engines.InternalCombustion\u0022 as e_8b2e1d55a3a9a7f07311 { }\n  package \u0022Garage.Engines.InternalCombustion.Piston\u0022 as e_bdff4f545c2ea10c1470 { }\n  package \u0022Garage.Engines.InternalCombustion.Turbine\u0022 as e_384c808b250ee0d3bb5d { }\n  package \u0022Garage.Engines.Specifications\u0022 as e_c98e764eca4aa9062ce1 { }\n  package \u0022Garage.Factories\u0022 as e_400f8bef6cf297e681d8 { }\n  package \u0022Garage.Vehicles\u0022 as e_b61b696f382917360ed0 { }\n  package \u0022Garage.Vehicles.Components\u0022 as e_f034617c6a613de7c0da { }\n  package \u0022Garage.Vehicles.Interfaces\u0022 as e_798d21f2272a791ef52a { }\n  package \u0022Garage.Vehicles.Specifications\u0022 as e_30b3f2e833734e4b75a9 { }\n  package \u0022Garage.Vehicles.Types\u0022 as e_9a13834fdf212e37fd93 { }\n}\ne_4e8a158f886433b7cb91 ..\u003E e_fc55a3295fd213831954 : references\ne_3bdc5d7ed9efbc4af169 ..\u003E e_fc55a3295fd213831954 : references\ne_5a229a8a577b83de6207 ..\u003E e_4e8a158f886433b7cb91 : references\ne_5a229a8a577b83de6207 ..\u003E e_3bdc5d7ed9efbc4af169 : references\ne_5a229a8a577b83de6207 ..\u003E e_fc55a3295fd213831954 : references\ne_5a229a8a577b83de6207 ..\u003E e_6baf9469d9bef8128882 : references\ne_fc55a3295fd213831954 ..\u003E e_6baf9469d9bef8128882 : references\nlegend bottom\n  Folder boxes: projects/namespaces; dashed arrows: project references.\n  [[../component/garage-components.puml Garage project components]]\nendlegend\n@enduml\n",
@@ -123,10 +855,14 @@ globalThis.GARAGE_UML_DATA = {
         "parking-activity",
         "parking-spot-state"
       ],
+      "storyIds": [
+        "park-vehicle"
+      ],
+      "origin": "code",
       "source": "interaction/sequence/parking-sequence.puml",
       "svg": "interaction/sequence/parking-sequence.svg",
-      "puml": "@startuml\n\u0027 diagram-id: parking-sequence\n\u0027 Generated from code annotations and source. Run generate; do not edit by hand.\ntitle Park an existing catalog vehicle\nactor \u0022Garage operator\u0022 as Actor\nparticipant \u0022Garage.Services.GarageService\u0022 as p_753cfee6aae6\nparticipant \u0022Garage.Results.ParkingResult\u0022 as p_426dd07c2e3a\nparticipant \u0022Garage.Models.Garage\u0022 as p_50a211325908\nparticipant \u0022Garage.Models.ParkingSpot\u0022 as p_b323161f1e5c\nnote over p_753cfee6aae6\nStatic source view; MaxDepth=3. Lifelines group calls by declared type, not runtime instance.\nAlternatives are possible source paths, not a recorded execution. Guards may be infeasible together.\nProperty getters and implicit/external exceptions are not expanded. Framework calls and callbacks are boundaries.\nCaller continuation assumes the callee returns normally. Async scheduling is not modeled.\nExpand bodies in: Garage.Models, Garage.Services. Other calls remain visible as boundaries.\nend note\nActor -\u003E p_753cfee6aae6 : Park(vehicle, garage, spotNumber)\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(garage)\nend note\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): Catalog.Vehicles.Contains(vehicle)\nend note\nalt !Catalog.Vehicles.Contains(vehicle)\np_753cfee6aae6 -\u003E p_426dd07c2e3a : Failed(\u0026quot;Choose a vehicle from this application\u0027s catalog.\u0026quot;, OperationError.VehicleNotFound)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_753cfee6aae6 : Garage.Results.ParkingResult (if call returns)\np_753cfee6aae6 --\u003E Actor : ParkingResult.Failed(\u0026quot;Choose a vehicle from this application\u0027s catalog.\u0026quot;, OperationError.VehicleNotFound)\nelse otherwise\np_753cfee6aae6 -\u003E p_753cfee6aae6 : ParkNewVehicle(vehicle, garage, spotNumber)\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): garages.Contains(garage)\nend note\nalt !garages.Contains(garage)\np_753cfee6aae6 -\u003E p_426dd07c2e3a : Failed(\u0026quot;Choose a garage registered with this application.\u0026quot;, OperationError.ValidationFailed)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_753cfee6aae6 : Garage.Results.ParkingResult (if call returns)\np_753cfee6aae6 --\u003E p_753cfee6aae6 : ParkingResult.Failed(\u0026quot;Choose a garage registered with this application.\u0026quot;, OperationError.ValidationFailed)\nelse otherwise\np_753cfee6aae6 -\u003E p_753cfee6aae6 : IsParked(vehicle)\nnote over p_753cfee6aae6\nCallback boundary (not executed by this analysis): garage =\u0026gt; garage.Vehicles.Any(parked =\u0026gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase))\nend note\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): garages.Any(garage =\u0026gt; garage.Vehicles.Any(parked =\u0026gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))\nend note\np_753cfee6aae6 --\u003E p_753cfee6aae6 : garages.Any(garage =\u0026gt; garage.Vehicles.Any(parked =\u0026gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))\nalt IsParked(vehicle)\np_753cfee6aae6 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} is already parked in a garage.\u0026quot;, OperationError.VehicleAlreadyParked)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_753cfee6aae6 : Garage.Results.ParkingResult (if call returns)\np_753cfee6aae6 --\u003E p_753cfee6aae6 : ParkingResult.Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} is already parked in a garage.\u0026quot;, OperationError.VehicleAlreadyParked)\nelse otherwise\nalt spotNumber is int spot\np_753cfee6aae6 -\u003E p_50a211325908 : Park(vehicle, spot)\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nalt spot \u0026lt; 1 || spot \u0026gt; Capacity\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Parking spot must be between 1 and {Capacity}.\u0026quot;, OperationError.SpotOutOfRange)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed($\u0026quot;Parking spot must be between 1 and {Capacity}.\u0026quot;, OperationError.SpotOutOfRange)\nelse otherwise\nalt parkingSpot.Vehicle is not null\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Parking spot {spot} is occupied.\u0026quot;, OperationError.SpotOccupied)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed($\u0026quot;Parking spot {spot} is occupied.\u0026quot;, OperationError.SpotOccupied)\nelse otherwise\np_50a211325908 -\u003E p_b323161f1e5c : Fits(vehicle)\nnote over p_b323161f1e5c\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nalt Dimensions is null\np_b323161f1e5c --\u003E p_50a211325908 : true\nelse otherwise\np_b323161f1e5c --\u003E p_50a211325908 : size.LengthMeters \u0026lt;= Dimensions.LengthMeters \u0026amp;\u0026amp; size.WidthMeters \u0026lt;= Dimensions.WidthMeters \u0026amp;\u0026amp; size.HeightMeters \u0026lt;= Dimensions.HeightMeters\nend\nalt !parkingSpot.Fits(vehicle)\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0026quot;, OperationError.VehicleDoesNotFit)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0026quot;, OperationError.VehicleDoesNotFit)\nelse otherwise\np_50a211325908 -\u003E p_50a211325908 : RegistrationExists(vehicle.RegistrationNumber)\nnote over p_50a211325908\nCallback boundary (not executed by this analysis): spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)\nend note\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): parkingSpots.Any(spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))\nend note\np_50a211325908 --\u003E p_50a211325908 : parkingSpots.Any(spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))\nalt RegistrationExists(vehicle.RegistrationNumber)\np_50a211325908 -\u003E p_50a211325908 : DuplicateRegistration(vehicle)\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0026quot;, OperationError.DuplicateRegistration)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0026quot;, OperationError.DuplicateRegistration)\np_50a211325908 --\u003E p_753cfee6aae6 : DuplicateRegistration(vehicle)\nelse otherwise\np_50a211325908 -\u003E p_b323161f1e5c : Park(vehicle)\nnote over p_b323161f1e5c\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nalt Vehicle is not null is false\np_b323161f1e5c -\u003E p_b323161f1e5c : Fits(vehicle)\nnote over p_b323161f1e5c\nDepth boundary: method body not expanded.\nend note\np_b323161f1e5c --\u003E p_b323161f1e5c : bool (if call returns)\nelse short-circuit\nend\nalt Vehicle is not null || !Fits(vehicle)\nnote over p_b323161f1e5c\nConstructor/initializer boundary (not expanded): new InvalidOperationException(\u0026quot;The spot must be empty and large enough for the vehicle.\u0026quot;)\nend note\nnote over p_b323161f1e5c\nThrows: new InvalidOperationException(\u0026quot;The spot must be empty and large enough for the vehicle.\u0026quot;); this path terminates here.\nend note\nelse otherwise\np_b323161f1e5c --\u003E p_50a211325908 : complete\nend\np_50a211325908 -\u003E p_426dd07c2e3a : Completed(spot, $\u0026quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0026quot;)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Completed(spot, $\u0026quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0026quot;)\nend\nend\nend\nend\np_753cfee6aae6 --\u003E p_753cfee6aae6 : garage.Park(vehicle, spot)\nelse otherwise\np_753cfee6aae6 -\u003E p_50a211325908 : Park(vehicle)\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\np_50a211325908 -\u003E p_50a211325908 : RegistrationExists(vehicle.RegistrationNumber)\nnote over p_50a211325908\nCallback boundary (not executed by this analysis): spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)\nend note\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): parkingSpots.Any(spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))\nend note\np_50a211325908 --\u003E p_50a211325908 : parkingSpots.Any(spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))\nalt RegistrationExists(vehicle.RegistrationNumber)\np_50a211325908 -\u003E p_50a211325908 : DuplicateRegistration(vehicle)\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0026quot;, OperationError.DuplicateRegistration)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0026quot;, OperationError.DuplicateRegistration)\np_50a211325908 --\u003E p_753cfee6aae6 : DuplicateRegistration(vehicle)\nelse otherwise\nnote over p_50a211325908\nCallback boundary (not executed by this analysis): spot =\u0026gt; spot.Vehicle is null \u0026amp;\u0026amp; spot.Fits(vehicle)\nend note\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): parkingSpots.FirstOrDefault(spot =\u0026gt; spot.Vehicle is null \u0026amp;\u0026amp; spot.Fits(vehicle))\nend note\nalt availableSpot is null\nalt AvailableSpaces == 0\np_50a211325908 -\u003E p_426dd07c2e3a : Failed(\u0026quot;The garage is full.\u0026quot;, OperationError.GarageFull)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed(\u0026quot;The garage is full.\u0026quot;, OperationError.GarageFull)\nelse otherwise\np_50a211325908 -\u003E p_426dd07c2e3a : Failed(\u0026quot;No available parking spot is large enough for this vehicle.\u0026quot;, OperationError.VehicleDoesNotFit)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed(\u0026quot;No available parking spot is large enough for this vehicle.\u0026quot;, OperationError.VehicleDoesNotFit)\nend\nelse otherwise\np_50a211325908 -\u003E p_50a211325908 : Park(vehicle, availableSpot.Number)\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nalt spot \u0026lt; 1 || spot \u0026gt; Capacity\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Parking spot must be between 1 and {Capacity}.\u0026quot;, OperationError.SpotOutOfRange)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;Parking spot must be between 1 and {Capacity}.\u0026quot;, OperationError.SpotOutOfRange)\nelse otherwise\nalt parkingSpot.Vehicle is not null\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Parking spot {spot} is occupied.\u0026quot;, OperationError.SpotOccupied)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;Parking spot {spot} is occupied.\u0026quot;, OperationError.SpotOccupied)\nelse otherwise\np_50a211325908 -\u003E p_b323161f1e5c : Fits(vehicle)\nnote over p_b323161f1e5c\nDepth boundary: method body not expanded.\nend note\np_b323161f1e5c --\u003E p_50a211325908 : bool (if call returns)\nalt !parkingSpot.Fits(vehicle)\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0026quot;, OperationError.VehicleDoesNotFit)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0026quot;, OperationError.VehicleDoesNotFit)\nelse otherwise\np_50a211325908 -\u003E p_50a211325908 : RegistrationExists(vehicle.RegistrationNumber)\nnote over p_50a211325908\nDepth boundary: method body not expanded.\nend note\np_50a211325908 --\u003E p_50a211325908 : bool (if call returns)\nalt RegistrationExists(vehicle.RegistrationNumber)\np_50a211325908 -\u003E p_50a211325908 : DuplicateRegistration(vehicle)\nnote over p_50a211325908\nDepth boundary: method body not expanded.\nend note\np_50a211325908 --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : DuplicateRegistration(vehicle)\nelse otherwise\np_50a211325908 -\u003E p_b323161f1e5c : Park(vehicle)\nnote over p_b323161f1e5c\nDepth boundary: method body not expanded.\nend note\np_b323161f1e5c --\u003E p_50a211325908 : complete (if call returns)\np_50a211325908 -\u003E p_426dd07c2e3a : Completed(spot, $\u0026quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0026quot;)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Completed(spot, $\u0026quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0026quot;)\nend\nend\nend\nend\np_50a211325908 --\u003E p_753cfee6aae6 : Park(vehicle, availableSpot.Number)\nend\nend\np_753cfee6aae6 --\u003E p_753cfee6aae6 : garage.Park(vehicle)\nend\nend\nend\np_753cfee6aae6 --\u003E Actor : ParkNewVehicle(vehicle, garage, spotNumber)\nend\nlegend bottom\n  [[../../structural/component/garage-components.puml Garage project components]]\n  [[../../structural/class/garage-classes.puml Garage classes]]\n  [[../../behavioral/activity/parking-activity.puml Parking validation and assignment]]\n  [[../../behavioral/state-machine/parking-spot-state.puml Parking spot occupancy]]\nendlegend\n@enduml\n",
-      "pumlHash": "4e5a7affd28ff873053070a4e3c908dad4214e7f29d36a4b74c3924a7c0adfd3"
+      "puml": "@startuml\n\u0027 diagram-id: parking-sequence\n\u0027 Generated from code annotations and source. Run generate; do not edit by hand.\ntitle Park an existing catalog vehicle\nactor \u0022Garage user.\u0022 as Actor\nparticipant \u0022Garage.Services.GarageService\u0022 as p_753cfee6aae6\nparticipant \u0022Garage.Results.ParkingResult\u0022 as p_426dd07c2e3a\nparticipant \u0022Garage.Models.Garage\u0022 as p_50a211325908\nparticipant \u0022Garage.Models.ParkingSpot\u0022 as p_b323161f1e5c\nnote over p_753cfee6aae6\nStatic source view; MaxDepth=3. Lifelines group calls by declared type, not runtime instance.\nAlternatives are possible source paths, not a recorded execution. Guards may be infeasible together.\nProperty getters and implicit/external exceptions are not expanded. Framework calls and callbacks are boundaries.\nCaller continuation assumes the callee returns normally. Async scheduling is not modeled.\nExpand bodies in: Garage.Models, Garage.Services. Other calls remain visible as boundaries.\nend note\nActor -\u003E p_753cfee6aae6 : Park(vehicle, garage, spotNumber)\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(garage)\nend note\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): Catalog.Vehicles.Contains(vehicle)\nend note\nalt !Catalog.Vehicles.Contains(vehicle)\np_753cfee6aae6 -\u003E p_426dd07c2e3a : Failed(\u0026quot;Choose a vehicle from this application\u0027s catalog.\u0026quot;, OperationError.VehicleNotFound)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_753cfee6aae6 : Garage.Results.ParkingResult (if call returns)\np_753cfee6aae6 --\u003E Actor : ParkingResult.Failed(\u0026quot;Choose a vehicle from this application\u0027s catalog.\u0026quot;, OperationError.VehicleNotFound)\nelse otherwise\np_753cfee6aae6 -\u003E p_753cfee6aae6 : ParkNewVehicle(vehicle, garage, spotNumber)\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): garages.Contains(garage)\nend note\nalt !garages.Contains(garage)\np_753cfee6aae6 -\u003E p_426dd07c2e3a : Failed(\u0026quot;Choose a garage registered with this application.\u0026quot;, OperationError.ValidationFailed)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_753cfee6aae6 : Garage.Results.ParkingResult (if call returns)\np_753cfee6aae6 --\u003E p_753cfee6aae6 : ParkingResult.Failed(\u0026quot;Choose a garage registered with this application.\u0026quot;, OperationError.ValidationFailed)\nelse otherwise\np_753cfee6aae6 -\u003E p_753cfee6aae6 : IsParked(vehicle)\nnote over p_753cfee6aae6\nCallback boundary (not executed by this analysis): garage =\u0026gt; garage.Vehicles.Any(parked =\u0026gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase))\nend note\nnote over p_753cfee6aae6\nExternal/delegate call boundary (not expanded): garages.Any(garage =\u0026gt; garage.Vehicles.Any(parked =\u0026gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))\nend note\np_753cfee6aae6 --\u003E p_753cfee6aae6 : garages.Any(garage =\u0026gt; garage.Vehicles.Any(parked =\u0026gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))\nalt IsParked(vehicle)\np_753cfee6aae6 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} is already parked in a garage.\u0026quot;, OperationError.VehicleAlreadyParked)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_753cfee6aae6 : Garage.Results.ParkingResult (if call returns)\np_753cfee6aae6 --\u003E p_753cfee6aae6 : ParkingResult.Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} is already parked in a garage.\u0026quot;, OperationError.VehicleAlreadyParked)\nelse otherwise\nalt spotNumber is int spot\np_753cfee6aae6 -\u003E p_50a211325908 : Park(vehicle, spot)\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nalt spot \u0026lt; 1 || spot \u0026gt; Capacity\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Parking spot must be between 1 and {Capacity}.\u0026quot;, OperationError.SpotOutOfRange)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed($\u0026quot;Parking spot must be between 1 and {Capacity}.\u0026quot;, OperationError.SpotOutOfRange)\nelse otherwise\nalt parkingSpot.Vehicle is not null\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Parking spot {spot} is occupied.\u0026quot;, OperationError.SpotOccupied)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed($\u0026quot;Parking spot {spot} is occupied.\u0026quot;, OperationError.SpotOccupied)\nelse otherwise\np_50a211325908 -\u003E p_b323161f1e5c : Fits(vehicle)\nnote over p_b323161f1e5c\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nalt Dimensions is null\np_b323161f1e5c --\u003E p_50a211325908 : true\nelse otherwise\np_b323161f1e5c --\u003E p_50a211325908 : size.LengthMeters \u0026lt;= Dimensions.LengthMeters \u0026amp;\u0026amp; size.WidthMeters \u0026lt;= Dimensions.WidthMeters \u0026amp;\u0026amp; size.HeightMeters \u0026lt;= Dimensions.HeightMeters\nend\nalt !parkingSpot.Fits(vehicle)\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0026quot;, OperationError.VehicleDoesNotFit)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0026quot;, OperationError.VehicleDoesNotFit)\nelse otherwise\np_50a211325908 -\u003E p_50a211325908 : RegistrationExists(vehicle.RegistrationNumber)\nnote over p_50a211325908\nCallback boundary (not executed by this analysis): spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)\nend note\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): parkingSpots.Any(spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))\nend note\np_50a211325908 --\u003E p_50a211325908 : parkingSpots.Any(spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))\nalt RegistrationExists(vehicle.RegistrationNumber)\np_50a211325908 -\u003E p_50a211325908 : DuplicateRegistration(vehicle)\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0026quot;, OperationError.DuplicateRegistration)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0026quot;, OperationError.DuplicateRegistration)\np_50a211325908 --\u003E p_753cfee6aae6 : DuplicateRegistration(vehicle)\nelse otherwise\np_50a211325908 -\u003E p_b323161f1e5c : Park(vehicle)\nnote over p_b323161f1e5c\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nalt Vehicle is not null is false\np_b323161f1e5c -\u003E p_b323161f1e5c : Fits(vehicle)\nnote over p_b323161f1e5c\nDepth boundary: method body not expanded.\nend note\np_b323161f1e5c --\u003E p_b323161f1e5c : bool (if call returns)\nelse short-circuit\nend\nalt Vehicle is not null || !Fits(vehicle)\nnote over p_b323161f1e5c\nConstructor/initializer boundary (not expanded): new InvalidOperationException(\u0026quot;The spot must be empty and large enough for the vehicle.\u0026quot;)\nend note\nnote over p_b323161f1e5c\nThrows: new InvalidOperationException(\u0026quot;The spot must be empty and large enough for the vehicle.\u0026quot;); this path terminates here.\nend note\nelse otherwise\np_b323161f1e5c --\u003E p_50a211325908 : complete\nend\np_50a211325908 -\u003E p_426dd07c2e3a : Completed(spot, $\u0026quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0026quot;)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Completed(spot, $\u0026quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0026quot;)\nend\nend\nend\nend\np_753cfee6aae6 --\u003E p_753cfee6aae6 : garage.Park(vehicle, spot)\nelse otherwise\np_753cfee6aae6 -\u003E p_50a211325908 : Park(vehicle)\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\np_50a211325908 -\u003E p_50a211325908 : RegistrationExists(vehicle.RegistrationNumber)\nnote over p_50a211325908\nCallback boundary (not executed by this analysis): spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)\nend note\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): parkingSpots.Any(spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))\nend note\np_50a211325908 --\u003E p_50a211325908 : parkingSpots.Any(spot =\u0026gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))\nalt RegistrationExists(vehicle.RegistrationNumber)\np_50a211325908 -\u003E p_50a211325908 : DuplicateRegistration(vehicle)\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0026quot;, OperationError.DuplicateRegistration)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.\u0026quot;, OperationError.DuplicateRegistration)\np_50a211325908 --\u003E p_753cfee6aae6 : DuplicateRegistration(vehicle)\nelse otherwise\nnote over p_50a211325908\nCallback boundary (not executed by this analysis): spot =\u0026gt; spot.Vehicle is null \u0026amp;\u0026amp; spot.Fits(vehicle)\nend note\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): parkingSpots.FirstOrDefault(spot =\u0026gt; spot.Vehicle is null \u0026amp;\u0026amp; spot.Fits(vehicle))\nend note\nalt availableSpot is null\nalt AvailableSpaces == 0\np_50a211325908 -\u003E p_426dd07c2e3a : Failed(\u0026quot;The garage is full.\u0026quot;, OperationError.GarageFull)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed(\u0026quot;The garage is full.\u0026quot;, OperationError.GarageFull)\nelse otherwise\np_50a211325908 -\u003E p_426dd07c2e3a : Failed(\u0026quot;No available parking spot is large enough for this vehicle.\u0026quot;, OperationError.VehicleDoesNotFit)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_753cfee6aae6 : ParkingResult.Failed(\u0026quot;No available parking spot is large enough for this vehicle.\u0026quot;, OperationError.VehicleDoesNotFit)\nend\nelse otherwise\np_50a211325908 -\u003E p_50a211325908 : Park(vehicle, availableSpot.Number)\nnote over p_50a211325908\nExternal/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)\nend note\nalt spot \u0026lt; 1 || spot \u0026gt; Capacity\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Parking spot must be between 1 and {Capacity}.\u0026quot;, OperationError.SpotOutOfRange)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;Parking spot must be between 1 and {Capacity}.\u0026quot;, OperationError.SpotOutOfRange)\nelse otherwise\nalt parkingSpot.Vehicle is not null\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Parking spot {spot} is occupied.\u0026quot;, OperationError.SpotOccupied)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;Parking spot {spot} is occupied.\u0026quot;, OperationError.SpotOccupied)\nelse otherwise\np_50a211325908 -\u003E p_b323161f1e5c : Fits(vehicle)\nnote over p_b323161f1e5c\nDepth boundary: method body not expanded.\nend note\np_b323161f1e5c --\u003E p_50a211325908 : bool (if call returns)\nalt !parkingSpot.Fits(vehicle)\np_50a211325908 -\u003E p_426dd07c2e3a : Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0026quot;, OperationError.VehicleDoesNotFit)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Failed($\u0026quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.\u0026quot;, OperationError.VehicleDoesNotFit)\nelse otherwise\np_50a211325908 -\u003E p_50a211325908 : RegistrationExists(vehicle.RegistrationNumber)\nnote over p_50a211325908\nDepth boundary: method body not expanded.\nend note\np_50a211325908 --\u003E p_50a211325908 : bool (if call returns)\nalt RegistrationExists(vehicle.RegistrationNumber)\np_50a211325908 -\u003E p_50a211325908 : DuplicateRegistration(vehicle)\nnote over p_50a211325908\nDepth boundary: method body not expanded.\nend note\np_50a211325908 --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : DuplicateRegistration(vehicle)\nelse otherwise\np_50a211325908 -\u003E p_b323161f1e5c : Park(vehicle)\nnote over p_b323161f1e5c\nDepth boundary: method body not expanded.\nend note\np_b323161f1e5c --\u003E p_50a211325908 : complete (if call returns)\np_50a211325908 -\u003E p_426dd07c2e3a : Completed(spot, $\u0026quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0026quot;)\nnote over p_426dd07c2e3a\nScope boundary: method body not expanded.\nend note\np_426dd07c2e3a --\u003E p_50a211325908 : Garage.Results.ParkingResult (if call returns)\np_50a211325908 --\u003E p_50a211325908 : ParkingResult.Completed(spot, $\u0026quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.\u0026quot;)\nend\nend\nend\nend\np_50a211325908 --\u003E p_753cfee6aae6 : Park(vehicle, availableSpot.Number)\nend\nend\np_753cfee6aae6 --\u003E p_753cfee6aae6 : garage.Park(vehicle)\nend\nend\nend\np_753cfee6aae6 --\u003E Actor : ParkNewVehicle(vehicle, garage, spotNumber)\nend\n\u0027 Story: park-vehicle \u2014 Park vehicle\nlegend bottom\n  [[../../structural/component/garage-components.puml Garage project components]]\n  [[../../structural/class/garage-classes.puml Garage classes]]\n  [[../../behavioral/activity/parking-activity.puml Parking validation and assignment]]\n  [[../../behavioral/state-machine/parking-spot-state.puml Parking spot occupancy]]\nendlegend\n@enduml\n",
+      "pumlHash": "904cfd485065cb04d9fd3ffa8d607f6a8164f65fa729cab090c8ee9249fe0f44"
     },
     {
       "id": "parking-activity",
@@ -138,6 +874,10 @@ globalThis.GARAGE_UML_DATA = {
         "parking-sequence",
         "parking-spot-state"
       ],
+      "storyIds": [
+        "park-vehicle"
+      ],
+      "origin": "authored",
       "source": "behavioral/activity/parking-activity.puml",
       "svg": "behavioral/activity/parking-activity.svg",
       "puml": "@startuml\n\u0027 diagram-id: parking-activity\n\u0027 entities: operation:park\ntitle Parking validation and assignment\nstart\n:Receive non-null vehicle, garage, optional spot number;\nif (Vehicle belongs to catalog?) then (yes)\nelse (no)\n  :Return VehicleNotFound;\n  stop\nendif\nif (Garage registered?) then (yes)\nelse (no)\n  :Return ValidationFailed;\n  stop\nendif\nif (Registration already parked in any garage?) then (yes)\n  :Return VehicleAlreadyParked;\n  stop\nendif\nif (Spot number supplied?) then (yes)\n  :Use supplied spot number;\nelse (no)\n  :Find first empty spot that fits vehicle;\n  if (Suitable spot found?) then (yes)\n    :Use matching spot number;\n  else (no)\n    :Return GarageFull or VehicleDoesNotFit;\n    stop\n  endif\nendif\n:Validate spot range, occupancy,\\ndimensions and duplicate registration;\nif (Validation successful?) then (yes)\n  :ParkingSpot.Park(vehicle);\n  :Return ParkingResult.Completed;\nelse (no)\n  :Return ParkingResult.Failed with error code;\nendif\nstop\nlegend bottom\n  Scope: GarageService.Park with non-null inputs; guards are summarized.\n  [[../../interaction/sequence/parking-sequence.puml Parking sequence]]\n  [[../state-machine/parking-spot-state.puml Spot state]]\nendlegend\n@enduml\n",
@@ -153,6 +893,10 @@ globalThis.GARAGE_UML_DATA = {
         "parking-sequence",
         "parking-activity"
       ],
+      "storyIds": [
+        "park-vehicle"
+      ],
+      "origin": "authored",
       "source": "behavioral/state-machine/parking-spot-state.puml",
       "svg": "behavioral/state-machine/parking-spot-state.svg",
       "puml": "@startuml\n\u0027 diagram-id: parking-spot-state\n\u0027 entities: model:parking-spot\ntitle Parking spot occupancy\n[*] --\u003E Empty : Construct valid numbered spot\nEmpty --\u003E Occupied : Park(vehicle) [non-null and Fits(vehicle)] / assign Vehicle\nOccupied --\u003E Empty : Clear() / Vehicle = null\nEmpty --\u003E Empty : Clear() / Vehicle remains null\nnote right of Empty\n  A null argument or a vehicle that does not fit\n  causes Park to throw; occupancy is unchanged.\nend note\nnote right of Occupied\n  Park throws if the spot is already occupied.\n  Garage.Remove calls Clear on a matched spot.\n  No separate persisted lifecycle exists.\nend note\nlegend bottom\n  [[../../interaction/sequence/parking-sequence.puml Parking sequence]]\n  [[../activity/parking-activity.puml Parking activity]]\nendlegend\n@enduml\n",
@@ -168,6 +912,8 @@ globalThis.GARAGE_UML_DATA = {
         "garage-components",
         "garage-use-cases"
       ],
+      "storyIds": [],
+      "origin": "authored",
       "source": "structural/deployment/local-deployment.puml",
       "svg": "structural/deployment/local-deployment.svg",
       "puml": "@startuml\n\u0027 diagram-id: local-deployment\n\u0027 entities: system:garage, component:console, component:terminal\ntitle Local Garage runtime\nnode \u0022User workstation\u0022 as Workstation {\n  node \u0022.NET 10 process (choose an interface)\u0022 as Runtime {\n    artifact \u0022Garage.Console executable\u0022 as Console\n    artifact \u0022Garage.Terminal executable\u0022 as Terminal\n    artifact \u0022Garage library\u0022 as Domain\n    artifact \u0022Vehicle library\u0022 as Vehicles\n    Console --\u003E Domain\n    Terminal --\u003E Domain\n    Domain --\u003E Vehicles\n  }\n  folder \u0022Local JSON files\u0022 as Json\n  folder \u0022Local diagnostic logs\u0022 as Logs\n  Domain ..\u003E Json : load layouts and vehicles\n  Domain ..\u003E Logs : diagnostic logging\n}\nnote bottom of Runtime\n  Each interface runs as its own process.\n  Garage and vehicle state live in memory for that session.\n  JSON imports do not persist interactive changes.\nend note\nlegend bottom\n  [[../component/garage-components.puml Components]]\n  [[../../behavioral/use-case/garage-use-cases.puml Use cases]]\nendlegend\n@enduml\n",
@@ -176,17 +922,54 @@ globalThis.GARAGE_UML_DATA = {
     {
       "id": "garage-use-cases",
       "type": "use-case",
-      "title": "Garage user capabilities",
+      "title": "Garage stories and goals",
       "maintenance": "generated",
       "status": "active",
       "related": [
         "garage-components",
-        "parking-sequence"
+        "parking-sequence",
+        "parking-story-activity"
       ],
+      "storyIds": [
+        "create-garage",
+        "create-garage-with-dimensions",
+        "create-vehicle",
+        "find-vehicle",
+        "inspect-spaces",
+        "list-vehicle-types",
+        "list-vehicles",
+        "navigate-menus",
+        "park-vehicle",
+        "quit-application",
+        "remove-vehicle",
+        "search-vehicles"
+      ],
+      "origin": "stories",
       "source": "behavioral/use-case/garage-use-cases.puml",
       "svg": "behavioral/use-case/garage-use-cases.svg",
-      "puml": "@startuml\n\u0027 diagram-id: garage-use-cases\n\u0027 Generated from code annotations and source. Run generate; do not edit by hand.\ntitle Garage user capabilities\nleft to right direction\nactor \u0022Garage operator\u0022 as a_7348bf17d801\nrectangle \u0022Garage application\u0022 {\n  usecase \u0022Create or import garage\u0022 as u_create_garage\n  usecase \u0022Create or import vehicle\u0022 as u_create_vehicle\n  usecase \u0022Inspect parking spaces\u0022 as u_inspect\n  usecase \u0022List garages and vehicles\u0022 as u_list\n  usecase \u0022Park vehicle\u0022 as u_park_vehicle\n  usecase \u0022Remove parked vehicle\u0022 as u_remove\n  usecase \u0022Search parked vehicles\u0022 as u_search\n}\na_7348bf17d801 --\u003E u_create_garage\na_7348bf17d801 --\u003E u_create_vehicle\na_7348bf17d801 --\u003E u_inspect\na_7348bf17d801 --\u003E u_list\na_7348bf17d801 --\u003E u_park_vehicle\na_7348bf17d801 --\u003E u_remove\na_7348bf17d801 --\u003E u_search\nlegend bottom\n  [[../../structural/component/garage-components.puml Garage project components]]\n  [[../../interaction/sequence/parking-sequence.puml Park an existing catalog vehicle]]\nendlegend\n@enduml\n",
-      "pumlHash": "80c631901e5c4b4e07e98e719ea5b848e939fea8c27389408d7afa042800103e"
+      "puml": "@startuml\n\u0027 diagram-id: garage-use-cases\n\u0027 Generated from UseCases/ stories; C# annotations link implementations.\ntitle Garage stories and goals\nleft to right direction\nactor \u0022Garage user.\u0022 as a_0e9dfb1d2d7e\nrectangle \u0022Garage application\u0022 {\n  usecase \u0022Create garage\u0022 as u_create_garage\n  usecase \u0022Create garage with sized spaces\u0022 as u_create_garage_with_dimensions\n  usecase \u0022Create or import catalogue vehicle\u0022 as u_create_vehicle\n  usecase \u0022Find vehicle by registration\u0022 as u_find_vehicle\n  usecase \u0022Inspect parking spaces\u0022 as u_inspect_spaces\n  usecase \u0022List vehicle types and counts\u0022 as u_list_vehicle_types\n  usecase \u0022List parked vehicles\u0022 as u_list_vehicles\n  usecase \u0022Navigate garage menus\u0022 as u_navigate_menus\n  usecase \u0022Park vehicle\u0022 as u_park_vehicle\n  usecase \u0022Quit application\u0022 as u_quit_application\n  usecase \u0022Remove vehicle\u0022 as u_remove_vehicle\n  usecase \u0022Search parked vehicles\u0022 as u_search_vehicles\n}\na_0e9dfb1d2d7e --\u003E u_create_garage\nnote right of u_create_garage\nMake a garage available with the capacity chosen by the user.\nrequired \u00B7 create-garage \u00B7 GAR-03, GAR-04, GAR-05, GAR-06, GAR-11, GAR-12, GAR-13\nLinked implementation; coverage requires separate verification.\nend note\na_0e9dfb1d2d7e --\u003E u_create_garage_with_dimensions\nnote right of u_create_garage_with_dimensions\nCreate a garage whose spaces have individual length, width and height limits.\noptional \u00B7 create-garage-with-dimensions \u00B7 OPT-08\nLinked implementation; coverage requires separate verification.\nend note\na_0e9dfb1d2d7e --\u003E u_create_vehicle\nnote right of u_create_vehicle\nAdd a valid vehicle to the shared catalogue before parking it, with optional immediate parking.\noptional \u00B7 create-vehicle \u00B7 OPT-10, OPT-12\nLinked implementation; coverage requires separate verification.\nend note\na_0e9dfb1d2d7e --\u003E u_find_vehicle\nnote right of u_find_vehicle\nFind a specific parked vehicle using its registration number.\nrequired \u00B7 find-vehicle \u00B7 GAR-03, GAR-09, GAR-11, GAR-12, GAR-13\nLinked implementation; coverage requires separate verification.\nend note\na_0e9dfb1d2d7e --\u003E u_inspect_spaces\nnote right of u_inspect_spaces\nSee each numbered parking space, its dimensions and whether it is occupied.\noptional \u00B7 inspect-spaces \u00B7 OPT-03, OPT-08\nLinked implementation; coverage requires separate verification.\nend note\na_0e9dfb1d2d7e --\u003E u_list_vehicle_types\nnote right of u_list_vehicle_types\nSee how many vehicles of each type are parked in the garage.\nrequired \u00B7 list-vehicle-types \u00B7 GAR-02, GAR-08, GAR-11, GAR-12\nLinked implementation; coverage requires separate verification.\nend note\na_0e9dfb1d2d7e --\u003E u_list_vehicles\nnote right of u_list_vehicles\nSee which vehicles are currently parked and their properties.\nrequired \u00B7 list-vehicles \u00B7 GAR-01, GAR-02, GAR-08, GAR-11, GAR-12\nLinked implementation; coverage requires separate verification.\nend note\na_0e9dfb1d2d7e --\u003E u_navigate_menus\nnote right of u_navigate_menus\nReach the required garage functions through the console interface.\nrequired \u00B7 navigate-menus \u00B7 GAR-11, GAR-12, GAR-13\nNo code annotation linked yet.\nend note\na_0e9dfb1d2d7e --\u003E u_park_vehicle\nnote right of u_park_vehicle\nPut a vehicle in the garage when there is capacity available.\nrequired \u00B7 park-vehicle \u00B7 GAR-03, GAR-05, GAR-07, GAR-11, GAR-12, GAR-13\nLinked implementation; coverage requires separate verification.\nend note\na_0e9dfb1d2d7e --\u003E u_quit_application\nnote right of u_quit_application\nEnd the running garage application through its interface.\nrequired \u00B7 quit-application \u00B7 GAR-11, GAR-13\nNo code annotation linked yet.\nend note\na_0e9dfb1d2d7e --\u003E u_remove_vehicle\nnote right of u_remove_vehicle\nTake a parked vehicle out of the garage and make its capacity available again.\nrequired \u00B7 remove-vehicle \u00B7 GAR-07, GAR-09, GAR-11, GAR-12, GAR-13\nLinked implementation; coverage requires separate verification.\nend note\na_0e9dfb1d2d7e --\u003E u_search_vehicles\nnote right of u_search_vehicles\nFind parked vehicles matching one or several chosen properties.\nrequired \u00B7 search-vehicles \u00B7 GAR-01, GAR-10, GAR-11, GAR-12, GAR-13\nLinked implementation; coverage requires separate verification.\nend note\nlegend bottom\n  [[../../structural/component/garage-components.puml Garage project components]]\n  [[../../interaction/sequence/parking-sequence.puml Park an existing catalog vehicle]]\n  [[../activity/parking-story-activity.puml Park vehicle \u2014 requirements flow]]\nendlegend\n@enduml\n",
+      "pumlHash": "7afd6450bb957c6c7164992e0a72a42b6ad1c5624474b54226dcbce7fc65b743"
+    },
+    {
+      "id": "parking-story-activity",
+      "type": "activity",
+      "title": "Park vehicle \u2014 requirements flow",
+      "maintenance": "generated",
+      "status": "active",
+      "related": [
+        "garage-use-cases",
+        "parking-sequence",
+        "parking-activity",
+        "parking-spot-state"
+      ],
+      "storyIds": [
+        "park-vehicle"
+      ],
+      "origin": "stories",
+      "source": "behavioral/activity/parking-story-activity.puml",
+      "svg": "behavioral/activity/parking-story-activity.svg",
+      "puml": "@startuml\n\u0027 diagram-id: parking-story-activity\n\u0027 Generated from the story Flow and explicitly mapped Alternatives; edit the Markdown story.\ntitle Park vehicle \u2014 requirements flow\nstart\n:The user requests parking from the console menu and supplies or selects a vehicle.;\n:The system checks the vehicle details, registration uniqueness and available capacity.;\nif (Invalid details) then (yes)\n:explain the problem and allow correction without crashing.;\nstop\nelse (no)\nendif\nif (Duplicate registration) then (yes)\n:reject the request and preserve the vehicles already parked.;\nstop\nelse (no)\nendif\nif (Garage full) then (yes)\n:explain that no capacity is available and leave the garage unchanged.;\nstop\nelse (no)\nendif\n:The system adds the vehicle to the garage.;\n:The system confirms that the vehicle is parked.;\nstop\nnote right\nStory: park-vehicle \u00B7 Actor: Garage user.\nPut a vehicle in the garage when there is capacity available.\nDone when: A valid vehicle is added when capacity is available.\nDone when: Parking does not exceed the chosen garage capacity or introduce a duplicate registration.\nDone when: A rejected request leaves the existing vehicles unchanged.\nDone when: The user receives a clear success or failure message.\nend note\n@enduml\n",
+      "pumlHash": "9a9edf899f8c037ddb028b3011d59e4c8f7d0283b251f7dc95173be1b57d3d58"
     },
     {
       "id": "garage-object",
@@ -197,6 +980,8 @@ globalThis.GARAGE_UML_DATA = {
       "related": [
         "garage-classes"
       ],
+      "storyIds": [],
+      "origin": "authored",
       "source": "structural/object/garage-object.puml",
       "svg": "structural/object/garage-object.svg",
       "puml": "@startuml\n\u0027 diagram-id: garage-object\n\u0027 entities: system:garage\ntitle TEMPLATE: illustrative object snapshot\nobject \u0022garage : Garage\u0022 as Garage {\n  GarageName = \u0022Example Garage\u0022\n  Capacity = 2\n}\nobject \u0022spot1 : ParkingSpot\u0022 as Spot {\n  Number = 1\n  Vehicle = null\n}\nGarage *-- Spot : parkingSpots\nnote bottom\n  Template only. Replace with a verified snapshot from a test or scenario.\n  [[../class/garage-classes.puml Garage classes]]\nend note\n@enduml\n",
@@ -211,6 +996,8 @@ globalThis.GARAGE_UML_DATA = {
       "related": [
         "garage-components"
       ],
+      "storyIds": [],
+      "origin": "authored",
       "source": "structural/composite-structure/garage-composite.puml",
       "svg": "structural/composite-structure/garage-composite.svg",
       "puml": "@startuml\n\u0027 diagram-id: garage-composite\n\u0027 entities: system:garage\ntitle TEMPLATE: internal collaboration\nrectangle \u0022Garage application (composite)\u0022 {\n  rectangle \u0022ui : interface\u0022 as UI\n  rectangle \u0022service : GarageService\u0022 as Service\n  rectangle \u0022catalog : VehicleCatalog\u0022 as Catalog\n  UI --\u003E Service : operations\n  Service --\u003E Catalog : vehicles\n}\nnote bottom\n  Template only. Define the intended parts, ports and connectors before promotion.\n  [[../component/garage-components.puml Components]]\nend note\n@enduml\n",
@@ -225,6 +1012,8 @@ globalThis.GARAGE_UML_DATA = {
       "related": [
         "garage-components"
       ],
+      "storyIds": [],
+      "origin": "authored",
       "source": "structural/profile/garage-profile.puml",
       "svg": "structural/profile/garage-profile.svg",
       "puml": "@startuml\n\u0027 diagram-id: garage-profile\n\u0027 entities: system:garage\ntitle TEMPLATE: optional modeling profile\npackage \u0022Garage profile (proposed)\u0022 \u003C\u003Cprofile\u003E\u003E {\n  class \u0022Class\u0022 as UMLClass \u003C\u003Cmetaclass\u003E\u003E\n  class \u0022DomainEntity\u0022 as DomainEntity \u003C\u003Cstereotype\u003E\u003E {\n    sourceId : String\n  }\n  DomainEntity --|\u003E UMLClass : extends (illustrative)\n}\nnote bottom\n  Template only; no custom UML profile is applied to generated diagrams.\n  PlantUML uses class notation here; this is not an executable UML metamodel.\n  [[../component/garage-components.puml Components]]\nend note\n@enduml\n",
@@ -239,6 +1028,8 @@ globalThis.GARAGE_UML_DATA = {
       "related": [
         "parking-sequence"
       ],
+      "storyIds": [],
+      "origin": "authored",
       "source": "interaction/communication/parking-communication.puml",
       "svg": "interaction/communication/parking-communication.svg",
       "puml": "@startuml\n\u0027 diagram-id: parking-communication\n\u0027 entities: system:garage\ntitle TEMPLATE: parking communication\nobject \u0022ui : Interface\u0022 as UI\nobject \u0022service : GarageService\u0022 as Service\nobject \u0022garage : Garage\u0022 as Garage\nUI --\u003E Service : 1: Park(vehicle, garage, spot?)\nService --\u003E Garage : 1.1: Park(vehicle, spot?)\nnote bottom\n  Template only. Verify guards and numbered messages against a chosen scenario.\n  Communication is expressed using objects and numbered links.\n  [[../sequence/parking-sequence.puml Reviewed parking sequence]]\nend note\n@enduml\n",
@@ -253,6 +1044,8 @@ globalThis.GARAGE_UML_DATA = {
       "related": [
         "parking-sequence"
       ],
+      "storyIds": [],
+      "origin": "authored",
       "source": "interaction/interaction-overview/parking-interaction-overview.puml",
       "svg": "interaction/interaction-overview/parking-interaction-overview.svg",
       "puml": "@startuml\n\u0027 diagram-id: parking-interaction-overview\n\u0027 entities: system:garage\ntitle TEMPLATE: interaction overview\nstart\n:ref - Select garage and vehicle;\n:ref - Parking sequence;\nif (Parking successful?) then (yes)\n  :ref - Refresh occupancy;\nelse (no)\n  :ref - Display failure;\nendif\nstop\nlegend bottom\n  Template only. Select and verify the constituent interactions before promotion.\n  Interaction references use PlantUML activity notation.\n  [[../sequence/parking-sequence.puml Reviewed parking sequence]]\nendlegend\n@enduml\n",
@@ -267,6 +1060,8 @@ globalThis.GARAGE_UML_DATA = {
       "related": [
         "parking-spot-state"
       ],
+      "storyIds": [],
+      "origin": "authored",
       "source": "interaction/timing/parking-timing.puml",
       "svg": "interaction/timing/parking-timing.svg",
       "puml": "@startuml\n\u0027 diagram-id: parking-timing\n\u0027 entities: system:garage\ntitle TEMPLATE: illustrative parking timeline\nrobust \u0022Spot occupancy\u0022 as Spot\n@0\nSpot is Empty\n@10\nSpot is Occupied\n@20\nSpot is Empty\nlegend bottom\n  Template only. Times are illustrative units, not measured durations or SLAs.\n  Replace with evidence from a test or trace before promotion.\n  [[../../behavioral/state-machine/parking-spot-state.puml Reviewed spot state]]\nendlegend\n@enduml\n",
@@ -294,7 +1089,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public static class ErrorLogger",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Documentation.SequenceViewAttribute",
@@ -314,7 +1110,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "Attribute"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Documentation.UseCaseAttribute",
@@ -322,19 +1119,18 @@ globalThis.GARAGE_UML_DATA = {
           "kind": "class",
           "group": "Garage.Documentation",
           "members": [
-            "primary constructor UseCaseAttribute(string id, string title)",
-            "public string Actor {  get;  set; }",
-            "public string Id {  get; }",
-            "public string Title {  get; }"
+            "primary constructor UseCaseAttribute(string id)",
+            "public string Id {  get; }"
           ],
           "files": [
             "Garage/Documentation/DiagramAttributes.cs"
           ],
-          "declaration": "public sealed class UseCaseAttribute(string id, string title)",
+          "declaration": "public sealed class UseCaseAttribute(string id)",
           "bases": [
             "Attribute"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Models.Garage",
@@ -342,8 +1138,9 @@ globalThis.GARAGE_UML_DATA = {
           "kind": "class",
           "group": "Garage.Models",
           "members": [
-            "[UseCase(\u0022remove\u0022, \u0022Remove parked vehicle\u0022)]\npublic GarageOperationResult Remove(string registrationNumber)",
-            "[UseCase(\u0022search\u0022, \u0022Search parked vehicles\u0022)]\npublic IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)",
+            "[UseCase(\u0022find-vehicle\u0022)]\npublic ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber)",
+            "[UseCase(\u0022remove-vehicle\u0022)]\npublic GarageOperationResult Remove(string registrationNumber)",
+            "[UseCase(\u0022search-vehicles\u0022)]\npublic IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)",
             "private Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles, IReadOnlyList\u003CDimensions\u003E? spotDimensions)",
             "private bool RegistrationExists(string registrationNumber)",
             "private readonly List\u003CParkingSpot\u003E parkingSpots",
@@ -358,7 +1155,6 @@ globalThis.GARAGE_UML_DATA = {
             "public IReadOnlyList\u003CVehicle\u003E Vehicles { get; }",
             "public IReadOnlyList\u003CVehicleTypeGroup\u003E VehiclesByType { get; }",
             "public IReadOnlyList\u003Cint\u003E AvailableSpotsFor(Vehicle vehicle)",
-            "public ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber)",
             "public ParkingResult Park(Vehicle vehicle)",
             "public ParkingResult Park(Vehicle vehicle, int spot)",
             "public const int MaximumGarageCapacity",
@@ -372,7 +1168,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed class Garage",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Models.ParkingSpot",
@@ -393,7 +1190,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class ParkingSpot",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Models.VehicleCatalog",
@@ -412,7 +1210,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed class VehicleCatalog",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Persistence.Json.Contracts.EngineJsonContract",
@@ -440,7 +1239,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class EngineJsonContract",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Persistence.Json.Contracts.VehicleJsonContract",
@@ -492,7 +1292,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class VehicleJsonContract",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Persistence.Json.GarageJsonLoader",
@@ -512,7 +1313,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public static class GarageJsonLoader",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Persistence.Json.JsonSettings",
@@ -528,7 +1330,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class JsonSettings",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Persistence.Json.VehicleJsonLoader",
@@ -544,7 +1347,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public static class VehicleJsonLoader",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Persistence.Json.VehicleJsonMapper",
@@ -579,7 +1383,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class VehicleJsonMapper",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Queries.ParkedVehicleInfo",
@@ -594,7 +1399,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record ParkedVehicleInfo(int SpotNumber, Vehicle Vehicle)",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Queries.ParkingSpotInfo",
@@ -609,7 +1415,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record ParkingSpotInfo(int SpotNumber, Dimensions? Dimensions, bool IsOccupied)",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Queries.VehicleSearch",
@@ -625,7 +1432,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class VehicleSearch",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Queries.VehicleSearchCriteria",
@@ -661,7 +1469,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed class VehicleSearchCriteria",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Queries.VehicleTypeGroup",
@@ -676,7 +1485,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record VehicleTypeGroup(string VehicleType, IReadOnlyList\u003CParkedVehicleInfo\u003E Vehicles)",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Results.GarageCreationResult",
@@ -697,7 +1507,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record GarageCreationResult",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Results.GarageOperationResult",
@@ -718,7 +1529,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record GarageOperationResult",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Results.OperationError",
@@ -749,7 +1561,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public enum OperationError",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Results.ParkingResult",
@@ -770,7 +1583,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record ParkingResult",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Results.VehicleCreationResult",
@@ -794,7 +1608,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record VehicleCreationResult",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Services.ExpectedFailure",
@@ -810,7 +1625,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class ExpectedFailure",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Services.GarageService",
@@ -818,14 +1634,14 @@ globalThis.GARAGE_UML_DATA = {
           "kind": "class",
           "group": "Garage.Services",
           "members": [
-            "[UseCase(\u0022create-garage\u0022, \u0022Create or import garage\u0022)]\npublic GarageCreationResult CreateGarage(string name, int capacity)",
-            "[UseCase(\u0022create-garage\u0022, \u0022Create or import garage\u0022)]\npublic GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)",
-            "[UseCase(\u0022park-vehicle\u0022, \u0022Park vehicle\u0022)]\n[SequenceView(\u0022parking-sequence\u0022, MaxDepth = 3, ExpandNamespaces = new[] { \u0022Garage.Services\u0022, \u0022Garage.Models\u0022 })]\npublic ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)",
+            "[UseCase(\u0022create-garage\u0022)]\npublic GarageCreationResult CreateGarage(string name, int capacity)",
+            "[UseCase(\u0022create-garage\u0022)]\npublic GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)",
+            "[UseCase(\u0022create-garage-with-dimensions\u0022)]\npublic GarageCreationResult CreateGarage(string name, IReadOnlyList\u003CDimensions\u003E sizes)",
+            "[UseCase(\u0022park-vehicle\u0022)]\n[SequenceView(\u0022parking-sequence\u0022, MaxDepth = 3, ExpandNamespaces = new[] { \u0022Garage.Services\u0022, \u0022Garage.Models\u0022 })]\npublic ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)",
             "private GarageCreationResult CreateAndRegister(Func\u003CVehicleGarage\u003E factory)",
             "private GarageCreationResult RegisterGarage(VehicleGarage garage)",
             "private ParkingResult ParkNewVehicle(Vehicle vehicle, VehicleGarage garage, int? spotNumber)",
             "private readonly List\u003CVehicleGarage\u003E garages",
-            "public GarageCreationResult CreateGarage(string name, IReadOnlyList\u003CDimensions\u003E sizes)",
             "public GarageService(List\u003CVehicleGarage\u003E initialGarages, List\u003CVehicle\u003E initialVehicles)",
             "public IReadOnlyList\u003CVehicle\u003E GetParkableVehicles(VehicleGarage garage, int? spotNumber = null)",
             "public IReadOnlyList\u003CVehicleGarage\u003E Garages { get; }",
@@ -839,7 +1655,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed class GarageService",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Services.VehicleCreationService",
@@ -847,8 +1664,8 @@ globalThis.GARAGE_UML_DATA = {
           "kind": "class",
           "group": "Garage.Services",
           "members": [
-            "[UseCase(\u0022create-vehicle\u0022, \u0022Create or import vehicle\u0022)]\npublic VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)",
-            "[UseCase(\u0022create-vehicle\u0022, \u0022Create or import vehicle\u0022)]\npublic VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)",
+            "[UseCase(\u0022create-vehicle\u0022)]\npublic VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)",
+            "[UseCase(\u0022create-vehicle\u0022)]\npublic VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)",
             "internal VehicleCreationService(VehicleCatalog catalog, Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park)",
             "private readonly Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park",
             "private readonly VehicleCatalog catalog"
@@ -858,7 +1675,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed class VehicleCreationService",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Specifications.GaragePlacementSpecification",
@@ -875,7 +1693,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record GaragePlacementSpecification",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Specifications.GarageSpecification",
@@ -893,7 +1712,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record GarageSpecification",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Specifications.SpotAssignment",
@@ -909,7 +1729,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record SpotAssignment",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Specifications.SpotSizeSpecification",
@@ -926,7 +1747,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record SpotSizeSpecification",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage/Garage.csproj:Garage.Specifications.SpotSpecification",
@@ -942,7 +1764,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record SpotSpecification",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         }
       ],
       "edges": [],
@@ -966,7 +1789,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "Project Garage.Console/Garage.Console.csproj",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "project:Garage.Terminal/Garage.Terminal.csproj",
@@ -979,7 +1803,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "Project Garage.Terminal/Garage.Terminal.csproj",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "project:Garage.Tests/Garage.Tests.csproj",
@@ -992,7 +1817,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "Project Garage.Tests/Garage.Tests.csproj",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "project:Garage/Garage.csproj",
@@ -1005,7 +1831,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "Project Garage/Garage.csproj",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "project:Vehicle/Vehicle.csproj",
@@ -1018,7 +1845,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "Project Vehicle/Vehicle.csproj",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         }
       ],
       "edges": [
@@ -1096,7 +1924,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "garage-composite:UI",
@@ -1109,7 +1938,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "garage-composite:container-1"
+          "parent": "garage-composite:container-1",
+          "storyId": null
         },
         {
           "id": "garage-composite:Service",
@@ -1122,7 +1952,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "garage-composite:container-1"
+          "parent": "garage-composite:container-1",
+          "storyId": null
         },
         {
           "id": "garage-composite:Catalog",
@@ -1135,7 +1966,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "garage-composite:container-1"
+          "parent": "garage-composite:container-1",
+          "storyId": null
         }
       ],
       "edges": [
@@ -1178,7 +2010,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class ConsoleScreen",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Display.EngineDisplay",
@@ -1193,7 +2026,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class EngineDisplay",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Display.VehicleDisplay",
@@ -1208,7 +2042,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class VehicleDisplay",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Drafts.AirplaneDraft",
@@ -1234,7 +2069,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "VehicleDraft"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Drafts.BoatDraft",
@@ -1260,7 +2096,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "VehicleDraft"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Drafts.BusDraft",
@@ -1284,7 +2121,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "VehicleDraft"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Drafts.CarDraft",
@@ -1310,7 +2148,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "VehicleDraft"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Drafts.EngineCreatorResult",
@@ -1328,7 +2167,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed record EngineCreatorResult(bool Success, bool Cancelled, List\u003CEngine\u003E Engines, string Message)",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Drafts.EngineDraft",
@@ -1376,7 +2216,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class EngineDraft",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Drafts.EngineKind",
@@ -1400,7 +2241,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal enum EngineKind",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Drafts.MotorcycleDraft",
@@ -1424,7 +2266,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "VehicleDraft"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Drafts.TruckDraft",
@@ -1446,7 +2289,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "VehicleDraft"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Drafts.VehicleDraft",
@@ -1484,7 +2328,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal abstract class VehicleDraft",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Mapping.EngineDraftMapper",
@@ -1499,7 +2344,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class EngineDraftMapper",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Mapping.VehicleDraftMapper",
@@ -1519,7 +2365,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class VehicleDraftMapper",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Menus.ConsoleMenu",
@@ -1539,7 +2386,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class ConsoleMenu",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Menus.EngineCreator",
@@ -1576,7 +2424,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class EngineCreator",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Menus.GarageActions",
@@ -1607,7 +2456,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class GarageActions",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Menus.GarageApplication",
@@ -1632,7 +2482,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class GarageApplication",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Menus.MenuOption",
@@ -1654,7 +2505,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class MenuOption",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Menus.VehicleCreator",
@@ -1704,7 +2556,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class VehicleCreator",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Prompts.ConsoleInput",
@@ -1729,7 +2582,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class ConsoleInput",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Console/Garage.Console.csproj:Garage.ConsoleApp.Prompts.SearchCriteriaCreator",
@@ -1813,7 +2667,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class SearchCriteriaCreator",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         }
       ],
       "edges": [
@@ -1883,7 +2738,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "garage-object:Spot",
@@ -1899,7 +2755,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         }
       ],
       "edges": [
@@ -1939,7 +2796,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "Project Garage.Console/Garage.Console.csproj",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "project:Garage.Terminal/Garage.Terminal.csproj",
@@ -1955,7 +2813,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "Project Garage.Terminal/Garage.Terminal.csproj",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "project:Garage.Tests/Garage.Tests.csproj",
@@ -1971,7 +2830,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "Project Garage.Tests/Garage.Tests.csproj",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "project:Garage/Garage.csproj",
@@ -1994,7 +2854,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "Project Garage/Garage.csproj",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "project:Vehicle/Vehicle.csproj",
@@ -2021,7 +2882,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "Project Vehicle/Vehicle.csproj",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         }
       ],
       "edges": [
@@ -2098,7 +2960,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "garage-profile:UMLClass",
@@ -2111,7 +2974,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "garage-profile:container-1"
+          "parent": "garage-profile:container-1",
+          "storyId": null
         },
         {
           "id": "garage-profile:DomainEntity",
@@ -2126,7 +2990,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "garage-profile:container-1"
+          "parent": "garage-profile:container-1",
+          "storyId": null
         }
       ],
       "edges": [
@@ -2173,7 +3038,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed partial class FactoryDefinition",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Terminal/Garage.Terminal.csproj:Garage.Terminal.Forms.FieldDefinition",
@@ -2191,7 +3057,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed record FieldDefinition(string Name, string Label, Type Type, bool Required = true, string Initial = \u0022\u0022)",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Terminal/Garage.Terminal.csproj:Garage.Terminal.Forms.SearchForm",
@@ -2206,7 +3073,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class SearchForm",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Terminal/Garage.Terminal.csproj:Garage.Terminal.Presentation.DashboardState",
@@ -2229,7 +3097,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class DashboardState(GarageService service)",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Terminal/Garage.Terminal.csproj:Garage.Terminal.Presentation.Dialogs",
@@ -2251,7 +3120,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class Dialogs(IApplication app)",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Terminal/Garage.Terminal.csproj:Garage.Terminal.Presentation.GarageWorkspace",
@@ -2304,7 +3174,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "Window"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Terminal/Garage.Terminal.csproj:Garage.Terminal.Presentation.GarageWorkspaceLayout",
@@ -2328,7 +3199,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class GarageWorkspaceLayout",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Terminal/Garage.Terminal.csproj:Garage.Terminal.Presentation.Theme",
@@ -2360,7 +3232,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class Theme",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Terminal/Garage.Terminal.csproj:Garage.Terminal.Presentation.VehicleDetails",
@@ -2378,7 +3251,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class VehicleDetails",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Terminal/Garage.Terminal.csproj:Garage.Terminal.Presentation.Workflows",
@@ -2398,7 +3272,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class Workflows(Dialogs dialogs, GarageService service)",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Terminal/Garage.Terminal.csproj:Garage.Terminal.Presentation.WorkspaceButtons",
@@ -2430,7 +3305,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal sealed class WorkspaceButtons",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Terminal/Garage.Terminal.csproj:Garage.Terminal.Presentation.WorkspaceCommand",
@@ -2458,7 +3334,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal enum WorkspaceCommand",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Terminal/Garage.Terminal.csproj:Garage.Terminal.Presentation.WorkspacePage",
@@ -2476,7 +3353,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal enum WorkspacePage",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         }
       ],
       "edges": [],
@@ -2500,7 +3378,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class ConsoleOutputCollection",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.CreationResultTests",
@@ -2518,7 +3397,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class CreationResultTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.Fixtures.EngineFixtures",
@@ -2534,7 +3414,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class EngineFixtures",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.Fixtures.VehicleFixtures",
@@ -2554,7 +3435,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "internal static class VehicleFixtures",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.GarageConstructionTests",
@@ -2572,7 +3454,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class GarageConstructionTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.GarageJsonLoaderTests",
@@ -2592,7 +3475,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class GarageJsonLoaderTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.GarageParkingTests",
@@ -2619,7 +3503,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class GarageParkingTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.GarageRemovalTests",
@@ -2636,7 +3521,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class GarageRemovalTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.GarageSearchTests",
@@ -2655,7 +3541,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class GarageSearchTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.GarageServiceTests",
@@ -2672,7 +3559,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class GarageServiceTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.GarageServiceWorkflowTests",
@@ -2698,7 +3586,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class GarageServiceWorkflowTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.RegistrationValidationTests",
@@ -2722,7 +3611,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class RegistrationValidationTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.TerminalWorkspaceTests",
@@ -2743,7 +3633,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class TerminalWorkspaceTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.VehicleEngineTests",
@@ -2763,7 +3654,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class VehicleEngineTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.VehicleJsonLoaderTests",
@@ -2779,7 +3671,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class VehicleJsonLoaderTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.VehicleJsonTests",
@@ -2795,7 +3688,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class VehicleJsonTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Garage.Tests/Garage.Tests.csproj:Garage.Tests.VehicleValidationTests",
@@ -2814,7 +3708,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class VehicleValidationTests",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         }
       ],
       "edges": [],
@@ -2824,12 +3719,12 @@ globalThis.GARAGE_UML_DATA = {
     },
     "garage-use-cases": {
       "id": "garage-use-cases",
-      "title": "Garage user capabilities",
+      "title": "Garage stories and goals",
       "type": "use-case",
       "nodes": [
         {
-          "id": "garage-use-cases:a_7348bf17d801",
-          "name": "Garage operator",
+          "id": "garage-use-cases:a_0e9dfb1d2d7e",
+          "name": "Garage user.",
           "kind": "actor",
           "group": "",
           "members": [],
@@ -2838,7 +3733,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "garage-use-cases:container-1",
@@ -2846,12 +3742,17 @@ globalThis.GARAGE_UML_DATA = {
           "kind": "boundary",
           "group": "",
           "members": [
-            "Contains: Create or import garage",
-            "Contains: Create or import vehicle",
+            "Contains: Create garage",
+            "Contains: Create garage with sized spaces",
+            "Contains: Create or import catalogue vehicle",
+            "Contains: Find vehicle by registration",
             "Contains: Inspect parking spaces",
-            "Contains: List garages and vehicles",
+            "Contains: List vehicle types and counts",
+            "Contains: List parked vehicles",
+            "Contains: Navigate garage menus",
             "Contains: Park vehicle",
-            "Contains: Remove parked vehicle",
+            "Contains: Quit application",
+            "Contains: Remove vehicle",
             "Contains: Search parked vehicles"
           ],
           "files": [
@@ -2859,154 +3760,314 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "garage-use-cases:u_create_garage",
-          "name": "Create or import garage",
+          "name": "Create garage",
           "kind": "use-case",
           "group": "Garage application",
-          "members": [],
+          "members": [
+            "Make a garage available with the capacity chosen by the user. required \u00B7 create-garage \u00B7 GAR-03, GAR-04, GAR-05, GAR-06, GAR-11, GAR-12, GAR-13 Linked implementation; coverage requires separate verification."
+          ],
           "files": [
+            "UseCases/garage/create-garage.md",
             "Garage/Services/GarageService.cs"
           ],
           "declaration": "",
           "bases": [],
-          "parent": "garage-use-cases:container-1"
+          "parent": "garage-use-cases:container-1",
+          "storyId": "create-garage"
+        },
+        {
+          "id": "garage-use-cases:u_create_garage_with_dimensions",
+          "name": "Create garage with sized spaces",
+          "kind": "use-case",
+          "group": "Garage application",
+          "members": [
+            "Create a garage whose spaces have individual length, width and height limits. optional \u00B7 create-garage-with-dimensions \u00B7 OPT-08 Linked implementation; coverage requires separate verification."
+          ],
+          "files": [
+            "UseCases/optional/create-garage-with-dimensions.md",
+            "Garage/Services/GarageService.cs"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "garage-use-cases:container-1",
+          "storyId": "create-garage-with-dimensions"
         },
         {
           "id": "garage-use-cases:u_create_vehicle",
-          "name": "Create or import vehicle",
+          "name": "Create or import catalogue vehicle",
           "kind": "use-case",
           "group": "Garage application",
-          "members": [],
+          "members": [
+            "Add a valid vehicle to the shared catalogue before parking it, with optional immediate parking. optional \u00B7 create-vehicle \u00B7 OPT-10, OPT-12 Linked implementation; coverage requires separate verification."
+          ],
           "files": [
+            "UseCases/optional/create-vehicle.md",
             "Garage/Services/VehicleCreationService.cs"
           ],
           "declaration": "",
           "bases": [],
-          "parent": "garage-use-cases:container-1"
+          "parent": "garage-use-cases:container-1",
+          "storyId": "create-vehicle"
         },
         {
-          "id": "garage-use-cases:u_inspect",
-          "name": "Inspect parking spaces",
+          "id": "garage-use-cases:u_find_vehicle",
+          "name": "Find vehicle by registration",
           "kind": "use-case",
           "group": "Garage application",
-          "members": [],
+          "members": [
+            "Find a specific parked vehicle using its registration number. required \u00B7 find-vehicle \u00B7 GAR-03, GAR-09, GAR-11, GAR-12, GAR-13 Linked implementation; coverage requires separate verification."
+          ],
           "files": [
+            "UseCases/garage/find-vehicle.md",
             "Garage/Models/Garage.cs"
           ],
           "declaration": "",
           "bases": [],
-          "parent": "garage-use-cases:container-1"
+          "parent": "garage-use-cases:container-1",
+          "storyId": "find-vehicle"
         },
         {
-          "id": "garage-use-cases:u_list",
-          "name": "List garages and vehicles",
+          "id": "garage-use-cases:u_inspect_spaces",
+          "name": "Inspect parking spaces",
           "kind": "use-case",
           "group": "Garage application",
-          "members": [],
+          "members": [
+            "See each numbered parking space, its dimensions and whether it is occupied. optional \u00B7 inspect-spaces \u00B7 OPT-03, OPT-08 Linked implementation; coverage requires separate verification."
+          ],
           "files": [
-            "Garage/Services/GarageService.cs"
+            "UseCases/optional/inspect-spaces.md",
+            "Garage/Models/Garage.cs"
           ],
           "declaration": "",
           "bases": [],
-          "parent": "garage-use-cases:container-1"
+          "parent": "garage-use-cases:container-1",
+          "storyId": "inspect-spaces"
+        },
+        {
+          "id": "garage-use-cases:u_list_vehicle_types",
+          "name": "List vehicle types and counts",
+          "kind": "use-case",
+          "group": "Garage application",
+          "members": [
+            "See how many vehicles of each type are parked in the garage. required \u00B7 list-vehicle-types \u00B7 GAR-02, GAR-08, GAR-11, GAR-12 Linked implementation; coverage requires separate verification."
+          ],
+          "files": [
+            "UseCases/garage/list-vehicle-types.md",
+            "Garage/Models/Garage.cs"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "garage-use-cases:container-1",
+          "storyId": "list-vehicle-types"
+        },
+        {
+          "id": "garage-use-cases:u_list_vehicles",
+          "name": "List parked vehicles",
+          "kind": "use-case",
+          "group": "Garage application",
+          "members": [
+            "See which vehicles are currently parked and their properties. required \u00B7 list-vehicles \u00B7 GAR-01, GAR-02, GAR-08, GAR-11, GAR-12 Linked implementation; coverage requires separate verification."
+          ],
+          "files": [
+            "UseCases/garage/list-vehicles.md",
+            "Garage/Models/Garage.cs"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "garage-use-cases:container-1",
+          "storyId": "list-vehicles"
+        },
+        {
+          "id": "garage-use-cases:u_navigate_menus",
+          "name": "Navigate garage menus",
+          "kind": "use-case",
+          "group": "Garage application",
+          "members": [
+            "Reach the required garage functions through the console interface. required \u00B7 navigate-menus \u00B7 GAR-11, GAR-12, GAR-13 No code annotation linked yet."
+          ],
+          "files": [
+            "UseCases/garage/navigate-menus.md"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "garage-use-cases:container-1",
+          "storyId": "navigate-menus"
         },
         {
           "id": "garage-use-cases:u_park_vehicle",
           "name": "Park vehicle",
           "kind": "use-case",
           "group": "Garage application",
-          "members": [],
+          "members": [
+            "Put a vehicle in the garage when there is capacity available. required \u00B7 park-vehicle \u00B7 GAR-03, GAR-05, GAR-07, GAR-11, GAR-12, GAR-13 Linked implementation; coverage requires separate verification."
+          ],
           "files": [
+            "UseCases/garage/park-vehicle.md",
             "Garage/Services/GarageService.cs"
           ],
           "declaration": "",
           "bases": [],
-          "parent": "garage-use-cases:container-1"
+          "parent": "garage-use-cases:container-1",
+          "storyId": "park-vehicle"
         },
         {
-          "id": "garage-use-cases:u_remove",
-          "name": "Remove parked vehicle",
+          "id": "garage-use-cases:u_quit_application",
+          "name": "Quit application",
           "kind": "use-case",
           "group": "Garage application",
-          "members": [],
+          "members": [
+            "End the running garage application through its interface. required \u00B7 quit-application \u00B7 GAR-11, GAR-13 No code annotation linked yet."
+          ],
           "files": [
+            "UseCases/garage/quit-application.md"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": "garage-use-cases:container-1",
+          "storyId": "quit-application"
+        },
+        {
+          "id": "garage-use-cases:u_remove_vehicle",
+          "name": "Remove vehicle",
+          "kind": "use-case",
+          "group": "Garage application",
+          "members": [
+            "Take a parked vehicle out of the garage and make its capacity available again. required \u00B7 remove-vehicle \u00B7 GAR-07, GAR-09, GAR-11, GAR-12, GAR-13 Linked implementation; coverage requires separate verification."
+          ],
+          "files": [
+            "UseCases/garage/remove-vehicle.md",
             "Garage/Models/Garage.cs"
           ],
           "declaration": "",
           "bases": [],
-          "parent": "garage-use-cases:container-1"
+          "parent": "garage-use-cases:container-1",
+          "storyId": "remove-vehicle"
         },
         {
-          "id": "garage-use-cases:u_search",
+          "id": "garage-use-cases:u_search_vehicles",
           "name": "Search parked vehicles",
           "kind": "use-case",
           "group": "Garage application",
-          "members": [],
+          "members": [
+            "Find parked vehicles matching one or several chosen properties. required \u00B7 search-vehicles \u00B7 GAR-01, GAR-10, GAR-11, GAR-12, GAR-13 Linked implementation; coverage requires separate verification."
+          ],
           "files": [
+            "UseCases/garage/search-vehicles.md",
             "Garage/Models/Garage.cs"
           ],
           "declaration": "",
           "bases": [],
-          "parent": "garage-use-cases:container-1"
+          "parent": "garage-use-cases:container-1",
+          "storyId": "search-vehicles"
         }
       ],
       "edges": [
         {
           "id": "garage-use-cases:edge-2",
-          "source": "garage-use-cases:a_7348bf17d801",
+          "source": "garage-use-cases:a_0e9dfb1d2d7e",
           "target": "garage-use-cases:u_create_garage",
           "kind": "association",
           "label": ""
         },
         {
           "id": "garage-use-cases:edge-3",
-          "source": "garage-use-cases:a_7348bf17d801",
-          "target": "garage-use-cases:u_create_vehicle",
+          "source": "garage-use-cases:a_0e9dfb1d2d7e",
+          "target": "garage-use-cases:u_create_garage_with_dimensions",
           "kind": "association",
           "label": ""
         },
         {
           "id": "garage-use-cases:edge-4",
-          "source": "garage-use-cases:a_7348bf17d801",
-          "target": "garage-use-cases:u_inspect",
+          "source": "garage-use-cases:a_0e9dfb1d2d7e",
+          "target": "garage-use-cases:u_create_vehicle",
           "kind": "association",
           "label": ""
         },
         {
           "id": "garage-use-cases:edge-5",
-          "source": "garage-use-cases:a_7348bf17d801",
-          "target": "garage-use-cases:u_list",
+          "source": "garage-use-cases:a_0e9dfb1d2d7e",
+          "target": "garage-use-cases:u_find_vehicle",
           "kind": "association",
           "label": ""
         },
         {
           "id": "garage-use-cases:edge-6",
-          "source": "garage-use-cases:a_7348bf17d801",
-          "target": "garage-use-cases:u_park_vehicle",
+          "source": "garage-use-cases:a_0e9dfb1d2d7e",
+          "target": "garage-use-cases:u_inspect_spaces",
           "kind": "association",
           "label": ""
         },
         {
           "id": "garage-use-cases:edge-7",
-          "source": "garage-use-cases:a_7348bf17d801",
-          "target": "garage-use-cases:u_remove",
+          "source": "garage-use-cases:a_0e9dfb1d2d7e",
+          "target": "garage-use-cases:u_list_vehicle_types",
           "kind": "association",
           "label": ""
         },
         {
           "id": "garage-use-cases:edge-8",
-          "source": "garage-use-cases:a_7348bf17d801",
-          "target": "garage-use-cases:u_search",
+          "source": "garage-use-cases:a_0e9dfb1d2d7e",
+          "target": "garage-use-cases:u_list_vehicles",
+          "kind": "association",
+          "label": ""
+        },
+        {
+          "id": "garage-use-cases:edge-9",
+          "source": "garage-use-cases:a_0e9dfb1d2d7e",
+          "target": "garage-use-cases:u_navigate_menus",
+          "kind": "association",
+          "label": ""
+        },
+        {
+          "id": "garage-use-cases:edge-10",
+          "source": "garage-use-cases:a_0e9dfb1d2d7e",
+          "target": "garage-use-cases:u_park_vehicle",
+          "kind": "association",
+          "label": ""
+        },
+        {
+          "id": "garage-use-cases:edge-11",
+          "source": "garage-use-cases:a_0e9dfb1d2d7e",
+          "target": "garage-use-cases:u_quit_application",
+          "kind": "association",
+          "label": ""
+        },
+        {
+          "id": "garage-use-cases:edge-12",
+          "source": "garage-use-cases:a_0e9dfb1d2d7e",
+          "target": "garage-use-cases:u_remove_vehicle",
+          "kind": "association",
+          "label": ""
+        },
+        {
+          "id": "garage-use-cases:edge-13",
+          "source": "garage-use-cases:a_0e9dfb1d2d7e",
+          "target": "garage-use-cases:u_search_vehicles",
           "kind": "association",
           "label": ""
         }
       ],
       "sequence": null,
       "timing": null,
-      "notes": []
+      "notes": [
+        "Make a garage available with the capacity chosen by the user. required \u00B7 create-garage \u00B7 GAR-03, GAR-04, GAR-05, GAR-06, GAR-11, GAR-12, GAR-13 Linked implementation; coverage requires separate verification.",
+        "Create a garage whose spaces have individual length, width and height limits. optional \u00B7 create-garage-with-dimensions \u00B7 OPT-08 Linked implementation; coverage requires separate verification.",
+        "Add a valid vehicle to the shared catalogue before parking it, with optional immediate parking. optional \u00B7 create-vehicle \u00B7 OPT-10, OPT-12 Linked implementation; coverage requires separate verification.",
+        "Find a specific parked vehicle using its registration number. required \u00B7 find-vehicle \u00B7 GAR-03, GAR-09, GAR-11, GAR-12, GAR-13 Linked implementation; coverage requires separate verification.",
+        "See each numbered parking space, its dimensions and whether it is occupied. optional \u00B7 inspect-spaces \u00B7 OPT-03, OPT-08 Linked implementation; coverage requires separate verification.",
+        "See how many vehicles of each type are parked in the garage. required \u00B7 list-vehicle-types \u00B7 GAR-02, GAR-08, GAR-11, GAR-12 Linked implementation; coverage requires separate verification.",
+        "See which vehicles are currently parked and their properties. required \u00B7 list-vehicles \u00B7 GAR-01, GAR-02, GAR-08, GAR-11, GAR-12 Linked implementation; coverage requires separate verification.",
+        "Reach the required garage functions through the console interface. required \u00B7 navigate-menus \u00B7 GAR-11, GAR-12, GAR-13 No code annotation linked yet.",
+        "Put a vehicle in the garage when there is capacity available. required \u00B7 park-vehicle \u00B7 GAR-03, GAR-05, GAR-07, GAR-11, GAR-12, GAR-13 Linked implementation; coverage requires separate verification.",
+        "End the running garage application through its interface. required \u00B7 quit-application \u00B7 GAR-11, GAR-13 No code annotation linked yet.",
+        "Take a parked vehicle out of the garage and make its capacity available again. required \u00B7 remove-vehicle \u00B7 GAR-07, GAR-09, GAR-11, GAR-12, GAR-13 Linked implementation; coverage requires separate verification.",
+        "Find parked vehicles matching one or several chosen properties. required \u00B7 search-vehicles \u00B7 GAR-01, GAR-10, GAR-11, GAR-12, GAR-13 Linked implementation; coverage requires separate verification."
+      ]
     },
     "local-deployment": {
       "id": "local-deployment",
@@ -3028,7 +4089,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "local-deployment:Runtime",
@@ -3047,7 +4109,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "local-deployment:Workstation"
+          "parent": "local-deployment:Workstation",
+          "storyId": null
         },
         {
           "id": "local-deployment:Console",
@@ -3060,7 +4123,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "local-deployment:Runtime"
+          "parent": "local-deployment:Runtime",
+          "storyId": null
         },
         {
           "id": "local-deployment:Terminal",
@@ -3073,7 +4137,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "local-deployment:Runtime"
+          "parent": "local-deployment:Runtime",
+          "storyId": null
         },
         {
           "id": "local-deployment:Domain",
@@ -3086,7 +4151,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "local-deployment:Runtime"
+          "parent": "local-deployment:Runtime",
+          "storyId": null
         },
         {
           "id": "local-deployment:Vehicles",
@@ -3099,7 +4165,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "local-deployment:Runtime"
+          "parent": "local-deployment:Runtime",
+          "storyId": null
         },
         {
           "id": "local-deployment:Json",
@@ -3112,7 +4179,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "local-deployment:Workstation"
+          "parent": "local-deployment:Workstation",
+          "storyId": null
         },
         {
           "id": "local-deployment:Logs",
@@ -3125,7 +4193,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "local-deployment:Workstation"
+          "parent": "local-deployment:Workstation",
+          "storyId": null
         }
       ],
       "edges": [
@@ -3187,7 +4256,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-2",
@@ -3200,7 +4270,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-4",
@@ -3213,7 +4284,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-6",
@@ -3226,7 +4298,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-8",
@@ -3239,7 +4312,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-10",
@@ -3252,7 +4326,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-12",
@@ -3265,7 +4340,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-14",
@@ -3278,7 +4354,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-16",
@@ -3291,7 +4368,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-18",
@@ -3304,7 +4382,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-20",
@@ -3317,7 +4396,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-22",
@@ -3330,7 +4410,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-24",
@@ -3343,7 +4424,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-26",
@@ -3356,7 +4438,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-28",
@@ -3369,7 +4452,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-30",
@@ -3382,7 +4466,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-32",
@@ -3395,7 +4480,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-34",
@@ -3408,7 +4494,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-36",
@@ -3421,7 +4508,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-39",
@@ -3434,7 +4522,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-41",
@@ -3447,7 +4536,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-43",
@@ -3460,7 +4550,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-45",
@@ -3473,7 +4564,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-47",
@@ -3486,7 +4578,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-49",
@@ -3499,7 +4592,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-activity:element-52",
@@ -3512,7 +4606,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         }
       ],
       "edges": [
@@ -3726,7 +4821,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-communication:Service",
@@ -3739,7 +4835,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-communication:Garage",
@@ -3752,7 +4849,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         }
       ],
       "edges": [
@@ -3793,7 +4891,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-interaction-overview:element-2",
@@ -3806,7 +4905,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-interaction-overview:element-4",
@@ -3819,7 +4919,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-interaction-overview:element-6",
@@ -3832,7 +4933,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-interaction-overview:element-8",
@@ -3845,7 +4947,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-interaction-overview:element-10",
@@ -3858,7 +4961,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-interaction-overview:element-12",
@@ -3871,7 +4975,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-interaction-overview:element-15",
@@ -3884,7 +4989,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         }
       ],
       "edges": [
@@ -3956,7 +5062,7 @@ globalThis.GARAGE_UML_DATA = {
       "nodes": [
         {
           "id": "parking-sequence:Actor",
-          "name": "Garage operator",
+          "name": "Garage user.",
           "kind": "actor",
           "group": "",
           "members": [],
@@ -3965,7 +5071,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-sequence:p_753cfee6aae6",
@@ -3978,7 +5085,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-sequence:p_426dd07c2e3a",
@@ -3991,7 +5099,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-sequence:p_50a211325908",
@@ -4004,7 +5113,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-sequence:p_b323161f1e5c",
@@ -4017,7 +5127,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-1",
@@ -4030,7 +5141,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-2",
@@ -4038,7 +5150,7 @@ globalThis.GARAGE_UML_DATA = {
           "kind": "message",
           "group": "",
           "members": [
-            "From Garage operator to Garage.Services.GarageService",
+            "From Garage user. to Garage.Services.GarageService",
             "Synchronous message / call"
           ],
           "files": [
@@ -4046,7 +5158,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-4",
@@ -4059,7 +5172,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-5",
@@ -4072,7 +5186,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-6",
@@ -4085,7 +5200,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-7",
@@ -4101,7 +5217,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-8",
@@ -4117,7 +5234,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-7"
+          "parent": "parking-sequence:element-7",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-10",
@@ -4130,7 +5248,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-7"
+          "parent": "parking-sequence:element-7",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-11",
@@ -4146,7 +5265,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-7"
+          "parent": "parking-sequence:element-7",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-13",
@@ -4154,7 +5274,7 @@ globalThis.GARAGE_UML_DATA = {
           "kind": "reply",
           "group": "Alternative paths",
           "members": [
-            "From Garage.Services.GarageService to Garage operator",
+            "From Garage.Services.GarageService to Garage user.",
             "Reply / returned result"
           ],
           "files": [
@@ -4162,7 +5282,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-7"
+          "parent": "parking-sequence:element-7",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-15",
@@ -4178,7 +5299,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-7"
+          "parent": "parking-sequence:element-7",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-17",
@@ -4191,7 +5313,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-7"
+          "parent": "parking-sequence:element-7",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-18",
@@ -4207,7 +5330,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-7"
+          "parent": "parking-sequence:element-7",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-19",
@@ -4223,7 +5347,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-18"
+          "parent": "parking-sequence:element-18",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-21",
@@ -4236,7 +5361,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-18"
+          "parent": "parking-sequence:element-18",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-22",
@@ -4252,7 +5378,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-18"
+          "parent": "parking-sequence:element-18",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-24",
@@ -4268,7 +5395,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-18"
+          "parent": "parking-sequence:element-18",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-26",
@@ -4284,7 +5412,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-18"
+          "parent": "parking-sequence:element-18",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-28",
@@ -4297,7 +5426,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-18"
+          "parent": "parking-sequence:element-18",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-29",
@@ -4310,7 +5440,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-18"
+          "parent": "parking-sequence:element-18",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-30",
@@ -4326,7 +5457,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-18"
+          "parent": "parking-sequence:element-18",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-32",
@@ -4342,7 +5474,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-18"
+          "parent": "parking-sequence:element-18",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-33",
@@ -4358,7 +5491,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-32"
+          "parent": "parking-sequence:element-32",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-35",
@@ -4371,7 +5505,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-32"
+          "parent": "parking-sequence:element-32",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-36",
@@ -4387,7 +5522,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-32"
+          "parent": "parking-sequence:element-32",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-38",
@@ -4403,7 +5539,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-32"
+          "parent": "parking-sequence:element-32",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-40",
@@ -4419,7 +5556,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-32"
+          "parent": "parking-sequence:element-32",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-41",
@@ -4435,7 +5573,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-40"
+          "parent": "parking-sequence:element-40",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-43",
@@ -4448,7 +5587,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-40"
+          "parent": "parking-sequence:element-40",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-44",
@@ -4464,7 +5604,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-40"
+          "parent": "parking-sequence:element-40",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-45",
@@ -4480,7 +5621,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-44"
+          "parent": "parking-sequence:element-44",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-47",
@@ -4493,7 +5635,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-44"
+          "parent": "parking-sequence:element-44",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-48",
@@ -4509,7 +5652,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-44"
+          "parent": "parking-sequence:element-44",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-50",
@@ -4525,7 +5669,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-44"
+          "parent": "parking-sequence:element-44",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-52",
@@ -4541,7 +5686,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-44"
+          "parent": "parking-sequence:element-44",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-53",
@@ -4557,7 +5703,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-52"
+          "parent": "parking-sequence:element-52",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-55",
@@ -4570,7 +5717,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-52"
+          "parent": "parking-sequence:element-52",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-56",
@@ -4586,7 +5734,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-52"
+          "parent": "parking-sequence:element-52",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-58",
@@ -4602,7 +5751,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-52"
+          "parent": "parking-sequence:element-52",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-60",
@@ -4618,7 +5768,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-52"
+          "parent": "parking-sequence:element-52",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-62",
@@ -4631,7 +5782,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-52"
+          "parent": "parking-sequence:element-52",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-63",
@@ -4647,7 +5799,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-52"
+          "parent": "parking-sequence:element-52",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-64",
@@ -4663,7 +5816,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-63"
+          "parent": "parking-sequence:element-63",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-66",
@@ -4679,7 +5833,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-63"
+          "parent": "parking-sequence:element-63",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-68",
@@ -4695,7 +5850,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-52"
+          "parent": "parking-sequence:element-52",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-69",
@@ -4711,7 +5867,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-68"
+          "parent": "parking-sequence:element-68",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-71",
@@ -4724,7 +5881,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-68"
+          "parent": "parking-sequence:element-68",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-72",
@@ -4740,7 +5898,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-68"
+          "parent": "parking-sequence:element-68",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-74",
@@ -4756,7 +5915,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-68"
+          "parent": "parking-sequence:element-68",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-76",
@@ -4772,7 +5932,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-68"
+          "parent": "parking-sequence:element-68",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-78",
@@ -4785,7 +5946,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-68"
+          "parent": "parking-sequence:element-68",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-79",
@@ -4798,7 +5960,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-68"
+          "parent": "parking-sequence:element-68",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-80",
@@ -4814,7 +5977,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-68"
+          "parent": "parking-sequence:element-68",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-82",
@@ -4830,7 +5994,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-68"
+          "parent": "parking-sequence:element-68",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-83",
@@ -4846,7 +6011,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-85",
@@ -4862,7 +6028,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-87",
@@ -4875,7 +6042,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-88",
@@ -4891,7 +6059,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-90",
@@ -4907,7 +6076,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-92",
@@ -4923,7 +6093,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-94",
@@ -4939,7 +6110,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-96",
@@ -4952,7 +6124,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-97",
@@ -4968,7 +6141,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-98",
@@ -4984,7 +6158,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-97"
+          "parent": "parking-sequence:element-97",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-100",
@@ -4997,7 +6172,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-97"
+          "parent": "parking-sequence:element-97",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-101",
@@ -5013,7 +6189,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-97"
+          "parent": "parking-sequence:element-97",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-103",
@@ -5029,7 +6206,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-104",
@@ -5042,7 +6220,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-103"
+          "parent": "parking-sequence:element-103",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-105",
@@ -5055,7 +6234,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-103"
+          "parent": "parking-sequence:element-103",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-106",
@@ -5071,7 +6251,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-103"
+          "parent": "parking-sequence:element-103",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-108",
@@ -5087,7 +6268,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-110",
@@ -5100,7 +6282,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-111",
@@ -5116,7 +6299,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-113",
@@ -5132,7 +6316,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-82"
+          "parent": "parking-sequence:element-82",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-115",
@@ -5148,7 +6333,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-40"
+          "parent": "parking-sequence:element-40",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-117",
@@ -5164,7 +6350,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-40"
+          "parent": "parking-sequence:element-40",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-119",
@@ -5177,7 +6364,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-40"
+          "parent": "parking-sequence:element-40",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-120",
@@ -5193,7 +6381,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-40"
+          "parent": "parking-sequence:element-40",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-122",
@@ -5206,7 +6395,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-40"
+          "parent": "parking-sequence:element-40",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-123",
@@ -5219,7 +6409,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-40"
+          "parent": "parking-sequence:element-40",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-124",
@@ -5235,7 +6426,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-40"
+          "parent": "parking-sequence:element-40",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-126",
@@ -5251,7 +6443,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-40"
+          "parent": "parking-sequence:element-40",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-127",
@@ -5267,7 +6460,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-126"
+          "parent": "parking-sequence:element-126",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-129",
@@ -5283,7 +6477,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-126"
+          "parent": "parking-sequence:element-126",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-131",
@@ -5296,7 +6491,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-126"
+          "parent": "parking-sequence:element-126",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-132",
@@ -5312,7 +6508,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-126"
+          "parent": "parking-sequence:element-126",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-134",
@@ -5328,7 +6525,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-126"
+          "parent": "parking-sequence:element-126",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-136",
@@ -5344,7 +6542,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-126"
+          "parent": "parking-sequence:element-126",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-138",
@@ -5357,7 +6556,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-126"
+          "parent": "parking-sequence:element-126",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-139",
@@ -5370,7 +6570,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-126"
+          "parent": "parking-sequence:element-126",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-140",
@@ -5386,7 +6587,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-126"
+          "parent": "parking-sequence:element-126",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-141",
@@ -5402,7 +6604,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-140"
+          "parent": "parking-sequence:element-140",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-142",
@@ -5418,7 +6621,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-141"
+          "parent": "parking-sequence:element-141",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-144",
@@ -5431,7 +6635,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-141"
+          "parent": "parking-sequence:element-141",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-145",
@@ -5447,7 +6652,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-141"
+          "parent": "parking-sequence:element-141",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-147",
@@ -5463,7 +6669,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-141"
+          "parent": "parking-sequence:element-141",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-149",
@@ -5479,7 +6686,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-141"
+          "parent": "parking-sequence:element-141",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-151",
@@ -5492,7 +6700,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-141"
+          "parent": "parking-sequence:element-141",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-152",
@@ -5508,7 +6717,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-141"
+          "parent": "parking-sequence:element-141",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-154",
@@ -5524,7 +6734,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-141"
+          "parent": "parking-sequence:element-141",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-156",
@@ -5540,7 +6751,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-140"
+          "parent": "parking-sequence:element-140",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-158",
@@ -5553,7 +6765,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-140"
+          "parent": "parking-sequence:element-140",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-159",
@@ -5569,7 +6782,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-140"
+          "parent": "parking-sequence:element-140",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-160",
@@ -5585,7 +6799,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-159"
+          "parent": "parking-sequence:element-159",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-162",
@@ -5598,7 +6813,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-159"
+          "parent": "parking-sequence:element-159",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-163",
@@ -5614,7 +6830,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-159"
+          "parent": "parking-sequence:element-159",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-165",
@@ -5630,7 +6847,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-159"
+          "parent": "parking-sequence:element-159",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-167",
@@ -5646,7 +6864,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-159"
+          "parent": "parking-sequence:element-159",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-168",
@@ -5662,7 +6881,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-167"
+          "parent": "parking-sequence:element-167",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-170",
@@ -5675,7 +6895,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-167"
+          "parent": "parking-sequence:element-167",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-171",
@@ -5691,7 +6912,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-167"
+          "parent": "parking-sequence:element-167",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-173",
@@ -5707,7 +6929,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-167"
+          "parent": "parking-sequence:element-167",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-175",
@@ -5723,7 +6946,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-167"
+          "parent": "parking-sequence:element-167",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-177",
@@ -5736,7 +6960,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-167"
+          "parent": "parking-sequence:element-167",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-178",
@@ -5752,7 +6977,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-167"
+          "parent": "parking-sequence:element-167",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-180",
@@ -5768,7 +6994,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-167"
+          "parent": "parking-sequence:element-167",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-181",
@@ -5784,7 +7011,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-180"
+          "parent": "parking-sequence:element-180",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-183",
@@ -5797,7 +7025,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-180"
+          "parent": "parking-sequence:element-180",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-184",
@@ -5813,7 +7042,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-180"
+          "parent": "parking-sequence:element-180",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-186",
@@ -5829,7 +7059,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-180"
+          "parent": "parking-sequence:element-180",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-188",
@@ -5845,7 +7076,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-180"
+          "parent": "parking-sequence:element-180",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-190",
@@ -5858,7 +7090,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-180"
+          "parent": "parking-sequence:element-180",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-191",
@@ -5874,7 +7107,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-180"
+          "parent": "parking-sequence:element-180",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-193",
@@ -5890,7 +7124,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-180"
+          "parent": "parking-sequence:element-180",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-194",
@@ -5906,7 +7141,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-193"
+          "parent": "parking-sequence:element-193",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-196",
@@ -5919,7 +7155,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-193"
+          "parent": "parking-sequence:element-193",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-197",
@@ -5935,7 +7172,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-193"
+          "parent": "parking-sequence:element-193",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-199",
@@ -5951,7 +7189,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-193"
+          "parent": "parking-sequence:element-193",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-201",
@@ -5967,7 +7206,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-193"
+          "parent": "parking-sequence:element-193",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-203",
@@ -5980,7 +7220,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-193"
+          "parent": "parking-sequence:element-193",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-204",
@@ -5996,7 +7237,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-193"
+          "parent": "parking-sequence:element-193",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-206",
@@ -6012,7 +7254,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-193"
+          "parent": "parking-sequence:element-193",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-208",
@@ -6025,7 +7268,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-193"
+          "parent": "parking-sequence:element-193",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-209",
@@ -6041,7 +7285,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-193"
+          "parent": "parking-sequence:element-193",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-211",
@@ -6057,7 +7302,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-193"
+          "parent": "parking-sequence:element-193",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-213",
@@ -6073,7 +7319,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-140"
+          "parent": "parking-sequence:element-140",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-215",
@@ -6089,7 +7336,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-40"
+          "parent": "parking-sequence:element-40",
+          "storyId": null
         },
         {
           "id": "parking-sequence:element-217",
@@ -6097,7 +7345,7 @@ globalThis.GARAGE_UML_DATA = {
           "kind": "reply",
           "group": "Alternative paths",
           "members": [
-            "From Garage.Services.GarageService to Garage operator",
+            "From Garage.Services.GarageService to Garage user.",
             "Reply / returned result"
           ],
           "files": [
@@ -6105,7 +7353,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-sequence:element-7"
+          "parent": "parking-sequence:element-7",
+          "storyId": null
         }
       ],
       "edges": [
@@ -8180,7 +9429,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-spot-state:Empty",
@@ -8195,7 +9445,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-spot-state:Occupied",
@@ -8210,7 +9461,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         }
       ],
       "edges": [
@@ -8250,6 +9502,328 @@ globalThis.GARAGE_UML_DATA = {
         "Park throws if the spot is already occupied. Garage.Remove calls Clear on a matched spot. No separate persisted lifecycle exists."
       ]
     },
+    "parking-story-activity": {
+      "id": "parking-story-activity",
+      "title": "Park vehicle \u2014 requirements flow",
+      "type": "activity",
+      "nodes": [
+        {
+          "id": "parking-story-activity:element-1",
+          "name": "Start",
+          "kind": "initial",
+          "group": "",
+          "members": [],
+          "files": [
+            "docs/uml/behavioral/activity/parking-story-activity.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-2",
+          "name": "The user requests parking from the console menu and supplies or selects a vehicle.",
+          "kind": "action",
+          "group": "",
+          "members": [],
+          "files": [
+            "UseCases/garage/park-vehicle.md"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-4",
+          "name": "The system checks the vehicle details, registration uniqueness and available capacity.",
+          "kind": "action",
+          "group": "",
+          "members": [],
+          "files": [
+            "UseCases/garage/park-vehicle.md"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-6",
+          "name": "Invalid details",
+          "kind": "decision",
+          "group": "",
+          "members": [],
+          "files": [
+            "UseCases/garage/park-vehicle.md"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-8",
+          "name": "explain the problem and allow correction without crashing.",
+          "kind": "action",
+          "group": "",
+          "members": [],
+          "files": [
+            "UseCases/garage/park-vehicle.md"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-10",
+          "name": "End",
+          "kind": "final",
+          "group": "",
+          "members": [],
+          "files": [
+            "docs/uml/behavioral/activity/parking-story-activity.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-12",
+          "name": "Duplicate registration",
+          "kind": "decision",
+          "group": "",
+          "members": [],
+          "files": [
+            "UseCases/garage/park-vehicle.md"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-14",
+          "name": "reject the request and preserve the vehicles already parked.",
+          "kind": "action",
+          "group": "",
+          "members": [],
+          "files": [
+            "UseCases/garage/park-vehicle.md"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-16",
+          "name": "End",
+          "kind": "final",
+          "group": "",
+          "members": [],
+          "files": [
+            "docs/uml/behavioral/activity/parking-story-activity.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-18",
+          "name": "Garage full",
+          "kind": "decision",
+          "group": "",
+          "members": [],
+          "files": [
+            "UseCases/garage/park-vehicle.md"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-20",
+          "name": "explain that no capacity is available and leave the garage unchanged.",
+          "kind": "action",
+          "group": "",
+          "members": [],
+          "files": [
+            "UseCases/garage/park-vehicle.md"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-22",
+          "name": "End",
+          "kind": "final",
+          "group": "",
+          "members": [],
+          "files": [
+            "docs/uml/behavioral/activity/parking-story-activity.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-24",
+          "name": "The system adds the vehicle to the garage.",
+          "kind": "action",
+          "group": "",
+          "members": [],
+          "files": [
+            "UseCases/garage/park-vehicle.md"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-26",
+          "name": "The system confirms that the vehicle is parked.",
+          "kind": "action",
+          "group": "",
+          "members": [],
+          "files": [
+            "UseCases/garage/park-vehicle.md"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        },
+        {
+          "id": "parking-story-activity:element-28",
+          "name": "End",
+          "kind": "final",
+          "group": "",
+          "members": [],
+          "files": [
+            "docs/uml/behavioral/activity/parking-story-activity.puml"
+          ],
+          "declaration": "",
+          "bases": [],
+          "parent": null,
+          "storyId": null
+        }
+      ],
+      "edges": [
+        {
+          "id": "parking-story-activity:edge-3",
+          "source": "parking-story-activity:element-1",
+          "target": "parking-story-activity:element-2",
+          "kind": "flow",
+          "label": ""
+        },
+        {
+          "id": "parking-story-activity:edge-5",
+          "source": "parking-story-activity:element-2",
+          "target": "parking-story-activity:element-4",
+          "kind": "flow",
+          "label": ""
+        },
+        {
+          "id": "parking-story-activity:edge-7",
+          "source": "parking-story-activity:element-4",
+          "target": "parking-story-activity:element-6",
+          "kind": "flow",
+          "label": ""
+        },
+        {
+          "id": "parking-story-activity:edge-9",
+          "source": "parking-story-activity:element-6",
+          "target": "parking-story-activity:element-8",
+          "kind": "flow",
+          "label": "yes"
+        },
+        {
+          "id": "parking-story-activity:edge-11",
+          "source": "parking-story-activity:element-8",
+          "target": "parking-story-activity:element-10",
+          "kind": "flow",
+          "label": ""
+        },
+        {
+          "id": "parking-story-activity:edge-13",
+          "source": "parking-story-activity:element-6",
+          "target": "parking-story-activity:element-12",
+          "kind": "flow",
+          "label": "no"
+        },
+        {
+          "id": "parking-story-activity:edge-15",
+          "source": "parking-story-activity:element-12",
+          "target": "parking-story-activity:element-14",
+          "kind": "flow",
+          "label": "yes"
+        },
+        {
+          "id": "parking-story-activity:edge-17",
+          "source": "parking-story-activity:element-14",
+          "target": "parking-story-activity:element-16",
+          "kind": "flow",
+          "label": ""
+        },
+        {
+          "id": "parking-story-activity:edge-19",
+          "source": "parking-story-activity:element-12",
+          "target": "parking-story-activity:element-18",
+          "kind": "flow",
+          "label": "no"
+        },
+        {
+          "id": "parking-story-activity:edge-21",
+          "source": "parking-story-activity:element-18",
+          "target": "parking-story-activity:element-20",
+          "kind": "flow",
+          "label": "yes"
+        },
+        {
+          "id": "parking-story-activity:edge-23",
+          "source": "parking-story-activity:element-20",
+          "target": "parking-story-activity:element-22",
+          "kind": "flow",
+          "label": ""
+        },
+        {
+          "id": "parking-story-activity:edge-25",
+          "source": "parking-story-activity:element-18",
+          "target": "parking-story-activity:element-24",
+          "kind": "flow",
+          "label": "no"
+        },
+        {
+          "id": "parking-story-activity:edge-27",
+          "source": "parking-story-activity:element-24",
+          "target": "parking-story-activity:element-26",
+          "kind": "flow",
+          "label": ""
+        },
+        {
+          "id": "parking-story-activity:edge-29",
+          "source": "parking-story-activity:element-26",
+          "target": "parking-story-activity:element-28",
+          "kind": "flow",
+          "label": ""
+        }
+      ],
+      "sequence": null,
+      "timing": null,
+      "notes": [
+        "Story: park-vehicle \u00B7 Actor: Garage user. Put a vehicle in the garage when there is capacity available. Done when: A valid vehicle is added when capacity is available. Done when: Parking does not exceed the chosen garage capacity or introduce a duplicate registration. Done when: A rejected request leaves the existing vehicles unchanged. Done when: The user receives a clear success or failure message."
+      ]
+    },
     "parking-timing": {
       "id": "parking-timing",
       "title": "Template: timing",
@@ -8270,7 +9844,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "parking-timing:element-1",
@@ -8287,7 +9862,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-timing:Spot"
+          "parent": "parking-timing:Spot",
+          "storyId": null
         },
         {
           "id": "parking-timing:element-2",
@@ -8304,7 +9880,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-timing:Spot"
+          "parent": "parking-timing:Spot",
+          "storyId": null
         },
         {
           "id": "parking-timing:element-3",
@@ -8321,7 +9898,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "",
           "bases": [],
-          "parent": "parking-timing:Spot"
+          "parent": "parking-timing:Spot",
+          "storyId": null
         }
       ],
       "edges": [],
@@ -8374,7 +9952,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "Engine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Electric.ElectricMotor",
@@ -8389,7 +9968,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "ElectricEngine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Engine",
@@ -8411,7 +9991,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public abstract class Engine",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.ExternalCombustion.ExternalCombustionEngine",
@@ -8429,7 +10010,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "Engine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.ExternalCombustion.SteamEngine",
@@ -8448,7 +10030,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "ExternalCombustionEngine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.FuelType",
@@ -8474,7 +10057,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public enum FuelType",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.InternalCombustion.InternalCombustionEngine",
@@ -8492,7 +10076,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "Engine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.InternalCombustion.Piston.FlatEngine",
@@ -8507,7 +10092,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "PistonEngine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.InternalCombustion.Piston.InlineEngine",
@@ -8522,7 +10108,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "PistonEngine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.InternalCombustion.Piston.PistonEngine",
@@ -8542,7 +10129,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "InternalCombustionEngine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.InternalCombustion.Piston.VEngine",
@@ -8557,7 +10145,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "PistonEngine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.InternalCombustion.RotaryEngine",
@@ -8576,7 +10165,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "InternalCombustionEngine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.InternalCombustion.Turbine.TurbineEngine",
@@ -8594,7 +10184,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "InternalCombustionEngine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.InternalCombustion.Turbine.TurbofanEngine",
@@ -8613,7 +10204,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "TurbineEngine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.InternalCombustion.Turbine.TurbojetEngine",
@@ -8632,7 +10224,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "TurbineEngine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.InternalCombustion.Turbine.TurbopropEngine",
@@ -8651,7 +10244,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "TurbineEngine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.InternalCombustion.Turbine.TurboshaftEngine",
@@ -8670,7 +10264,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "TurbineEngine"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Specifications.ElectricEngineSpecification",
@@ -8688,7 +10283,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "EngineSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Specifications.EngineSpecification",
@@ -8701,7 +10297,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public abstract class EngineSpecification",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Specifications.ExternalCombustionEngineSpecification",
@@ -8718,7 +10315,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "EngineSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Specifications.InternalCombustionEngineSpecification",
@@ -8735,7 +10333,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "EngineSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Specifications.PistonEngineSpecification",
@@ -8756,7 +10355,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "InternalCombustionEngineSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Specifications.RotaryEngineSpecification",
@@ -8775,7 +10375,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "InternalCombustionEngineSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Specifications.SteamEngineSpecification",
@@ -8793,7 +10394,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "ExternalCombustionEngineSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Specifications.TurbineEngineSpecification",
@@ -8810,7 +10412,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "InternalCombustionEngineSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Specifications.TurbofanEngineSpecification",
@@ -8827,7 +10430,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "TurbineEngineSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Specifications.TurbopropEngineSpecification",
@@ -8844,7 +10448,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "TurbineEngineSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Engines.Specifications.TurboshaftEngineSpecification",
@@ -8861,7 +10466,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "TurbineEngineSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Factories.AirplaneFactory",
@@ -8876,7 +10482,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public static class AirplaneFactory",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Factories.BoatFactory",
@@ -8891,7 +10498,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public static class BoatFactory",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Factories.BusFactory",
@@ -8906,7 +10514,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public static class BusFactory",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Factories.CarFactory",
@@ -8921,7 +10530,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public static class CarFactory",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Factories.EngineFactory",
@@ -8945,7 +10555,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public static class EngineFactory",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Factories.MotorcycleFactory",
@@ -8960,7 +10571,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public static class MotorcycleFactory",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Factories.TruckFactory",
@@ -8975,7 +10587,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public static class TruckFactory",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Airplane",
@@ -9002,7 +10615,8 @@ globalThis.GARAGE_UML_DATA = {
             "IPassengerCarrier",
             "Vehicle"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Boat",
@@ -9029,7 +10643,8 @@ globalThis.GARAGE_UML_DATA = {
             "IPassengerCarrier",
             "Vehicle"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Bus",
@@ -9055,7 +10670,8 @@ globalThis.GARAGE_UML_DATA = {
             "IPassengerCarrier",
             "RoadVehicle"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Car",
@@ -9081,7 +10697,8 @@ globalThis.GARAGE_UML_DATA = {
             "IPassengerCarrier",
             "RoadVehicle"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Components.Cabin",
@@ -9097,7 +10714,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class Cabin",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Components.Cockpit",
@@ -9113,7 +10731,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public class Cockpit",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Components.Dimensions",
@@ -9132,7 +10751,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public sealed record Dimensions",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.CountryCode",
@@ -9174,7 +10794,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public enum CountryCode",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Interfaces.IHasSeats",
@@ -9189,7 +10810,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public interface IHasSeats",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Interfaces.IHasWheels",
@@ -9204,7 +10826,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public interface IHasWheels",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Interfaces.IManufacturer",
@@ -9221,7 +10844,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public interface IManufacturer",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Interfaces.IPassengerCarrier",
@@ -9237,7 +10861,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public interface IPassengerCarrier",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Motorcycle",
@@ -9263,7 +10888,8 @@ globalThis.GARAGE_UML_DATA = {
             "IPassengerCarrier",
             "RoadVehicle"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.RoadVehicle",
@@ -9281,7 +10907,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "Vehicle"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Specifications.AirplaneSpecification",
@@ -9303,7 +10930,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "VehicleSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Specifications.BoatSpecification",
@@ -9325,7 +10953,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "VehicleSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Specifications.BusSpecification",
@@ -9346,7 +10975,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "VehicleSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Specifications.CarSpecification",
@@ -9366,7 +10996,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "VehicleSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Specifications.MotorcycleSpecification",
@@ -9387,7 +11018,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "VehicleSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Specifications.TruckSpecification",
@@ -9407,7 +11039,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "VehicleSpecification"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Specifications.VehicleSpecification",
@@ -9433,7 +11066,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public abstract class VehicleSpecification",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Truck",
@@ -9454,7 +11088,8 @@ globalThis.GARAGE_UML_DATA = {
             "IHasWheels",
             "RoadVehicle"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Types.BoatType",
@@ -9474,7 +11109,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public enum BoatType",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Types.BodyType",
@@ -9495,7 +11131,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public enum BodyType",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Types.MotorcycleType",
@@ -9515,7 +11152,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public enum MotorcycleType",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Types.VehicleColor",
@@ -9541,7 +11179,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public enum VehicleColor",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Validation",
@@ -9561,7 +11200,8 @@ globalThis.GARAGE_UML_DATA = {
           ],
           "declaration": "public static class Validation",
           "bases": [],
-          "parent": null
+          "parent": null,
+          "storyId": null
         },
         {
           "id": "type:Vehicle/Vehicle.csproj:Garage.Vehicles.Vehicle",
@@ -9589,7 +11229,8 @@ globalThis.GARAGE_UML_DATA = {
           "bases": [
             "IManufacturer"
           ],
-          "parent": null
+          "parent": null,
+          "storyId": null
         }
       ],
       "edges": [

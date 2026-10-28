@@ -1,0 +1,34 @@
+@startuml
+' diagram-id: parking-story-activity
+' Generated from the story Flow and explicitly mapped Alternatives; edit the Markdown story.
+title Park vehicle — requirements flow
+start
+:The user requests parking from the console menu and supplies or selects a vehicle.;
+:The system checks the vehicle details, registration uniqueness and available capacity.;
+if (Invalid details) then (yes)
+:explain the problem and allow correction without crashing.;
+stop
+else (no)
+endif
+if (Duplicate registration) then (yes)
+:reject the request and preserve the vehicles already parked.;
+stop
+else (no)
+endif
+if (Garage full) then (yes)
+:explain that no capacity is available and leave the garage unchanged.;
+stop
+else (no)
+endif
+:The system adds the vehicle to the garage.;
+:The system confirms that the vehicle is parked.;
+stop
+note right
+Story: park-vehicle · Actor: Garage user.
+Put a vehicle in the garage when there is capacity available.
+Done when: A valid vehicle is added when capacity is available.
+Done when: Parking does not exceed the chosen garage capacity or introduce a duplicate registration.
+Done when: A rejected request leaves the existing vehicles unchanged.
+Done when: The user receives a clear success or failure message.
+end note
+@enduml

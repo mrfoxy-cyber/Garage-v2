@@ -29,6 +29,7 @@ static class GraphGallery
                 <aside class="sidebar" aria-label="Diagram navigation">
                   <div class="sidebar-heading"><span>DIAGRAMS</span><span id="diagram-count" class="count-pill"></span></div>
                   <label class="nav-search"><span aria-hidden="true">⌕</span><input id="diagram-search" type="search" placeholder="Find a diagram…" aria-label="Find a diagram"></label>
+                  <section class="story-navigation"><h2>REQUIREMENTS</h2><button id="open-use-cases" type="button" class="diagram-nav-item"><span class="nav-symbol" aria-hidden="true">U</span><span>Use-case stories</span></button></section>
                   <nav id="diagram-nav" aria-label="Choose a diagram">
             """);
         foreach (var group in manifest.Diagrams.GroupBy(d => d.Type is "sequence" or "communication" or "interaction-overview" or "timing" ? "Interaction" : d.Type is "use-case" or "activity" or "state-machine" ? "Behavioral" : "Structural"))
@@ -46,6 +47,7 @@ static class GraphGallery
                   <footer class="sidebar-footer"><span class="offline-dot"></span>Offline · code-linked diagrams<br><a href="README.md">Maintenance guide</a></footer>
                 </aside>
                 <main class="workspace" id="workspace">
+                  <div id="diagram-content">
                   <div class="workspace-title"><div><p id="view-kind" class="eyebrow">STRUCTURAL / COMPONENT</p><h1 id="view-title">Garage project components</h1><p id="view-description" class="view-description">Explore the application structure.</p></div><div class="view-links"><a id="source-link" href="structural/component/garage-components.puml">Source</a><a id="export-link" href="structural/component/garage-components.svg" target="_blank" rel="noopener">SVG export ↗</a></div></div>
                   <section class="diagram-workbench" aria-label="Interactive diagram">
                     <div class="workbench-topbar"><div class="workbench-name"><span class="canvas-dot"></span><strong id="canvas-label">Project dependencies</strong><span id="graph-count" class="graph-count"></span></div><div class="workbench-actions"><div class="presentation-toggle" role="group" aria-label="Diagram presentation"><button id="view-interactive" type="button" aria-pressed="true">Interactive</button><button id="view-plantuml" type="button" aria-pressed="false">PlantUML</button><button id="view-puml" type="button" aria-pressed="false">PUML source</button></div><button id="collapse-all" type="button" class="quiet-button">Collapse all</button><button id="fullscreen" type="button" class="quiet-button" aria-label="Toggle fullscreen diagram">⛶ <span>Fullscreen</span></button></div></div>
@@ -64,6 +66,9 @@ static class GraphGallery
                   <div class="mini-legend"><span><i class="legend-inheritance"></i>Inherits</span><span><i class="legend-realization"></i>Implements</span><span><i class="legend-reference"></i>References</span><button type="button" id="legend-button">All symbols →</button></div>
                   <div id="related-views" class="related-views"></div>
                   <noscript>This explorer requires JavaScript. Diagram source and SVG exports remain available in the structural, behavioral and interaction folders.</noscript>
+                  </div>
+                  <section id="use-case-catalogue" hidden aria-label="Use-case catalogue"><iframe id="use-case-frame" title="Required and optional use-case stories" style="width:100%;height:calc(100vh - 140px);min-height:500px;border:0;border-radius:12px" loading="lazy"></iframe></section>
+                  <section id="story-detail" class="story-detail" hidden aria-label="Story diagrams and code"></section>
                 </main>
               </div>
               <dialog id="symbol-dialog" class="symbol-dialog"><div class="dialog-header"><h2>How to read UML</h2><button id="close-help" type="button" aria-label="Close symbol guide">×</button></div>

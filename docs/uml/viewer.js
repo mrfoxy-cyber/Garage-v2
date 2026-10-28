@@ -31,6 +31,7 @@
   let resizeFrame = null;
   let priorSize = '';
   let presentation = 'interactive';
+  let catalogueOpen = false;
   let interactiveLabel = '';
   let interactiveHint = '';
   const presentationCameras = new Map();
@@ -38,7 +39,7 @@
   let pinch = null;
   const memberTouches = new Map();
   const SVG_NS = 'http://www.w3.org/2000/svg';
-  const interactive = () => presentation === 'interactive' && !!graph;
+  const interactive = () => !catalogueOpen && presentation === 'interactive' && !!graph;
   const cameraKey = () => `${diagram?.id}:${presentation}`;
   function saveCamera() { if (diagram && presentation !== 'source') presentationCameras.set(cameraKey(), { ...camera, fitted }); }
   function restoreCamera() {
@@ -192,6 +193,10 @@
         card.append(body);
         const footer = element('div', 'entity-footer');
         footer.append(element('span', '', `${node.members.length} ${graph.type === 'package' ? 'namespaces' : graph.type === 'class' ? 'declared members' : 'details'}`));
+        if (node.storyId) {
+          const storyLink = element('button', 'quiet-button', 'Story & diagrams →'); storyLink.type = 'button';
+          storyLink.addEventListener('click', () => selectStory(node.storyId)); footer.append(storyLink);
+        }
         if (node.files[0]) {
           const source = element('a', '', 'View source ↗'); source.href = '../../' + node.files[0].split('/').map(encodeURIComponent).join('/'); source.target = '_blank'; source.rel = 'noopener'; footer.append(source);
         }
@@ -306,6 +311,11 @@
   }
   async function selectView(id, updateHash = true) {
     saveCamera();
+    catalogueOpen = false;
+    selectedStory = null; byId('story-detail').hidden = true;
+    byId('diagram-content').hidden = false;
+    byId('use-case-catalogue').hidden = true;
+    byId('open-use-cases').removeAttribute('aria-current');
     if (!diagrams.has(id)) id = 'garage-classes';
     diagram = diagrams.get(id); graph = data.views[id] || null;
     presentationCameras.delete(`${id}:interactive`);
@@ -327,10 +337,10 @@
     byId('show-all').hidden = true;
     byId('view-title').textContent = diagram.title;
     byId('view-kind').textContent = `${['sequence','communication','interaction-overview','timing'].includes(diagram.type) ? 'INTERACTION' : ['use-case','activity','state-machine'].includes(diagram.type) ? 'BEHAVIORAL' : 'STRUCTURAL'} / ${diagram.type.toUpperCase()}`;
-    byId('view-description').textContent = diagram.maintenance === 'generated' ? 'A live view of the code. Open a card to explore its details; use Show all for the complete project.' : diagram.status === 'template' ? 'An interactive modeling template. Its example values and flows are illustrative.' : 'An interactive view of the reviewed UML source. Open an element to explore its details.';
+    byId('view-description').textContent = diagram.origin === 'stories' ? 'Generated from your user stories. Open an element to read its goal and linked sources.' : diagram.maintenance === 'generated' ? 'A live view of the code. Open a card to explore its details; use Show all for the complete project.' : diagram.status === 'template' ? 'An interactive modeling template. Its example values and flows are illustrative.' : 'An interactive view of the reviewed UML source. Open an element to explore its details.';
     byId('source-link').href = diagram.source; byId('export-link').href = diagram.svg;
     byId('canvas-label').textContent = ({class:'Classes & relationships',component:'Project dependencies',package:'Projects & namespaces',sequence:'Lifelines & interactions',activity:'Actions & decisions','state-machine':'States & transitions','use-case':'Actors & capabilities',deployment:'Runtime & deployment',object:'Object snapshot','composite-structure':'Parts & connectors',profile:'Modeling conventions',communication:'Objects & numbered messages','interaction-overview':'Interaction flow',timing:'State over time'})[diagram.type] || 'Interactive diagram';
-    byId('maintenance-badge').textContent = diagram.status === 'template' ? 'Template' : diagram.maintenance === 'generated' ? 'Generated from code' : 'Reviewed diagram';
+    byId('maintenance-badge').textContent = diagram.status === 'template' ? 'Template' : diagram.origin === 'stories' ? 'Generated from stories' : diagram.maintenance === 'generated' ? 'Generated from code' : 'Reviewed diagram';
     byId('interaction-hint').textContent = graph?.sequence ? 'Open alt frames to reveal branches · Click messages for details · Scroll to zoom' : 'Click an element to expand · Drag background to pan · Scroll to zoom';
     interactiveLabel = byId('canvas-label').textContent;
     interactiveHint = byId('interaction-hint').textContent;
@@ -348,12 +358,56 @@
     }
     const related = byId('related-views'); related.replaceChildren(element('span', '', 'RELATED'));
     for (const relatedId of diagram.related) { const target = diagrams.get(relatedId); if (!target) continue; const button = element('button', '', target.title); button.type = 'button'; button.addEventListener('click', () => selectView(relatedId)); related.append(button); }
+    for (const storyId of diagram.storyIds || []) { const story = (data.stories || []).find(s => s.id === storyId); if (!story) continue; const button = element('button', '', 'Story: ' + story.title); button.type = 'button'; button.addEventListener('click', () => selectStory(storyId)); related.append(button); }
     updateSearchOptions();
     if (updateHash && location.hash.slice(1) !== id) history.replaceState(null, '', '#' + id);
     fitted = true;
     await setPresentation(presentation, true);
   }
 
+  let selectedStory = null;
+  function selectStory(id, updateHash = true) {
+    const story = (data.stories || []).find(s => s.id === id);
+    if (!story) return selectCatalogue(updateHash);
+    saveCamera(); request++; catalogueOpen = true; selectedStory = id;
+    byId('diagram-content').hidden = true; byId('use-case-catalogue').hidden = true;
+    byId('open-use-cases').setAttribute('aria-current', 'page');
+    for (const button of document.querySelectorAll('[data-view-id]')) button.removeAttribute('aria-current');
+    const panel = byId('story-detail'); panel.hidden = false; panel.replaceChildren();
+    const back = element('button', 'quiet-button', '← All use-case stories'); back.type = 'button'; back.addEventListener('click', () => selectCatalogue()); panel.append(back);
+    panel.append(element('p', 'eyebrow', `${story.priority.toUpperCase()} STORY · ${story.id}`), element('h1', '', story.title), element('p', 'story-goal', story.goal), element('p', 'story-meta', `Actor: ${story.actor} · Requirements: ${story.requirements.join(', ') || 'None'}`));
+    const source = element('a', '', 'Story Markdown ↗'); source.href = '../../' + story.source.split('/').map(encodeURIComponent).join('/'); source.target = '_blank'; source.rel = 'noopener'; panel.append(source);
+    panel.append(element('h2', '', 'Diagrams for this story'));
+    const diagramLinks = element('div', 'story-diagram-links');
+    for (const id of story.diagrams) {
+      const target = diagrams.get(id); if (!target) continue;
+      const button = element('button', 'story-diagram-link'); button.type = 'button';
+      button.append(element('strong', '', target.title), element('span', '', target.type === 'class' ? 'Shared project structure' : target.origin === 'stories' ? 'Requirements · generated from story' : target.maintenance === 'generated' ? 'Implementation · generated from code' : 'Implementation · reviewed view'));
+      button.addEventListener('click', () => selectView(id)); diagramLinks.append(button);
+    }
+    panel.append(diagramLinks, element('h2', '', 'Linked code'));
+    panel.append(element('p', 'story-meta', 'These links identify related implementation. They do not certify complete behavior or test coverage.'));
+    if (!story.implementations.length) panel.append(element('p', '', 'No code annotation linked yet.'));
+    const codeList = element('ul', 'story-code-links');
+    for (const implementation of story.implementations) {
+      const item = element('li'); const link = element('a', '', implementation.member); link.href = '../../' + implementation.source.split('/').map(encodeURIComponent).join('/'); link.target = '_blank'; link.rel = 'noopener'; item.append(link); codeList.append(item);
+    }
+    panel.append(codeList);
+    const steps = element('ol'); for (const step of story.flow) steps.append(element('li', '', step.text)); panel.append(element('h2', '', 'Flow'), steps);
+    const alternatives = element('ul'); for (const alternative of story.alternatives) { const item = element('li'); item.append(element('strong', '', alternative.condition + ': '), document.createTextNode(alternative.response)); alternatives.append(item); } panel.append(element('h2', '', 'Alternatives'), alternatives);
+    const done = element('ul'); for (const condition of story.done) done.append(element('li', '', condition)); panel.append(element('h2', '', 'Done when'), done);
+    if (updateHash) history.replaceState(null, '', '#story/' + id);
+  }
+  function selectCatalogue(updateHash = true) {
+    saveCamera(); request++; catalogueOpen = true;
+    selectedStory = null; byId('story-detail').hidden = true;
+    byId('diagram-content').hidden = true; byId('use-case-catalogue').hidden = false;
+    byId('open-use-cases').setAttribute('aria-current', 'page');
+    for (const button of document.querySelectorAll('[data-view-id]')) button.removeAttribute('aria-current');
+    if (!byId('use-case-frame').getAttribute('src')) byId('use-case-frame').src = 'use-cases.generated.html';
+    if (updateHash) history.replaceState(null, '', '#use-cases');
+  }
+  byId('open-use-cases').addEventListener('click', () => selectCatalogue());
   for (const button of document.querySelectorAll('[data-view-id]')) button.addEventListener('click', () => selectView(button.dataset.viewId));
   byId('diagram-count').textContent = String(diagrams.size);
   byId('view-interactive').addEventListener('click', () => setPresentation('interactive'));
@@ -431,7 +485,7 @@
     cancelAnimationFrame(resizeFrame);
     resizeFrame = requestAnimationFrame(() => { if (interactive()) arrange({ fit: fitted, anchor: fitted ? null : expandedId }); else if (presentation === 'plantuml' && fitted) fit(); });
   }).observe(viewport);
-  window.addEventListener('hashchange', () => { const id=location.hash.slice(1);if(diagrams.has(id)&&id!==diagram?.id)selectView(id,false); });
-  globalThis.GarageExplorer = { selectView, setPresentation, fit, zoomTo, toggleNode, focusSearch, resetFilters, getState: () => ({ diagram:diagram?.id,presentation,expandedId,focusId,camera:{...camera},scene,visibleGraph:graph?filteredGraph():null }) };
-  selectView(location.hash.slice(1) || 'garage-classes', false);
+  window.addEventListener('hashchange', () => { const id=location.hash.slice(1);if(id.startsWith('story/'))selectStory(id.slice(6),false);else if(id==='use-cases')selectCatalogue(false);else if(diagrams.has(id)&&(catalogueOpen||selectedStory||id!==diagram?.id))selectView(id,false); });
+  globalThis.GarageExplorer = { selectView, selectCatalogue, selectStory, setPresentation, fit, zoomTo, toggleNode, focusSearch, resetFilters, getState: () => ({ diagram:selectedStory?'story/'+selectedStory:catalogueOpen?'use-cases':diagram?.id,presentation,expandedId,focusId,camera:{...camera},scene,visibleGraph:graph?filteredGraph():null }) };
+  if(location.hash.slice(1).startsWith('story/'))selectStory(location.hash.slice(7),false);else if(location.hash.slice(1)==='use-cases')selectCatalogue(false);else selectView(location.hash.slice(1) || 'garage-classes', false);
 })();

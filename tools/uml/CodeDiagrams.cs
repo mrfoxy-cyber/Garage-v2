@@ -3,9 +3,11 @@ using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using UseCaseManagement;
 
-record CodeUseCase(string Id, string Title, string Actor, string[] Sources);
-record CodeSequenceEntry(string Id, string EntryPoint, string Source, int MaxDepth, string[] ExpandNamespaces);
+record CodeImplementation(string Member, string Type, string Project, string Source);
+record CodeUseCase(string Id, string Title, string Actor, string[] Sources, string StorySource, CodeImplementation[] Implementations);
+record CodeSequenceEntry(string Id, string EntryPoint, string Source, int MaxDepth, string[] ExpandNamespaces, string StoryId);
 record GeneratedCodeDiagram(string Puml, Dictionary<string, string[]> ParticipantSources);
 record CodeDiagramSet(CodeUseCase[] UseCases, CodeSequenceEntry[] SequenceEntries,
     SortedDictionary<string, GeneratedCodeDiagram> Diagrams);
@@ -20,12 +22,13 @@ static class CodeDiagrams
         ((string?)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") ?? throw new Exception("Cannot locate .NET references."))
         .Split(Path.PathSeparator).Select(p => MetadataReference.CreateFromFile(p)).ToArray<MetadataReference>());
 
-    public static CodeDiagramSet Extract(string root, Manifest manifest)
+    public static CodeDiagramSet Extract(string root, Manifest manifest, Catalogue? catalogue = null)
     {
         var diagrams = new SortedDictionary<string, GeneratedCodeDiagram>(StringComparer.Ordinal);
         if (!manifest.Diagrams.Any(d => d.Maintenance == "generated" && (d.Type is "sequence" or "use-case")))
             return new([], [], diagrams);
         var session = new Session(root, manifest);
+        catalogue ??= CatalogueStore.TryLoad(root);
         var cases = new List<CodeUseCase>();
         var entries = new List<(CodeSequenceEntry Entry, MethodDeclarationSyntax Syntax, string Actor)>();
         foreach (var compilation in session.Compilations.Values)
@@ -38,13 +41,15 @@ static class CodeDiagrams
                 var attributes = symbol.GetAttributes();
                 var useCases = attributes.Where(a => a.AttributeClass?.ToDisplayString() == UseCaseName).Select(a =>
                 {
-                    if (a.ConstructorArguments.Length != 2) throw Error(member, "UseCase needs an ID and title.");
+                    if (a.ConstructorArguments.Length != 1 || a.NamedArguments.Length != 0)
+                        throw Error(member, "UseCase takes only a story ID; title and actor belong in UseCases/.");
                     var id = Value(a.ConstructorArguments[0], member);
-                    var title = Value(a.ConstructorArguments[1], member);
-                    var actor = a.NamedArguments.FirstOrDefault(p => p.Key == "Actor").Value.Value as string ?? "Garage operator";
-                    if (!Regex.IsMatch(id, "^[a-z0-9-]+$") || string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(actor))
-                        throw Error(member, "UseCase needs a lowercase stable ID, title and actor.");
-                    return new CodeUseCase(id, title, actor, [Uml.Relative(root, tree.FilePath)]);
+                    var story = catalogue?.Stories.SingleOrDefault(s => s.Id == id)
+                        ?? throw Error(member, $"Unknown UseCase story ID: {id}. Add its complete story in UseCases/ first.");
+                    var source = Uml.Relative(root, tree.FilePath);
+                    var project = session.Compilations.Single(p => p.Value == compilation).Key;
+                    return new CodeUseCase(id, story.Title, story.Actor, [source], story.Source,
+                        [new(symbol.ToDisplayString(), symbol.ContainingType.ToDisplayString(), project, source)]);
                 }).ToArray();
                 cases.AddRange(useCases);
                 foreach (var annotation in attributes.Where(a => a.AttributeClass?.ToDisplayString() == SequenceName))
@@ -59,15 +64,14 @@ static class CodeDiagrams
                     var namespaces = expansion.Kind == TypedConstantKind.Array && !expansion.IsNull
                         ? expansion.Values.Select(v => Value(v, member)).Distinct().Order(StringComparer.Ordinal).ToArray() : [];
                     if (namespaces.Any(n => !Regex.IsMatch(n, @"^\w+(\.\w+)*$"))) throw Error(member, "ExpandNamespaces needs nonempty namespace names.");
-                    entries.Add((new(id, symbol.ToDisplayString(), Uml.Relative(root, tree.FilePath), depth, namespaces), method, useCases[0].Actor));
+                    entries.Add((new(id, symbol.ToDisplayString(), Uml.Relative(root, tree.FilePath), depth, namespaces, useCases[0].Id), method, useCases[0].Actor));
                 }
             }
         }
         var grouped = cases.GroupBy(c => c.Id).OrderBy(g => g.Key, StringComparer.Ordinal).Select(g =>
         {
-            if (g.Select(c => (c.Title, c.Actor)).Distinct().Count() != 1)
-                throw new Exception($"Conflicting UseCase metadata for {g.Key}. Use the same title and actor at each implementation.");
-            return g.First() with { Sources = g.SelectMany(c => c.Sources).Distinct().Order(StringComparer.Ordinal).ToArray() };
+            return g.First() with { Sources = g.SelectMany(c => c.Sources).Distinct().Order(StringComparer.Ordinal).ToArray(),
+                Implementations = g.SelectMany(c => c.Implementations).Distinct().OrderBy(i => i.Member, StringComparer.Ordinal).ToArray() };
         }).ToArray();
         foreach (var duplicate in entries.GroupBy(e => e.Entry.Id).Where(g => g.Count() > 1))
             throw new Exception($"Duplicate SequenceView ID: {duplicate.Key}");
@@ -78,16 +82,19 @@ static class CodeDiagrams
         {
             if (diagram.Type == "use-case")
             {
-                if (grouped.Length == 0) throw new Exception($"No UseCase annotations for {diagram.Id}.");
-                diagrams.Add(diagram.Id, Related(root, manifest, diagram, UseCases(diagram, grouped)));
+                if (catalogue is null || catalogue.Stories.Count == 0) throw new Exception($"No stories in UseCases/ for {diagram.Id}.");
+                diagrams.Add(diagram.Id, Related(root, manifest, diagram, StoryDiagrams.UseCases(diagram, catalogue, grouped)));
             }
             if (diagram.Type == "sequence")
             {
                 var matches = entries.Where(e => e.Entry.Id == diagram.Id).ToArray();
                 if (matches.Length != 1) throw new Exception($"Generated sequence {diagram.Id} needs exactly one matching SequenceView annotation.");
                 var entry = matches[0];
-                diagrams.Add(diagram.Id, Related(root, manifest, diagram,
-                    new SequenceWriter(session, entry.Entry.MaxDepth, entry.Entry.ExpandNamespaces).Generate(diagram, entry.Syntax, entry.Actor)));
+                var generated = new SequenceWriter(session, entry.Entry.MaxDepth, entry.Entry.ExpandNamespaces).Generate(diagram, entry.Syntax, entry.Actor);
+                var story = catalogue!.Stories.Single(s => s.Id == entry.Entry.StoryId);
+                generated = generated with { Puml = generated.Puml.Replace("@enduml\n",
+                    "' " + Text("Story: " + story.Id + " — " + story.Title) + "\n@enduml\n", StringComparison.Ordinal) };
+                diagrams.Add(diagram.Id, Related(root, manifest, diagram, generated));
             }
         }
         return new(grouped, entries.Select(e => e.Entry).OrderBy(e => e.Id, StringComparer.Ordinal).ToArray(), diagrams);
@@ -99,7 +106,7 @@ static class CodeDiagrams
         var location = node.GetLocation().GetLineSpan();
         return new Exception($"{location.Path}:{location.StartLinePosition.Line + 1}: {message}");
     }
-    static string Text(string text) => text.Replace("&", "&amp;").Replace("\r", " ").Replace("\n", " ").Replace("\\", "&#92;")
+    internal static string Text(string text) => text.Replace("&", "&amp;").Replace("\r", " ").Replace("\n", " ").Replace("\\", "&#92;")
         .Replace("\"", "&quot;").Replace("<", "&lt;").Replace(">", "&gt;");
     public static GraphView View(Diagram diagram, GeneratedCodeDiagram generated)
     {
@@ -140,25 +147,6 @@ static class CodeDiagrams
         lines.Add("endlegend");
         return generated with { Puml = generated.Puml.Replace("@enduml\n", string.Join("\n", lines) + "\n@enduml\n", StringComparison.Ordinal) };
     }
-    static GeneratedCodeDiagram UseCases(Diagram diagram, CodeUseCase[] cases)
-    {
-        var lines = Header(diagram);
-        var sources = new Dictionary<string, string[]>(StringComparer.Ordinal);
-        lines.Add("left to right direction");
-        foreach (var actor in cases.Select(c => c.Actor).Distinct().Order(StringComparer.Ordinal))
-            lines.Add($"actor \"{Text(actor)}\" as a_{Uml.Hash(actor)[..12]}");
-        lines.Add("rectangle \"Garage application\" {");
-        foreach (var item in cases)
-        {
-            lines.Add($"  usecase \"{Text(item.Title)}\" as u_{item.Id.Replace('-', '_')}");
-            sources[item.Title] = sources.GetValueOrDefault(item.Title, []).Concat(item.Sources).Distinct().Order(StringComparer.Ordinal).ToArray();
-        }
-        lines.Add("}");
-        foreach (var item in cases) lines.Add($"a_{Uml.Hash(item.Actor)[..12]} --> u_{item.Id.Replace('-', '_')}");
-        lines.Add("@enduml");
-        return new(string.Join("\n", lines) + "\n", sources);
-    }
-
     sealed class Session
     {
         public string Root { get; }

@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "projects": [
     {
       "id": "project:Garage.Console/Garage.Console.csproj",
@@ -3008,7 +3008,7 @@
       "namespace": "Garage.Documentation",
       "name": "UseCaseAttribute",
       "kind": "class",
-      "declaration": "public sealed class UseCaseAttribute(string id, string title)",
+      "declaration": "public sealed class UseCaseAttribute(string id)",
       "files": [
         "Garage/Documentation/DiagramAttributes.cs"
       ],
@@ -3016,10 +3016,8 @@
         "Attribute"
       ],
       "members": [
-        "primary constructor UseCaseAttribute(string id, string title)",
-        "public string Actor {  get;  set; }",
-        "public string Id {  get; }",
-        "public string Title {  get; }"
+        "primary constructor UseCaseAttribute(string id)",
+        "public string Id {  get; }"
       ],
       "operations": []
     },
@@ -3035,8 +3033,9 @@
       ],
       "bases": [],
       "members": [
-        "[UseCase(\u0022remove\u0022, \u0022Remove parked vehicle\u0022)]\npublic GarageOperationResult Remove(string registrationNumber)",
-        "[UseCase(\u0022search\u0022, \u0022Search parked vehicles\u0022)]\npublic IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)",
+        "[UseCase(\u0022find-vehicle\u0022)]\npublic ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber)",
+        "[UseCase(\u0022remove-vehicle\u0022)]\npublic GarageOperationResult Remove(string registrationNumber)",
+        "[UseCase(\u0022search-vehicles\u0022)]\npublic IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)",
         "private Garage(string garageName, int capacity, List\u003CVehicle\u003E initialVehicles, IReadOnlyList\u003CDimensions\u003E? spotDimensions)",
         "private bool RegistrationExists(string registrationNumber)",
         "private readonly List\u003CParkingSpot\u003E parkingSpots",
@@ -3051,7 +3050,6 @@
         "public IReadOnlyList\u003CVehicle\u003E Vehicles { get; }",
         "public IReadOnlyList\u003CVehicleTypeGroup\u003E VehiclesByType { get; }",
         "public IReadOnlyList\u003Cint\u003E AvailableSpotsFor(Vehicle vehicle)",
-        "public ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber)",
         "public ParkingResult Park(Vehicle vehicle)",
         "public ParkingResult Park(Vehicle vehicle, int spot)",
         "public const int MaximumGarageCapacity",
@@ -3074,7 +3072,7 @@
         {
           "id": "operation:Garage/Garage.csproj:Garage.Models.Garage.FindVehicleByRegistration(string)",
           "name": "FindVehicleByRegistration",
-          "signature": "public ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber)"
+          "signature": "[UseCase(\u0022find-vehicle\u0022)]\npublic ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber)"
         },
         {
           "id": "operation:Garage/Garage.csproj:Garage.Models.Garage.Park(Vehicle)",
@@ -3094,7 +3092,7 @@
         {
           "id": "operation:Garage/Garage.csproj:Garage.Models.Garage.Remove(string)",
           "name": "Remove",
-          "signature": "[UseCase(\u0022remove\u0022, \u0022Remove parked vehicle\u0022)]\npublic GarageOperationResult Remove(string registrationNumber)"
+          "signature": "[UseCase(\u0022remove-vehicle\u0022)]\npublic GarageOperationResult Remove(string registrationNumber)"
         },
         {
           "id": "operation:Garage/Garage.csproj:Garage.Models.Garage.RemoveAtSpot(int)",
@@ -3104,7 +3102,7 @@
         {
           "id": "operation:Garage/Garage.csproj:Garage.Models.Garage.Search(VehicleSearchCriteria)",
           "name": "Search",
-          "signature": "[UseCase(\u0022search\u0022, \u0022Search parked vehicles\u0022)]\npublic IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)"
+          "signature": "[UseCase(\u0022search-vehicles\u0022)]\npublic IReadOnlyList\u003CVehicle\u003E Search(VehicleSearchCriteria criteria)"
         }
       ]
     },
@@ -3829,14 +3827,14 @@
       ],
       "bases": [],
       "members": [
-        "[UseCase(\u0022create-garage\u0022, \u0022Create or import garage\u0022)]\npublic GarageCreationResult CreateGarage(string name, int capacity)",
-        "[UseCase(\u0022create-garage\u0022, \u0022Create or import garage\u0022)]\npublic GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)",
-        "[UseCase(\u0022park-vehicle\u0022, \u0022Park vehicle\u0022)]\n[SequenceView(\u0022parking-sequence\u0022, MaxDepth = 3, ExpandNamespaces = new[] { \u0022Garage.Services\u0022, \u0022Garage.Models\u0022 })]\npublic ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)",
+        "[UseCase(\u0022create-garage\u0022)]\npublic GarageCreationResult CreateGarage(string name, int capacity)",
+        "[UseCase(\u0022create-garage\u0022)]\npublic GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)",
+        "[UseCase(\u0022create-garage-with-dimensions\u0022)]\npublic GarageCreationResult CreateGarage(string name, IReadOnlyList\u003CDimensions\u003E sizes)",
+        "[UseCase(\u0022park-vehicle\u0022)]\n[SequenceView(\u0022parking-sequence\u0022, MaxDepth = 3, ExpandNamespaces = new[] { \u0022Garage.Services\u0022, \u0022Garage.Models\u0022 })]\npublic ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)",
         "private GarageCreationResult CreateAndRegister(Func\u003CVehicleGarage\u003E factory)",
         "private GarageCreationResult RegisterGarage(VehicleGarage garage)",
         "private ParkingResult ParkNewVehicle(Vehicle vehicle, VehicleGarage garage, int? spotNumber)",
         "private readonly List\u003CVehicleGarage\u003E garages",
-        "public GarageCreationResult CreateGarage(string name, IReadOnlyList\u003CDimensions\u003E sizes)",
         "public GarageService(List\u003CVehicleGarage\u003E initialGarages, List\u003CVehicle\u003E initialVehicles)",
         "public IReadOnlyList\u003CVehicle\u003E GetParkableVehicles(VehicleGarage garage, int? spotNumber = null)",
         "public IReadOnlyList\u003CVehicleGarage\u003E Garages { get; }",
@@ -3859,17 +3857,17 @@
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.GarageService.CreateGarage(string,IReadOnlyList\u003CDimensions\u003E)",
           "name": "CreateGarage",
-          "signature": "public GarageCreationResult CreateGarage(string name, IReadOnlyList\u003CDimensions\u003E sizes)"
+          "signature": "[UseCase(\u0022create-garage-with-dimensions\u0022)]\npublic GarageCreationResult CreateGarage(string name, IReadOnlyList\u003CDimensions\u003E sizes)"
         },
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.GarageService.CreateGarage(string,int)",
           "name": "CreateGarage",
-          "signature": "[UseCase(\u0022create-garage\u0022, \u0022Create or import garage\u0022)]\npublic GarageCreationResult CreateGarage(string name, int capacity)"
+          "signature": "[UseCase(\u0022create-garage\u0022)]\npublic GarageCreationResult CreateGarage(string name, int capacity)"
         },
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.GarageService.CreateGarageFromJson(string,string?)",
           "name": "CreateGarageFromJson",
-          "signature": "[UseCase(\u0022create-garage\u0022, \u0022Create or import garage\u0022)]\npublic GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)"
+          "signature": "[UseCase(\u0022create-garage\u0022)]\npublic GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)"
         },
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.GarageService.GetParkableVehicles(VehicleGarage,int?)",
@@ -3884,7 +3882,7 @@
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.GarageService.Park(Vehicle,VehicleGarage,int?)",
           "name": "Park",
-          "signature": "[UseCase(\u0022park-vehicle\u0022, \u0022Park vehicle\u0022)]\n[SequenceView(\u0022parking-sequence\u0022, MaxDepth = 3, ExpandNamespaces = new[] { \u0022Garage.Services\u0022, \u0022Garage.Models\u0022 })]\npublic ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)"
+          "signature": "[UseCase(\u0022park-vehicle\u0022)]\n[SequenceView(\u0022parking-sequence\u0022, MaxDepth = 3, ExpandNamespaces = new[] { \u0022Garage.Services\u0022, \u0022Garage.Models\u0022 })]\npublic ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)"
         },
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.GarageService.ParkNewVehicle(Vehicle,VehicleGarage,int?)",
@@ -3910,8 +3908,8 @@
       ],
       "bases": [],
       "members": [
-        "[UseCase(\u0022create-vehicle\u0022, \u0022Create or import vehicle\u0022)]\npublic VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)",
-        "[UseCase(\u0022create-vehicle\u0022, \u0022Create or import vehicle\u0022)]\npublic VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)",
+        "[UseCase(\u0022create-vehicle\u0022)]\npublic VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)",
+        "[UseCase(\u0022create-vehicle\u0022)]\npublic VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)",
         "internal VehicleCreationService(VehicleCatalog catalog, Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park)",
         "private readonly Func\u003CVehicle, VehicleGarage, int?, ParkingResult\u003E park",
         "private readonly VehicleCatalog catalog"
@@ -3920,12 +3918,12 @@
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.VehicleCreationService.Create(Func\u003CVehicle\u003E,VehicleGarage?,int?)",
           "name": "Create",
-          "signature": "[UseCase(\u0022create-vehicle\u0022, \u0022Create or import vehicle\u0022)]\npublic VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)"
+          "signature": "[UseCase(\u0022create-vehicle\u0022)]\npublic VehicleCreationResult Create(Func\u003CVehicle\u003E factory, VehicleGarage? targetGarage = null, int? spotNumber = null)"
         },
         {
           "id": "operation:Garage/Garage.csproj:Garage.Services.VehicleCreationService.FromJson(string,VehicleGarage?,int?)",
           "name": "FromJson",
-          "signature": "[UseCase(\u0022create-vehicle\u0022, \u0022Create or import vehicle\u0022)]\npublic VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)"
+          "signature": "[UseCase(\u0022create-vehicle\u0022)]\npublic VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)"
         }
       ]
     },
@@ -5523,58 +5521,184 @@
   "useCases": [
     {
       "id": "create-garage",
-      "title": "Create or import garage",
-      "actor": "Garage operator",
+      "title": "Create garage",
+      "actor": "Garage user.",
       "sources": [
         "Garage/Services/GarageService.cs"
+      ],
+      "storySource": "UseCases/garage/create-garage.md",
+      "implementations": [
+        {
+          "member": "Garage.Services.GarageService.CreateGarage(string, int)",
+          "type": "Garage.Services.GarageService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/GarageService.cs"
+        },
+        {
+          "member": "Garage.Services.GarageService.CreateGarageFromJson(string, string?)",
+          "type": "Garage.Services.GarageService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/GarageService.cs"
+        }
+      ]
+    },
+    {
+      "id": "create-garage-with-dimensions",
+      "title": "Create garage with sized spaces",
+      "actor": "Garage user.",
+      "sources": [
+        "Garage/Services/GarageService.cs"
+      ],
+      "storySource": "UseCases/optional/create-garage-with-dimensions.md",
+      "implementations": [
+        {
+          "member": "Garage.Services.GarageService.CreateGarage(string, System.Collections.Generic.IReadOnlyList\u003CGarage.Vehicles.Components.Dimensions\u003E)",
+          "type": "Garage.Services.GarageService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/GarageService.cs"
+        }
       ]
     },
     {
       "id": "create-vehicle",
-      "title": "Create or import vehicle",
-      "actor": "Garage operator",
+      "title": "Create or import catalogue vehicle",
+      "actor": "Garage user.",
       "sources": [
         "Garage/Services/VehicleCreationService.cs"
+      ],
+      "storySource": "UseCases/optional/create-vehicle.md",
+      "implementations": [
+        {
+          "member": "Garage.Services.VehicleCreationService.Create(System.Func\u003CGarage.Vehicles.Vehicle\u003E, Garage.Models.Garage?, int?)",
+          "type": "Garage.Services.VehicleCreationService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/VehicleCreationService.cs"
+        },
+        {
+          "member": "Garage.Services.VehicleCreationService.FromJson(string, Garage.Models.Garage?, int?)",
+          "type": "Garage.Services.VehicleCreationService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/VehicleCreationService.cs"
+        }
       ]
     },
     {
-      "id": "inspect",
-      "title": "Inspect parking spaces",
-      "actor": "Garage operator",
+      "id": "find-vehicle",
+      "title": "Find vehicle by registration",
+      "actor": "Garage user.",
       "sources": [
         "Garage/Models/Garage.cs"
+      ],
+      "storySource": "UseCases/garage/find-vehicle.md",
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.FindVehicleByRegistration(string)",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
       ]
     },
     {
-      "id": "list",
-      "title": "List garages and vehicles",
-      "actor": "Garage operator",
+      "id": "inspect-spaces",
+      "title": "Inspect parking spaces",
+      "actor": "Garage user.",
       "sources": [
-        "Garage/Services/GarageService.cs"
+        "Garage/Models/Garage.cs"
+      ],
+      "storySource": "UseCases/optional/inspect-spaces.md",
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.SpotDetails",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ]
+    },
+    {
+      "id": "list-vehicle-types",
+      "title": "List vehicle types and counts",
+      "actor": "Garage user.",
+      "sources": [
+        "Garage/Models/Garage.cs"
+      ],
+      "storySource": "UseCases/garage/list-vehicle-types.md",
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.VehiclesByType",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ]
+    },
+    {
+      "id": "list-vehicles",
+      "title": "List parked vehicles",
+      "actor": "Garage user.",
+      "sources": [
+        "Garage/Models/Garage.cs"
+      ],
+      "storySource": "UseCases/garage/list-vehicles.md",
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.Vehicles",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
       ]
     },
     {
       "id": "park-vehicle",
       "title": "Park vehicle",
-      "actor": "Garage operator",
+      "actor": "Garage user.",
       "sources": [
         "Garage/Services/GarageService.cs"
+      ],
+      "storySource": "UseCases/garage/park-vehicle.md",
+      "implementations": [
+        {
+          "member": "Garage.Services.GarageService.Park(Garage.Vehicles.Vehicle, Garage.Models.Garage, int?)",
+          "type": "Garage.Services.GarageService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/GarageService.cs"
+        }
       ]
     },
     {
-      "id": "remove",
-      "title": "Remove parked vehicle",
-      "actor": "Garage operator",
+      "id": "remove-vehicle",
+      "title": "Remove vehicle",
+      "actor": "Garage user.",
       "sources": [
         "Garage/Models/Garage.cs"
+      ],
+      "storySource": "UseCases/garage/remove-vehicle.md",
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.Remove(string)",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
       ]
     },
     {
-      "id": "search",
+      "id": "search-vehicles",
       "title": "Search parked vehicles",
-      "actor": "Garage operator",
+      "actor": "Garage user.",
       "sources": [
         "Garage/Models/Garage.cs"
+      ],
+      "storySource": "UseCases/garage/search-vehicles.md",
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.Search(Garage.Queries.VehicleSearchCriteria)",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
       ]
     }
   ],
@@ -5587,6 +5711,725 @@
       "expandNamespaces": [
         "Garage.Models",
         "Garage.Services"
+      ],
+      "storyId": "park-vehicle"
+    }
+  ],
+  "stories": [
+    {
+      "id": "create-garage",
+      "title": "Create garage",
+      "goal": "Make a garage available with the capacity chosen by the user.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/create-garage.md",
+      "requirements": [
+        "GAR-03",
+        "GAR-04",
+        "GAR-05",
+        "GAR-06",
+        "GAR-11",
+        "GAR-12",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests a new garage from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The user enters its capacity."
+        },
+        {
+          "number": 3,
+          "text": "The system validates the capacity and creates an empty garage with that limit."
+        },
+        {
+          "number": 4,
+          "text": "The system confirms that the garage is ready to use."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Invalid capacity",
+          "response": "explain the problem and allow correction without crashing or creating an invalid garage.",
+          "afterStep": null
+        },
+        {
+          "condition": "Initial vehicles",
+          "response": "the application must also support creating a garage populated from the start. Initial vehicles must satisfy the same validity, uniqueness and capacity rules as vehicles parked later. The assignment does not specify how those initial vehicles are supplied.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "A valid request creates a garage with the chosen capacity.",
+        "Its vehicle collection is stored privately using a list.",
+        "It can start empty or with valid initial vehicles without exceeding capacity.",
+        "Invalid input is handled with clear feedback."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Services.GarageService.CreateGarage(string, int)",
+          "type": "Garage.Services.GarageService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/GarageService.cs"
+        },
+        {
+          "member": "Garage.Services.GarageService.CreateGarageFromJson(string, string?)",
+          "type": "Garage.Services.GarageService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/GarageService.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "find-vehicle",
+      "title": "Find vehicle by registration",
+      "goal": "Find a specific parked vehicle using its registration number.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/find-vehicle.md",
+      "requirements": [
+        "GAR-03",
+        "GAR-09",
+        "GAR-11",
+        "GAR-12",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests registration lookup from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The user enters a registration number."
+        },
+        {
+          "number": 3,
+          "text": "The system searches the parked vehicles without distinguishing uppercase and lowercase letters."
+        },
+        {
+          "number": 4,
+          "text": "The system displays the matching vehicle and its properties."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "No match",
+          "response": "explain that no vehicle with that registration is parked.",
+          "afterStep": null
+        },
+        {
+          "condition": "Invalid input",
+          "response": "explain the problem and allow correction without crashing.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "ABC123, Abc123 and AbC123 find the same vehicle.",
+        "The result identifies the matching parked vehicle, or clearly reports no match.",
+        "Searching leaves the garage unchanged."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.FindVehicleByRegistration(string)",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "list-vehicles",
+      "title": "List parked vehicles",
+      "goal": "See which vehicles are currently parked and their properties.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/list-vehicles.md",
+      "requirements": [
+        "GAR-01",
+        "GAR-02",
+        "GAR-08",
+        "GAR-11",
+        "GAR-12"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests the list of parked vehicles from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The system retrieves the vehicles currently in the garage."
+        },
+        {
+          "number": 3,
+          "text": "The system displays each vehicle\u0027s registration, type and vehicle properties."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Empty garage",
+          "response": "explain that no vehicles are parked.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "Every parked vehicle is included once.",
+        "The user can distinguish vehicles and inspect their properties.",
+        "Vehicles outside the garage are not included.",
+        "Listing leaves the garage unchanged."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.Vehicles",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "list-vehicle-types",
+      "title": "List vehicle types and counts",
+      "goal": "See how many vehicles of each type are parked in the garage.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/list-vehicle-types.md",
+      "requirements": [
+        "GAR-02",
+        "GAR-08",
+        "GAR-11",
+        "GAR-12"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests a summary by vehicle type from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The system groups the parked vehicles by type and counts each group."
+        },
+        {
+          "number": 3,
+          "text": "The system displays the vehicle types present and their counts."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Empty garage",
+          "response": "explain that no vehicles are parked.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "Each displayed count reflects the vehicles currently parked of that type.",
+        "The counts add up to the number of parked vehicles.",
+        "Vehicles outside the garage are not counted.",
+        "Viewing the summary leaves the garage unchanged."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.VehiclesByType",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "navigate-menus",
+      "title": "Navigate garage menus",
+      "goal": "Reach the required garage functions through the console interface.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/navigate-menus.md",
+      "requirements": [
+        "GAR-11",
+        "GAR-12",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The system presents the main menu and its available choices."
+        },
+        {
+          "number": 2,
+          "text": "The user selects a function or submenu."
+        },
+        {
+          "number": 3,
+          "text": "The system opens the requested interaction and shows the available choices."
+        },
+        {
+          "number": 4,
+          "text": "The user can continue with a function or return to the main menu."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Invalid choice",
+          "response": "explain the available choices and allow another selection without crashing.",
+          "afterStep": null
+        },
+        {
+          "condition": "A garage is needed",
+          "response": "explain that a garage must first be created before the requested operation can continue.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "All required functions are reachable through text-based main and submenus.",
+        "Garage creation with user-specified capacity and application exit are reachable.",
+        "Invalid navigation does not crash the application or change garage contents."
+      ],
+      "implementations": [],
+      "diagrams": [
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "park-vehicle",
+      "title": "Park vehicle",
+      "goal": "Put a vehicle in the garage when there is capacity available.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/park-vehicle.md",
+      "requirements": [
+        "GAR-03",
+        "GAR-05",
+        "GAR-07",
+        "GAR-11",
+        "GAR-12",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests parking from the console menu and supplies or selects a vehicle."
+        },
+        {
+          "number": 2,
+          "text": "The system checks the vehicle details, registration uniqueness and available capacity."
+        },
+        {
+          "number": 3,
+          "text": "The system adds the vehicle to the garage."
+        },
+        {
+          "number": 4,
+          "text": "The system confirms that the vehicle is parked."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Invalid details",
+          "response": "explain the problem and allow correction without crashing.",
+          "afterStep": 2
+        },
+        {
+          "condition": "Duplicate registration",
+          "response": "reject the request and preserve the vehicles already parked.",
+          "afterStep": 2
+        },
+        {
+          "condition": "Garage full",
+          "response": "explain that no capacity is available and leave the garage unchanged.",
+          "afterStep": 2
+        }
+      ],
+      "done": [
+        "A valid vehicle is added when capacity is available.",
+        "Parking does not exceed the chosen garage capacity or introduce a duplicate registration.",
+        "A rejected request leaves the existing vehicles unchanged.",
+        "The user receives a clear success or failure message."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Services.GarageService.Park(Garage.Vehicles.Vehicle, Garage.Models.Garage, int?)",
+          "type": "Garage.Services.GarageService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/GarageService.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "parking-sequence",
+        "parking-activity",
+        "parking-spot-state",
+        "garage-use-cases",
+        "parking-story-activity"
+      ]
+    },
+    {
+      "id": "quit-application",
+      "title": "Quit application",
+      "goal": "End the running garage application through its interface.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/quit-application.md",
+      "requirements": [
+        "GAR-11",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user chooses the exit option from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The system ends the menu interaction and shuts down normally."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Invalid menu choice",
+          "response": "keep the application running, explain the available choices and allow another selection.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "The user can end the application without forcibly closing the console.",
+        "Choosing exit terminates the running application normally."
+      ],
+      "implementations": [],
+      "diagrams": [
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "remove-vehicle",
+      "title": "Remove vehicle",
+      "goal": "Take a parked vehicle out of the garage and make its capacity available again.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/remove-vehicle.md",
+      "requirements": [
+        "GAR-07",
+        "GAR-09",
+        "GAR-11",
+        "GAR-12",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests vehicle removal from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The user identifies the parked vehicle."
+        },
+        {
+          "number": 3,
+          "text": "The system finds the vehicle and removes it from the garage."
+        },
+        {
+          "number": 4,
+          "text": "The system confirms that the vehicle has been removed."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Vehicle not found",
+          "response": "explain that no matching vehicle is parked and leave the garage unchanged.",
+          "afterStep": null
+        },
+        {
+          "condition": "Invalid input",
+          "response": "explain the problem and allow correction without crashing.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "The identified vehicle is no longer parked in the garage.",
+        "Its capacity is available for another vehicle.",
+        "Other parked vehicles remain unchanged.",
+        "Registration lookup ignores letter case, and success or failure is clearly reported."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.Remove(string)",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "search-vehicles",
+      "title": "Search parked vehicles",
+      "goal": "Find parked vehicles matching one or several chosen properties.",
+      "actor": "Garage user.",
+      "priority": "required",
+      "source": "UseCases/garage/search-vehicles.md",
+      "requirements": [
+        "GAR-01",
+        "GAR-10",
+        "GAR-11",
+        "GAR-12",
+        "GAR-13"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user requests vehicle search from the console menu."
+        },
+        {
+          "number": 2,
+          "text": "The user supplies one or more criteria using shared vehicle properties and, when wanted, vehicle type."
+        },
+        {
+          "number": 3,
+          "text": "The system finds parked vehicles that match all supplied criteria."
+        },
+        {
+          "number": 4,
+          "text": "The system displays the matching vehicles and their properties."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "One criterion",
+          "response": "search using just that criterion, such as colour.",
+          "afterStep": null
+        },
+        {
+          "condition": "Combined criteria",
+          "response": "apply the criteria together, such as black vehicles with four wheels, or pink motorcycles with three wheels.",
+          "afterStep": null
+        },
+        {
+          "condition": "No matches",
+          "response": "clearly report that no parked vehicles match.",
+          "afterStep": null
+        },
+        {
+          "condition": "Invalid values",
+          "response": "explain the problem and allow correction without crashing.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "Each shared vehicle property can be used for searching, alone or in combination with the others.",
+        "Type filtering can be combined with shared-property criteria.",
+        "Every result matches all supplied criteria, and the garage remains unchanged."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.Search(Garage.Queries.VehicleSearchCriteria)",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "create-garage-with-dimensions",
+      "title": "Create garage with sized spaces",
+      "goal": "Create a garage whose spaces have individual length, width and height limits.",
+      "actor": "Garage user.",
+      "priority": "optional",
+      "source": "UseCases/optional/create-garage-with-dimensions.md",
+      "requirements": [
+        "OPT-08"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user supplies the garage name and the dimensions of its parking spaces."
+        },
+        {
+          "number": 2,
+          "text": "The system validates the name and space dimensions."
+        },
+        {
+          "number": 3,
+          "text": "The system registers the garage with the supplied spaces and confirms success."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Invalid dimensions",
+          "response": "explain the problem and leave the garage collection unchanged.",
+          "afterStep": null
+        },
+        {
+          "condition": "Duplicate name",
+          "response": "reject creation and preserve the existing garage.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "Every created space retains its configured dimensions.",
+        "A rejected request does not add a partial garage.",
+        "Sized spaces remain an optional extension of the basic capacity-based garage."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Services.GarageService.CreateGarage(string, System.Collections.Generic.IReadOnlyList\u003CGarage.Vehicles.Components.Dimensions\u003E)",
+          "type": "Garage.Services.GarageService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/GarageService.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "create-vehicle",
+      "title": "Create or import catalogue vehicle",
+      "goal": "Add a valid vehicle to the shared catalogue before parking it, with optional immediate parking.",
+      "actor": "Garage user.",
+      "priority": "optional",
+      "source": "UseCases/optional/create-vehicle.md",
+      "requirements": [
+        "OPT-10",
+        "OPT-12"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user enters vehicle details or selects a vehicle JSON file."
+        },
+        {
+          "number": 2,
+          "text": "The system validates the vehicle and checks registration uniqueness."
+        },
+        {
+          "number": 3,
+          "text": "If the user selected a garage, the system attempts to park the vehicle there."
+        },
+        {
+          "number": 4,
+          "text": "The system adds the vehicle to the catalogue and confirms success."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "Invalid details or file",
+          "response": "explain the problem and leave the catalogue unchanged.",
+          "afterStep": null
+        },
+        {
+          "condition": "Duplicate registration",
+          "response": "reject the vehicle and preserve the existing catalogue.",
+          "afterStep": null
+        },
+        {
+          "condition": "Parking rejected",
+          "response": "explain the failure and do not register the new vehicle in the catalogue.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "Successful creation adds exactly one valid vehicle with a unique registration.",
+        "A vehicle may remain unparked in the catalogue.",
+        "Immediate parking must succeed before catalogue registration is committed."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Services.VehicleCreationService.Create(System.Func\u003CGarage.Vehicles.Vehicle\u003E, Garage.Models.Garage?, int?)",
+          "type": "Garage.Services.VehicleCreationService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/VehicleCreationService.cs"
+        },
+        {
+          "member": "Garage.Services.VehicleCreationService.FromJson(string, Garage.Models.Garage?, int?)",
+          "type": "Garage.Services.VehicleCreationService",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Services/VehicleCreationService.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
+      ]
+    },
+    {
+      "id": "inspect-spaces",
+      "title": "Inspect parking spaces",
+      "goal": "See each numbered parking space, its dimensions and whether it is occupied.",
+      "actor": "Garage user.",
+      "priority": "optional",
+      "source": "UseCases/optional/inspect-spaces.md",
+      "requirements": [
+        "OPT-03",
+        "OPT-08"
+      ],
+      "flow": [
+        {
+          "number": 1,
+          "text": "The user selects a garage and requests its parking-space details."
+        },
+        {
+          "number": 2,
+          "text": "The system retrieves the numbered spaces and occupancy information."
+        },
+        {
+          "number": 3,
+          "text": "The system displays the available space details."
+        }
+      ],
+      "alternatives": [
+        {
+          "condition": "No selected garage",
+          "response": "explain that a garage must be selected first.",
+          "afterStep": null
+        },
+        {
+          "condition": "Unsized space",
+          "response": "show the space and occupancy without inventing dimension limits.",
+          "afterStep": null
+        }
+      ],
+      "done": [
+        "Each space is listed once with its number and current occupancy.",
+        "Configured dimensions are shown when available.",
+        "Inspection leaves parking assignments unchanged."
+      ],
+      "implementations": [
+        {
+          "member": "Garage.Models.Garage.SpotDetails",
+          "type": "Garage.Models.Garage",
+          "project": "Garage/Garage.csproj",
+          "source": "Garage/Models/Garage.cs"
+        }
+      ],
+      "diagrams": [
+        "garage-classes",
+        "garage-use-cases"
       ]
     }
   ]

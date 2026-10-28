@@ -27,7 +27,6 @@ public sealed class GarageService
         VehicleCreation = new VehicleCreationService(Catalog, ParkNewVehicle);
     }
 
-    [UseCase("list", "List garages and vehicles")]
     public IReadOnlyList<VehicleGarage> Garages => garages.AsReadOnly();
     public VehicleCatalog Catalog { get; }
     public VehicleCreationService VehicleCreation { get; }
@@ -35,14 +34,15 @@ public sealed class GarageService
     public bool ContainsGarage(string name) => garages.Any(garage =>
         string.Equals(garage.GarageName, name.Trim(), StringComparison.OrdinalIgnoreCase));
 
-    [UseCase("create-garage", "Create or import garage")]
+    [UseCase("create-garage")]
     public GarageCreationResult CreateGarage(string name, int capacity) =>
         CreateAndRegister(() => new VehicleGarage(name, capacity));
 
+    [UseCase("create-garage-with-dimensions")]
     public GarageCreationResult CreateGarage(string name, IReadOnlyList<Dimensions> sizes) =>
         CreateAndRegister(() => new VehicleGarage(name, sizes));
 
-    [UseCase("create-garage", "Create or import garage")]
+    [UseCase("create-garage")]
     public GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null) =>
         CreateAndRegister(() => GarageJsonLoader.Load(configurationPath, placementPath));
 
@@ -59,7 +59,7 @@ public sealed class GarageService
                 : garage.AvailableSpotsFor(vehicle).Count > 0)).ToList().AsReadOnly();
     }
 
-    [UseCase("park-vehicle", "Park vehicle")]
+    [UseCase("park-vehicle")]
     [SequenceView("parking-sequence", MaxDepth = 3,
         ExpandNamespaces = new[] { "Garage.Services", "Garage.Models" })]
     public ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)

@@ -33,6 +33,8 @@ The **domain** is the part that decides what a valid vehicle or parking operatio
 
 The [Garage structure guide](Garage/README.md) explains how models, services, queries, results, and JSON loading connect, with a small example of the complete flow.
 
+The [use-case stories](UseCases/README.md) define required behavior from the Garage 1.0 assignment, with lists replacing its original array rule. Complete stories cover creation, parking, removal, listing, lookup, search, menus and exit; optional enhancements and implementation notes are kept separately. The [use-case manager](tools/UseCaseManager/README.md) validates the files and generates a catalogue in the diagram browser.
+
 ## Vehicles and the domain
 
 Every vehicle has shared information such as a registration number, country of registration, manufacturer, model, year, and colour. Cars, motorcycles, buses, trucks, boats, and airplanes add their own specifications. A vehicle can also have engines, dimensions, and details specific to its type.

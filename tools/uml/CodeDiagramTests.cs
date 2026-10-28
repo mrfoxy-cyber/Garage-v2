@@ -21,9 +21,7 @@ static class CodeDiagramTests
         Write("Library/Attributes.cs", """
             namespace Garage.Documentation;
             [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = true)]
-            public sealed class UseCaseAttribute(string id, string title) : Attribute {
-                public string Actor { get; set; } = "Garage operator";
-            }
+            public sealed class UseCaseAttribute(string id) : Attribute { }
             [AttributeUsage(AttributeTargets.Method)]
             public sealed class SequenceViewAttribute(string id) : Attribute {
                 public int MaxDepth { get; set; } = 3;
@@ -45,7 +43,7 @@ static class CodeDiagramTests
             namespace Demo;
             public sealed class Service {
                 private readonly VehicleGarage garage = new();
-                [UseCase("park-vehicle", "Park a vehicle", Actor = "Operator")]
+                [UseCase("park-vehicle")]
                 [SequenceView("sequence", MaxDepth = 3)]
                 public int Park(int? spot) {
                     if (spot is null) return garage.Park(1);
@@ -58,6 +56,26 @@ static class CodeDiagramTests
             }
             """;
         var source = original;
+        Write("UseCases/requirements/README.md", "- **GAR-01 — Parking:** Park vehicles.");
+        Write("UseCases/optional/README.md", "# Optional enhancements");
+        Write("UseCases/garage/park-vehicle.md", """
+            # Park a vehicle
+
+            **Goal:** Park a vehicle safely.
+            **Actor:** Operator
+            ## Flow
+            1. Choose a vehicle.
+            2. Park the vehicle.
+            ## Alternatives
+            - **Full:** reject parking.
+            ## Done when
+            - A valid vehicle is parked.
+            ```yaml
+            id: park-vehicle
+            priority: required
+            requirements: [GAR-01]
+            ```
+            """);
         Write("App/Service.cs", source);
         Diagram Diagram(string id, string type) => new(id, type, id, $"docs/uml/{id}.puml", "generated", "active", null, [], [], [], []);
         var manifest = new Manifest(1, ["App/App.csproj", "Library/Library.csproj"], [], [Diagram("sequence", "sequence"), Diagram("use-cases", "use-case")]);
@@ -115,15 +133,15 @@ static class CodeDiagramTests
         Throws(() => Puml(), "Service.cs:", "unsupported control flow fails with a source location");
         source = original.Replace("MaxDepth = 3", "MaxDepth = -1");
         Throws(() => Puml(), "MaxDepth", "invalid depth annotation is rejected");
-        source = original.Replace("[UseCase(\"park-vehicle\", \"Park a vehicle\", Actor = \"Operator\")]", "");
+        source = original.Replace("[UseCase(\"park-vehicle\")]", "");
         Throws(() => Puml(), "exactly one UseCase", "sequence annotation needs explicit actor and goal metadata");
-        source = original.Replace("private int First()", "[UseCase(\"park-vehicle\", \"Conflicting title\", Actor = \"Operator\")] private int First()");
-        Throws(() => Puml(), "Conflicting UseCase", "conflicting definitions cannot silently change a shared use case");
-        source = original.Replace("private int First()", "[UseCase(\"other\", \"Other\")][SequenceView(\"sequence\")] private int First()");
+        source = original.Replace("private int First()", "[UseCase(\"missing-story\")] private int First()");
+        Throws(() => Puml(), "Unknown UseCase story ID", "unknown story links fail rather than inventing metadata");
+        source = original.Replace("private int First()", "[UseCase(\"park-vehicle\")][SequenceView(\"sequence\")] private int First()");
         Throws(() => Puml(), "Duplicate SequenceView", "duplicate sequence roots are rejected");
         source = original.Replace("SequenceView(\"sequence\"", "SequenceView(\"unregistered\"");
         Throws(() => Puml(), "manifest.json", "orphan sequence annotations are rejected");
-        source = original.Replace("private int First()", "[UseCase(\"park-vehicle\", \"Park a vehicle\", Actor = \"Operator\")] private int First()");
+        source = original.Replace("private int First()", "[UseCase(\"park-vehicle\")] private int First()");
         Write("App/Service.cs", source);
         Assert(Extract().UseCases.Length == 1, "one use case may link several implementing operations");
         source = original;

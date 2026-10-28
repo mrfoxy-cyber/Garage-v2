@@ -181,6 +181,7 @@
         "Garage/Results/OperationError.cs"
       ],
       "trackSymbols": [],
+      "storyIds": ["park-vehicle"],
       "entities": [
         "operation:park"
       ],
@@ -202,6 +203,7 @@
         "Garage/Models/Garage.cs"
       ],
       "trackSymbols": [],
+      "storyIds": ["park-vehicle"],
       "entities": [
         "model:parking-spot"
       ],
@@ -240,7 +242,7 @@
     {
       "id": "garage-use-cases",
       "type": "use-case",
-      "title": "Garage user capabilities",
+      "title": "Garage stories and goals",
       "file": "docs/uml/behavioral/use-case/garage-use-cases.puml",
       "maintenance": "generated",
       "status": "active",
@@ -253,8 +255,23 @@
       ],
       "related": [
         "garage-components",
-        "parking-sequence"
+        "parking-sequence",
+        "parking-story-activity"
       ]
+    },
+    {
+      "id": "parking-story-activity",
+      "type": "activity",
+      "title": "Park vehicle — requirements flow",
+      "file": "docs/uml/behavioral/activity/parking-story-activity.puml",
+      "maintenance": "generated",
+      "status": "active",
+      "project": null,
+      "trackFiles": [],
+      "trackSymbols": [],
+      "entities": ["operation:park"],
+      "storyIds": ["park-vehicle"],
+      "related": ["garage-use-cases", "parking-sequence", "parking-activity", "parking-spot-state"]
     },
     {
       "id": "garage-object",

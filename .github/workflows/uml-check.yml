@@ -25,6 +25,8 @@ jobs:
         run: dotnet build tools/uml/Uml.csproj --configuration Release
       - name: Test change detection
         run: dotnet run --no-build --configuration Release --project tools/uml -- self-test
+      - name: Test use-case manager
+        run: dotnet run --no-build --configuration Release --project tools/UseCaseManager -- self-test
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

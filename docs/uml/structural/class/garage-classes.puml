@@ -19,16 +19,15 @@ class "SequenceViewAttribute" as e_921fac54fe9e9970ce7f {
   public string[] ExpandNamespaces &#123;  get;  set; &#125;
 }
 class "UseCaseAttribute" as e_70ee0bedbf2ab27c1a4a {
-  primary constructor UseCaseAttribute(string id, string title)
-  public string Actor &#123;  get;  set; &#125;
+  primary constructor UseCaseAttribute(string id)
   public string Id &#123;  get; &#125;
-  public string Title &#123;  get; &#125;
 }
 }
 package "Garage.Models" as e_b9ddcf58f7305c147c98 {
 class "Garage" as e_7dfee8d41ffeed65ee04 {
-  [UseCase(\"remove\", \"Remove parked vehicle\")] public GarageOperationResult Remove(string registrationNumber)
-  [UseCase(\"search\", \"Search parked vehicles\")] public IReadOnlyList<Vehicle> Search(VehicleSearchCriteria criteria)
+  [UseCase(\"find-vehicle\")] public ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber)
+  [UseCase(\"remove-vehicle\")] public GarageOperationResult Remove(string registrationNumber)
+  [UseCase(\"search-vehicles\")] public IReadOnlyList<Vehicle> Search(VehicleSearchCriteria criteria)
   private Garage(string garageName, int capacity, List<Vehicle> initialVehicles, IReadOnlyList<Dimensions>? spotDimensions)
   private bool RegistrationExists(string registrationNumber)
   private readonly List<ParkingSpot> parkingSpots
@@ -43,7 +42,6 @@ class "Garage" as e_7dfee8d41ffeed65ee04 {
   public IReadOnlyList<Vehicle> Vehicles &#123; get; &#125;
   public IReadOnlyList<VehicleTypeGroup> VehiclesByType &#123; get; &#125;
   public IReadOnlyList<int> AvailableSpotsFor(Vehicle vehicle)
-  public ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber)
   public ParkingResult Park(Vehicle vehicle)
   public ParkingResult Park(Vehicle vehicle, int spot)
   public const int MaximumGarageCapacity
@@ -278,14 +276,14 @@ class "ExpectedFailure" as e_fd3daa564fa221428833 {
   public static bool IsExpected(Exception exception)
 }
 class "GarageService" as e_6dd2ac09b188a18419a6 {
-  [UseCase(\"create-garage\", \"Create or import garage\")] public GarageCreationResult CreateGarage(string name, int capacity)
-  [UseCase(\"create-garage\", \"Create or import garage\")] public GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)
-  [UseCase(\"park-vehicle\", \"Park vehicle\")] [SequenceView(\"parking-sequence\", MaxDepth = 3, ExpandNamespaces = new[] &#123; \"Garage.Services\", \"Garage.Models\" &#125;)] public ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)
+  [UseCase(\"create-garage\")] public GarageCreationResult CreateGarage(string name, int capacity)
+  [UseCase(\"create-garage\")] public GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null)
+  [UseCase(\"create-garage-with-dimensions\")] public GarageCreationResult CreateGarage(string name, IReadOnlyList<Dimensions> sizes)
+  [UseCase(\"park-vehicle\")] [SequenceView(\"parking-sequence\", MaxDepth = 3, ExpandNamespaces = new[] &#123; \"Garage.Services\", \"Garage.Models\" &#125;)] public ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)
   private GarageCreationResult CreateAndRegister(Func<VehicleGarage> factory)
   private GarageCreationResult RegisterGarage(VehicleGarage garage)
   private ParkingResult ParkNewVehicle(Vehicle vehicle, VehicleGarage garage, int? spotNumber)
   private readonly List<VehicleGarage> garages
-  public GarageCreationResult CreateGarage(string name, IReadOnlyList<Dimensions> sizes)
   public GarageService(List<VehicleGarage> initialGarages, List<Vehicle> initialVehicles)
   public IReadOnlyList<Vehicle> GetParkableVehicles(VehicleGarage garage, int? spotNumber = null)
   public IReadOnlyList<VehicleGarage> Garages &#123; get; &#125;
@@ -295,8 +293,8 @@ class "GarageService" as e_6dd2ac09b188a18419a6 {
   public bool IsParked(Vehicle vehicle)
 }
 class "VehicleCreationService" as e_30eac2cea220d48d859f {
-  [UseCase(\"create-vehicle\", \"Create or import vehicle\")] public VehicleCreationResult Create(Func<Vehicle> factory, VehicleGarage? targetGarage = null, int? spotNumber = null)
-  [UseCase(\"create-vehicle\", \"Create or import vehicle\")] public VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)
+  [UseCase(\"create-vehicle\")] public VehicleCreationResult Create(Func<Vehicle> factory, VehicleGarage? targetGarage = null, int? spotNumber = null)
+  [UseCase(\"create-vehicle\")] public VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null)
   internal VehicleCreationService(VehicleCatalog catalog, Func<Vehicle, VehicleGarage, int?, ParkingResult> park)
   private readonly Func<Vehicle, VehicleGarage, int?, ParkingResult> park
   private readonly VehicleCatalog catalog

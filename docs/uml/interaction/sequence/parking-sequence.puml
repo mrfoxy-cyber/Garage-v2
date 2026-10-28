@@ -2,7 +2,7 @@
 ' diagram-id: parking-sequence
 ' Generated from code annotations and source. Run generate; do not edit by hand.
 title Park an existing catalog vehicle
-actor "Garage operator" as Actor
+actor "Garage user." as Actor
 participant "Garage.Services.GarageService" as p_753cfee6aae6
 participant "Garage.Results.ParkingResult" as p_426dd07c2e3a
 participant "Garage.Models.Garage" as p_50a211325908
@@ -265,6 +265,7 @@ end
 end
 p_753cfee6aae6 --> Actor : ParkNewVehicle(vehicle, garage, spotNumber)
 end
+' Story: park-vehicle — Park vehicle
 legend bottom
   [[../../structural/component/garage-components.puml Garage project components]]
   [[../../structural/class/garage-classes.puml Garage classes]]

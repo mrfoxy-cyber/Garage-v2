@@ -1,12 +1,10 @@
 namespace Garage.Documentation;
 
-/// <summary>Names a user goal implemented by an operation or query.</summary>
+/// <summary>Links an operation or query to a story ID in UseCases/.</summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = true, Inherited = false)]
-public sealed class UseCaseAttribute(string id, string title) : Attribute
+public sealed class UseCaseAttribute(string id) : Attribute
 {
     public string Id { get; } = id;
-    public string Title { get; } = title;
-    public string Actor { get; set; } = "Garage operator";
 }
 
 /// <summary>Starts a source-based sequence view; depth limits method-body expansion.</summary>

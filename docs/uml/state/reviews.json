@@ -63,11 +63,11 @@
       "Garage/Models/ParkingSpot.cs": "fee0a7d322540bb7f169a6de71a6afb47fd1bc825989cf7ac5c49c018714d330",
       "Garage/Results/OperationError.cs": "a0543f8a76665ce9e0cb2e7e331c6d6e005989f7e3f830b3ce6342b9a18a1c32",
       "Garage/Results/ParkingResult.cs": "cb28e5fdb91e49319068bea60bf006f596631ef97fffdde6f65406571c4334a5",
-      "Garage/Services/GarageService.cs": "5ef0c1ba0588e98af96be13510fb374c0c0ba55fd47b1da1a3c6b1c95bde76ba",
+      "Garage/Services/GarageService.cs": "6237aa08ba8a13edac5cf95d83fa8d2baab5f81a6fef7bf74ca9e413577a106e",
       "tracking-policy": "c1bcfbf0c8ba4bd577c54f5174f1cff1e55642087f354d0e0babb5c61df6ae51"
     },
     "diagramHash": "f7e69eba0bb51a4f7d2a4c7afb6b081b70a010c8e08991981b1e0dc67f82d235",
-    "note": "Reviewed annotation-only changes in GarageService and Garage: executable parking logic is unchanged and the activity still matches catalog, garage, duplicate-registration, spot-selection and assignment paths."
+    "note": "Reviewed the newly annotated dimensions overload: only use-case documentation was added; parking validation and assignment behavior are unchanged."
   },
   "parking-sequence": {
     "fingerprints": {

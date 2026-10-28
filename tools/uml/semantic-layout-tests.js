@@ -23,7 +23,7 @@ function inside(node,frame) { return node.x>=frame.x && node.y>=frame.y && node.
   for (const diagram of data.diagrams) assert(data.views[diagram.id]);
   pass('every diagram, including all six templates, has a live model');
   for (const diagram of data.diagrams) { const scene=await semantic.layout(data.views[diagram.id],options); geometry(scene); }
-  pass('all 18 diagram types/views render finite non-overlapping interactive geometry');
+  pass(`all ${data.diagrams.length} diagram views render finite non-overlapping interactive geometry`);
 
   const sequence=data.views['parking-sequence'];
   const folded=await semantic.layout(sequence,options);

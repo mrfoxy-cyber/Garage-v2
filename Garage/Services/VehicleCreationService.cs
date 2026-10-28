@@ -19,7 +19,7 @@ public sealed class VehicleCreationService
         this.park = park;
     }
 
-    [UseCase("create-vehicle", "Create or import vehicle")]
+    [UseCase("create-vehicle")]
     public VehicleCreationResult Create(Func<Vehicle> factory, VehicleGarage? targetGarage = null, int? spotNumber = null)
     {
         ArgumentNullException.ThrowIfNull(factory);
@@ -55,7 +55,7 @@ public sealed class VehicleCreationService
             $"{targetGarage.GarageName} at spot {parking!.SpotNumber}.");
     }
 
-    [UseCase("create-vehicle", "Create or import vehicle")]
+    [UseCase("create-vehicle")]
     public VehicleCreationResult FromJson(string path, VehicleGarage? targetGarage = null, int? spotNumber = null) =>
         Create(() => VehicleJsonLoader.LoadVehicle(path), targetGarage, spotNumber);
 }

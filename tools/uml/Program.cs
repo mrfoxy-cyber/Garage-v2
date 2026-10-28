@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using UseCaseManagement;
 
 return Uml.Run(args);
 
@@ -138,7 +139,12 @@ static class Uml
             Operations = g.SelectMany(t => t.Operations).DistinctBy(o => o.Id).OrderBy(o => o.Id, StringComparer.Ordinal).ToArray(),
             Declaration = string.Join("; ", g.Select(t => t.Declaration).Distinct().Order(StringComparer.Ordinal))
         }).OrderBy(t => t.Id, StringComparer.Ordinal).ToArray();
-        return new Model(projects.ToArray(), merged, fingerprints, CodeDiagrams.Extract(root, manifest));
+        var catalogue = CatalogueStore.TryLoad(root);
+        if (catalogue is not null)
+            foreach (var story in catalogue.Stories)
+                fingerprints[story.Source] = Hash(Serialize(new { story,
+                    requirements = catalogue.Requirements.Where(r => story.Requirements.Contains(r.Id)).ToArray() }));
+        return new Model(projects.ToArray(), merged, fingerprints, CodeDiagrams.Extract(root, StoryDiagrams.Describe(manifest, catalogue), catalogue), catalogue);
     }
 
     static string TypeName(BaseTypeDeclarationSyntax type) => type.Identifier.Text +
@@ -182,7 +188,12 @@ static class Uml
             if (d.Status is not ("active" or "template")) throw new Exception($"Invalid status: {d.Id}");
             if (!d.File.StartsWith("docs/uml/", StringComparison.Ordinal) || !d.File.EndsWith(".puml", StringComparison.Ordinal)) throw new Exception($"Invalid diagram path: {d.File}");
             At(root, d.File);
-            if (d.Maintenance == "generated" && d.Type is not ("class" or "component" or "package" or "sequence" or "use-case")) throw new Exception($"No generator for {d.Type}.");
+            if (d.Maintenance == "generated" && d.Type is not ("class" or "component" or "package" or "sequence" or "use-case" or "activity")) throw new Exception($"No generator for {d.Type}.");
+            foreach (var storyId in d.StoryIds ?? [])
+                if (model.Stories?.Stories.Any(s => s.Id == storyId) != true) throw new Exception($"Unknown story {storyId} in {d.Id}.");
+            if (d.StoryIds is not null && d.StoryIds.Distinct().Count() != d.StoryIds.Length) throw new Exception($"Duplicate story reference in {d.Id}.");
+            if (d.Maintenance == "generated" && d.Type == "activity" && d.StoryIds is not { Length: 1 })
+                throw new Exception($"Generated activity {d.Id} needs exactly one storyIds entry.");
             if (d.Maintenance == "generated" && (d.Type is "sequence" or "use-case") && model.CodeDiagrams?.Diagrams.ContainsKey(d.Id) != true)
                 throw new Exception($"Missing code annotations for {d.Id}.");
             if (d.Type == "class" && d.Maintenance == "generated" && !manifest.Projects.Contains(d.Project)) throw new Exception($"Unknown class diagram project: {d.Id}");
@@ -214,9 +225,13 @@ static class Uml
 
     public static SortedDictionary<string, string> Outputs(string root, Manifest manifest, Model model)
     {
+        manifest = StoryDiagrams.Describe(manifest, model.Stories);
         var output = new SortedDictionary<string, string>(StringComparer.Ordinal);
-        output["docs/uml/model.generated.json"] = Serialize(new { version = 2, projects = model.Projects, types = model.Types,
-            useCases = model.CodeDiagrams?.UseCases ?? [], sequenceEntries = model.CodeDiagrams?.SequenceEntries ?? [] });
+        if (model.Stories is { } catalogue)
+            foreach (var (path, content) in CatalogueStore.Outputs(catalogue)) output.Add(path, content);
+        var stories = StoryDiagrams.Traces(manifest, model);
+        output["docs/uml/model.generated.json"] = Serialize(new { version = 3, projects = model.Projects, types = model.Types,
+            useCases = model.CodeDiagrams?.UseCases ?? [], sequenceEntries = model.CodeDiagrams?.SequenceEntries ?? [], stories });
         var views = GraphData.Create(manifest, model);
         // Capture authored sources once: interactive metadata, PUML text and previews share this snapshot.
         var authoredSources = manifest.Diagrams.Where(d => d.Maintenance != "generated")
@@ -225,11 +240,14 @@ static class Uml
             views.Add(diagram.Id, AuthoredData.Parse(diagram, authoredSources[diagram.File]));
         foreach (var d in manifest.Diagrams.Where(d => d.Maintenance == "generated"))
         {
-            if (d.Type is "sequence" or "use-case")
+            if (d.Type is "sequence" or "use-case" or "activity")
             {
-                var generated = model.CodeDiagrams!.Diagrams[d.Id];
+                var generated = d.Type == "activity" ? StoryDiagrams.Activity(d, model.Stories ?? throw new Exception("Story catalogue required.")) : model.CodeDiagrams!.Diagrams[d.Id];
                 output[d.File] = generated.Puml;
-                views.Add(d.Id, CodeDiagrams.View(d, generated));
+                var view = CodeDiagrams.View(d, generated);
+                if (d.Type == "use-case") view = view with { Nodes = view.Nodes.Select(n => n with {
+                    StoryId = stories.SingleOrDefault(s => n.Id == d.Id + ":u_" + s.Id.Replace('-', '_'))?.Id }).ToArray() };
+                views.Add(d.Id, view);
                 continue;
             }
             var lines = new List<string> { "@startuml", "' diagram-id: " + d.Id, "' Generated. Run the UML generate command; do not edit by hand.", "hide empty members", "skinparam classAttributeIconSize 0", "title " + d.Title };
@@ -316,9 +334,10 @@ static class Uml
             lines.Add("@enduml");
             output[d.File] = string.Join("\n", lines) + "\n";
         }
-        var graphData = new { version = 4, diagrams = manifest.Diagrams.Select(d => {
+        var graphData = new { version = 5, stories, diagrams = manifest.Diagrams.Select(d => {
             var puml = output.TryGetValue(d.File, out var generated) ? generated : authoredSources[d.File];
-            return new { d.Id, d.Type, d.Title, d.Maintenance, d.Status, d.Related,
+            return new { d.Id, d.Type, d.Title, d.Maintenance, d.Status, d.Related, storyIds = StoryDiagrams.StoryIds(d, model),
+                origin = d.Maintenance == "generated" && d.Type is "use-case" or "activity" ? "stories" : d.Maintenance == "generated" ? "code" : "authored",
                 source = d.File["docs/uml/".Length..], svg = Path.ChangeExtension(d.File["docs/uml/".Length..], ".svg").Replace('\\', '/'),
                 puml, pumlHash = Hash(puml) };
         }).ToArray(), views };
@@ -402,7 +421,8 @@ static class Uml
         var result = new SortedDictionary<string, string>(StringComparer.Ordinal);
         foreach (var (key, hash) in model.Fingerprints)
             if ((!key.StartsWith("symbol:", StringComparison.Ordinal) && d.TrackFiles.Any(p => Glob(p, key))) || d.TrackSymbols.Any(s => key == "symbol:" + s)) result[key] = hash;
-        result["tracking-policy"] = Hash(Serialize(new { d.TrackFiles, d.TrackSymbols, d.Entities, d.Related }));
+        foreach (var story in model.Stories?.Stories.Where(s => (d.StoryIds ?? []).Contains(s.Id)) ?? []) result[story.Source] = model.Fingerprints[story.Source];
+        result["tracking-policy"] = d.StoryIds is null ? Hash(Serialize(new { d.TrackFiles, d.TrackSymbols, d.Entities, d.Related })) : Hash(Serialize(new { d.TrackFiles, d.TrackSymbols, d.Entities, d.Related, d.StoryIds }));
         return result;
     }
     public static SortedDictionary<string, Review> Reviews(string root) => File.Exists(At(root, "docs/uml/state/reviews.json")) ? Read<SortedDictionary<string, Review>>(At(root, "docs/uml/state/reviews.json")) : new(StringComparer.Ordinal);
@@ -446,11 +466,11 @@ static class Uml
 }
 
 record Manifest(int Version, string[] Projects, string[] Inputs, Diagram[] Diagrams);
-record Diagram(string Id, string Type, string Title, string File, string Maintenance, string Status, string? Project, string[] TrackFiles, string[] TrackSymbols, string[] Entities, string[] Related);
+record Diagram(string Id, string Type, string Title, string File, string Maintenance, string Status, string? Project, string[] TrackFiles, string[] TrackSymbols, string[] Entities, string[] Related, string[]? StoryIds = null);
 record Registry(Entity[] Entities);
 record Entity(string Id, string Kind, string[] Targets);
 record ProjectModel(string Id, string Name, string File, string[] References);
 record TypeModel(string Id, string Project, string Namespace, string Name, string Kind, string Declaration, string[] Files, string[] Bases, string[] Members, OperationModel[] Operations);
 record OperationModel(string Id, string Name, string Signature);
-record Model(ProjectModel[] Projects, TypeModel[] Types, SortedDictionary<string, string> Fingerprints, CodeDiagramSet? CodeDiagrams = null);
+record Model(ProjectModel[] Projects, TypeModel[] Types, SortedDictionary<string, string> Fingerprints, CodeDiagramSet? CodeDiagrams = null, Catalogue? Stories = null);
 record Review(SortedDictionary<string, string> Fingerprints, string DiagramHash, string Note);
