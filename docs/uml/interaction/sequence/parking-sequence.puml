@@ -271,5 +271,8 @@ legend bottom
   [[../../structural/class/garage-classes.puml Garage classes]]
   [[../../behavioral/activity/parking-activity.puml Parking validation and assignment]]
   [[../../behavioral/state-machine/parking-spot-state.puml Parking spot occupancy]]
+  [[../communication/parking-communication.puml Parking collaboration and messages]]
+  [[../interaction-overview/parking-interaction-overview.puml Parking interaction paths]]
+  [[../timing/parking-timing.puml Template: parking timing — illustrative]]
 endlegend
 @enduml

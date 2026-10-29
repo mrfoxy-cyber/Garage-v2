@@ -72,6 +72,9 @@ static class StoryDiagramTests
         var parking = traces.Single(s => s.Id == "park-vehicle");
         Assert(parking.Implementations.Single().Member == "Demo.Service.Park()" && parking.Diagrams.Contains("classes") && parking.Diagrams.Contains("reviewed") && parking.Diagrams.Contains("story-sequence") && parking.Diagrams.Contains("story-activity"), "one story ID links requirements, code, sequence, reviewed behavior and shared class structure");
         Assert(traces.Single(s => s.Id == "unlinked").Implementations.Length == 0, "unlinked stories never claim an implementation");
+        var sameTitles = model.Stories! with { Stories = model.Stories!.Stories.Select(s => s with { Title = "Same goal title" }).ToList() };
+        var sameTitleView = CodeDiagrams.View(manifest.Diagrams[0], StoryDiagrams.UseCases(manifest.Diagrams[0], sameTitles, model.CodeDiagrams!.UseCases));
+        Assert(sameTitleView.Nodes.Single(n => n.Id.EndsWith(":u_unlinked", StringComparison.Ordinal)).Files.SequenceEqual(["UseCases/garage/unlinked.md"]) && sameTitleView.Nodes.Single(n => n.Id.EndsWith(":u_park_vehicle", StringComparison.Ordinal)).Files[0] == source, "duplicate display titles keep distinct story identities and source links");
         var graph = CodeDiagrams.View(manifest.Diagrams[2], StoryDiagrams.Activity(manifest.Diagrams[2], model.Stories!));
         var decision = graph.Nodes.Single(n => n.Kind == "decision");
         var rejection = graph.Nodes.Single(n => n.Name == "Reject without changes.");

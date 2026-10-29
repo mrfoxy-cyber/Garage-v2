@@ -197,6 +197,10 @@
           const storyLink = element('button', 'quiet-button', 'Story & diagrams →'); storyLink.type = 'button';
           storyLink.addEventListener('click', () => selectStory(node.storyId)); footer.append(storyLink);
         }
+        if (node.reference) {
+          const reference = element('button', 'quiet-button', 'Open sequence →'); reference.type = 'button';
+          reference.addEventListener('click', () => openReference(node.reference)); footer.append(reference);
+        }
         if (node.files[0]) {
           const source = element('a', '', 'View source ↗'); source.href = '../../' + node.files[0].split('/').map(encodeURIComponent).join('/'); source.target = '_blank'; source.rel = 'noopener'; footer.append(source);
         }
@@ -321,6 +325,7 @@
     presentationCameras.delete(`${id}:interactive`);
     request++; expandedId = null; focusId = null; scene = null; nodeSearch.value = ''; namespaceSelect.replaceChildren();
     const all = element('option', '', 'All namespaces'); all.value = ''; namespaceSelect.append(all);
+    namespaceSelect.value = '';
     for (const group of [...new Set((graph?.nodes || []).map(n => n.group).filter(Boolean))].sort()) { const option = element('option', '', group); option.value = group; namespaceSelect.append(option); }
     // Start large projects at a readable level; every type remains available through search or Show all.
     if (graph?.type === 'class' && graph.nodes.length > 12) {
@@ -328,7 +333,7 @@
       const preferred = ['.Models', '.Menus', '.Presentation', '.Vehicles'].map(suffix => groups.find(g => g.endsWith(suffix))).find(Boolean);
       namespaceSelect.value = preferred || groups.sort((a, b) => graph.nodes.filter(n => n.group === b).length - graph.nodes.filter(n => n.group === a).length)[0] || '';
     }
-    if (graph?.type === 'activity' && graph.nodes.length > 14) focusId = graph.nodes.find(n => n.kind === 'decision')?.id || null;
+    if (['activity','interaction-overview'].includes(graph?.type) && graph.nodes.length > 14) focusId = graph.nodes.find(n => n.kind === 'decision')?.id || null;
     byId('namespace-field').hidden = !graph || graph.type !== 'class';
     byId('graph-filters').hidden = !graph;
     byId('collapse-all').hidden = !graph; byId('collapse-all').disabled = true;
@@ -337,14 +342,14 @@
     byId('show-all').hidden = true;
     byId('view-title').textContent = diagram.title;
     byId('view-kind').textContent = `${['sequence','communication','interaction-overview','timing'].includes(diagram.type) ? 'INTERACTION' : ['use-case','activity','state-machine'].includes(diagram.type) ? 'BEHAVIORAL' : 'STRUCTURAL'} / ${diagram.type.toUpperCase()}`;
-    byId('view-description').textContent = diagram.origin === 'stories' ? 'Generated from your user stories. Open an element to read its goal and linked sources.' : diagram.maintenance === 'generated' ? 'A live view of the code. Open a card to explore its details; use Show all for the complete project.' : diagram.status === 'template' ? 'An interactive modeling template. Its example values and flows are illustrative.' : 'An interactive view of the reviewed UML source. Open an element to explore its details.';
+    byId('view-description').textContent = diagram.origin === 'interaction' ? 'Generated from the same interaction as the sequence. Open an element for its messages, guards and sequence context.' : diagram.origin === 'stories' ? 'Generated from your user stories. Open an element to read its goal and linked sources.' : diagram.maintenance === 'generated' ? 'A live view of the code. Open a card to explore its details; use Show all for the complete project.' : diagram.type === 'timing' && diagram.status === 'template' ? 'An illustrative timeline linked to the parking story. Actual durations and deadlines need timing requirements or measured traces.' : diagram.status === 'template' ? 'An interactive modeling template. Its example values and flows are illustrative.' : 'An interactive view of the reviewed UML source. Open an element to explore its details.';
     byId('source-link').href = diagram.source; byId('export-link').href = diagram.svg;
     byId('canvas-label').textContent = ({class:'Classes & relationships',component:'Project dependencies',package:'Projects & namespaces',sequence:'Lifelines & interactions',activity:'Actions & decisions','state-machine':'States & transitions','use-case':'Actors & capabilities',deployment:'Runtime & deployment',object:'Object snapshot','composite-structure':'Parts & connectors',profile:'Modeling conventions',communication:'Objects & numbered messages','interaction-overview':'Interaction flow',timing:'State over time'})[diagram.type] || 'Interactive diagram';
-    byId('maintenance-badge').textContent = diagram.status === 'template' ? 'Template' : diagram.origin === 'stories' ? 'Generated from stories' : diagram.maintenance === 'generated' ? 'Generated from code' : 'Reviewed diagram';
+    byId('maintenance-badge').textContent = diagram.status === 'template' ? 'Template' : diagram.origin === 'interaction' ? 'Generated from sequence' : diagram.origin === 'stories' ? 'Generated from stories' : diagram.maintenance === 'generated' ? 'Generated from code' : 'Reviewed diagram';
     byId('interaction-hint').textContent = graph?.sequence ? 'Open alt frames to reveal branches · Click messages for details · Scroll to zoom' : 'Click an element to expand · Drag background to pan · Scroll to zoom';
     interactiveLabel = byId('canvas-label').textContent;
     interactiveHint = byId('interaction-hint').textContent;
-    byId('view-caption').textContent = ({class:'Solid hollow-triangle arrows show inheritance; dashed arrows show implementation. Namespace panels group independent clusters. External bases appear inside the expanded card.',component:'Arrows follow declared project references. Open a project to explore its details.',package:'Project boxes contain namespaces; arrows represent exact project references.',sequence:'Read messages from top to bottom. Dashed vertical lines are lifelines; dashed horizontal arrows are replies. Alternative frames start folded; opening a nested frame keeps its outer context.',activity:'Follow control arrows from the start to a final node. Diamonds represent decisions or merges; arrow labels preserve the source guards.','state-machine':'Transitions preserve their triggers, guards and actions. A self-loop returns to the same state. Open a state to read its notes.','use-case':'Actors sit outside the system boundary; ellipses represent user capabilities. Open a capability to read its notes.',deployment:'Nested frames preserve device and runtime containment. Artifacts and local files retain their deployment relationships.',object:'Instance names and attribute values describe a snapshot. A filled diamond marks the owning object.','composite-structure':'The frame groups the application parts; labeled connectors show their collaboration.',profile:'Metaclasses and stereotypes preserve the illustrative profile notation. This template is not an executable UML metamodel.',communication:'Numbered message labels show the collaboration order between objects.','interaction-overview':'Interaction reference nodes are connected through decisions and merge points.',timing:'Horizontal position represents time; vertical levels represent states. Click a time point for details. Units remain illustrative.'})[diagram.type] || '';
+    byId('view-caption').textContent = ({class:'Solid hollow-triangle arrows show inheritance; dashed arrows show implementation. Namespace panels group independent clusters. External bases appear inside the expanded card.',component:'Arrows follow declared project references. Open a project to explore its details.',package:'Project boxes contain namespaces; arrows represent exact project references.',sequence:'Read messages from top to bottom. Dashed vertical lines are lifelines; dashed horizontal arrows are replies. Alternative frames start folded; opening a nested frame keeps its outer context.',activity:'Follow control arrows from the start to a final node. Diamonds represent decisions or merges; arrow labels preserve the source guards.','state-machine':'Transitions preserve their triggers, guards and actions. A self-loop returns to the same state. Open a state to read its notes.','use-case':'Actors sit outside the system boundary; ellipses represent user capabilities. Open a capability to read its notes.',deployment:'Nested frames preserve device and runtime containment. Artifacts and local files retain their deployment relationships.',object:'Instance names and attribute values describe a snapshot. A filled diamond marks the owning object.','composite-structure':'The frame groups the application parts; labeled connectors show their collaboration.',profile:'Metaclasses and stereotypes preserve the illustrative profile notation. This template is not an executable UML metamodel.',communication:'Connections group calls and replies between participants. Expand an object for all numbered messages and their guards; Open sequence restores the source context.','interaction-overview':'Interaction reference nodes are connected through decisions and merge points.',timing:'Horizontal position represents time; vertical levels represent states. Click a time point for details. Units remain illustrative.'})[diagram.type] || '';
     nodeSearch.closest('label').querySelector('.field-label').textContent = diagram.type === 'class' ? 'Find a class' : 'Find an element';
     nodeSearch.placeholder = diagram.type === 'class' ? 'Type a class name…' : 'Type an element name…';
     const notesPanel = byId('view-notes'); const notesBody = byId('view-notes-content'); notesBody.replaceChildren(); notesPanel.hidden = !graph?.notes?.length;
@@ -382,7 +387,7 @@
     for (const id of story.diagrams) {
       const target = diagrams.get(id); if (!target) continue;
       const button = element('button', 'story-diagram-link'); button.type = 'button';
-      button.append(element('strong', '', target.title), element('span', '', target.type === 'class' ? 'Shared project structure' : target.origin === 'stories' ? 'Requirements · generated from story' : target.maintenance === 'generated' ? 'Implementation · generated from code' : 'Implementation · reviewed view'));
+      button.append(element('strong', '', target.title), element('span', '', target.status === 'template' ? 'Illustrative template · linked to story' : target.type === 'class' ? 'Shared project structure' : target.origin === 'stories' ? 'Requirements · generated from story' : target.origin === 'interaction' ? 'Implementation · shared sequence data' : target.maintenance === 'generated' ? 'Implementation · generated from code' : 'Implementation · reviewed view'));
       button.addEventListener('click', () => selectView(id)); diagramLinks.append(button);
     }
     panel.append(diagramLinks, element('h2', '', 'Linked code'));
@@ -393,6 +398,17 @@
       const item = element('li'); const link = element('a', '', implementation.member); link.href = '../../' + implementation.source.split('/').map(encodeURIComponent).join('/'); link.target = '_blank'; link.rel = 'noopener'; item.append(link); codeList.append(item);
     }
     panel.append(codeList);
+    for (const interaction of Object.values(data.interactions || {}).filter(i => i.storyId === story.id)) {
+      const paths = element('details', 'story-interaction-paths'); paths.append(element('summary', '', `Source interaction branches (${interaction.branches.length})`));
+      paths.append(element('p', 'story-meta', 'Explore guarded source branches. Each link opens its enclosing sequence alternatives.'));
+      const list = element('ul');
+      for (const branch of interaction.branches) {
+        const item = element('li'); const button = element('button', 'quiet-button', ['otherwise','else'].includes(branch.label) ? 'Otherwise: ' + branch.frameLabel : branch.label); button.type = 'button'; button.dataset.branchId = branch.id;
+        button.title = [...branch.parentIds.map(id => interaction.branches.find(b => b.id === id)?.label || id), branch.label].join(' → ');
+        button.addEventListener('click', () => openReference({diagramId:interaction.id,nodeId:branch.fragmentId})); item.append(button); list.append(item);
+      }
+      paths.append(list); panel.append(paths);
+    }
     const steps = element('ol'); for (const step of story.flow) steps.append(element('li', '', step.text)); panel.append(element('h2', '', 'Flow'), steps);
     const alternatives = element('ul'); for (const alternative of story.alternatives) { const item = element('li'); item.append(element('strong', '', alternative.condition + ': '), document.createTextNode(alternative.response)); alternatives.append(item); } panel.append(element('h2', '', 'Alternatives'), alternatives);
     const done = element('ul'); for (const condition of story.done) done.append(element('li', '', condition)); panel.append(element('h2', '', 'Done when'), done);
@@ -406,6 +422,13 @@
     for (const button of document.querySelectorAll('[data-view-id]')) button.removeAttribute('aria-current');
     if (!byId('use-case-frame').getAttribute('src')) byId('use-case-frame').src = 'use-cases.generated.html';
     if (updateHash) history.replaceState(null, '', '#use-cases');
+  }
+  async function openReference(reference) {
+    await selectView(reference.diagramId);
+    if (catalogueOpen || diagram?.id !== reference.diagramId) return;
+    await setPresentation('interactive');
+    if (catalogueOpen || diagram?.id !== reference.diagramId) return;
+    if (graph?.nodes.some(n => n.id === reference.nodeId)) await toggleNode(reference.nodeId);
   }
   byId('open-use-cases').addEventListener('click', () => selectCatalogue());
   for (const button of document.querySelectorAll('[data-view-id]')) button.addEventListener('click', () => selectView(button.dataset.viewId));
@@ -486,6 +509,6 @@
     resizeFrame = requestAnimationFrame(() => { if (interactive()) arrange({ fit: fitted, anchor: fitted ? null : expandedId }); else if (presentation === 'plantuml' && fitted) fit(); });
   }).observe(viewport);
   window.addEventListener('hashchange', () => { const id=location.hash.slice(1);if(id.startsWith('story/'))selectStory(id.slice(6),false);else if(id==='use-cases')selectCatalogue(false);else if(diagrams.has(id)&&(catalogueOpen||selectedStory||id!==diagram?.id))selectView(id,false); });
-  globalThis.GarageExplorer = { selectView, selectCatalogue, selectStory, setPresentation, fit, zoomTo, toggleNode, focusSearch, resetFilters, getState: () => ({ diagram:selectedStory?'story/'+selectedStory:catalogueOpen?'use-cases':diagram?.id,presentation,expandedId,focusId,camera:{...camera},scene,visibleGraph:graph?filteredGraph():null }) };
+  globalThis.GarageExplorer = { selectView, selectCatalogue, selectStory, openReference, setPresentation, fit, zoomTo, toggleNode, focusSearch, resetFilters, getState: () => ({ diagram:selectedStory?'story/'+selectedStory:catalogueOpen?'use-cases':diagram?.id,presentation,expandedId,focusId,camera:{...camera},scene,visibleGraph:graph?filteredGraph():null }) };
   if(location.hash.slice(1).startsWith('story/'))selectStory(location.hash.slice(7),false);else if(location.hash.slice(1)==='use-cases')selectCatalogue(false);else selectView(location.hash.slice(1) || 'garage-classes', false);
 })();

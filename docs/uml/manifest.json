@@ -162,7 +162,10 @@
         "garage-components",
         "garage-classes",
         "parking-activity",
-        "parking-spot-state"
+        "parking-spot-state",
+        "parking-communication",
+        "parking-interaction-overview",
+        "parking-timing"
       ]
     },
     {
@@ -327,10 +330,11 @@
     {
       "id": "parking-communication",
       "type": "communication",
-      "title": "Template: communication",
+      "title": "Parking collaboration and messages",
       "file": "docs/uml/interaction/communication/parking-communication.puml",
-      "maintenance": "manual",
-      "status": "template",
+      "maintenance": "generated",
+      "status": "active",
+      "interactionSource": "parking-sequence",
       "project": null,
       "trackFiles": [],
       "trackSymbols": [],
@@ -338,16 +342,19 @@
         "system:garage"
       ],
       "related": [
-        "parking-sequence"
+        "parking-sequence",
+        "parking-interaction-overview",
+        "garage-use-cases"
       ]
     },
     {
       "id": "parking-interaction-overview",
       "type": "interaction-overview",
-      "title": "Template: interaction-overview",
+      "title": "Parking interaction paths",
       "file": "docs/uml/interaction/interaction-overview/parking-interaction-overview.puml",
-      "maintenance": "manual",
-      "status": "template",
+      "maintenance": "generated",
+      "status": "active",
+      "interactionSource": "parking-sequence",
       "project": null,
       "trackFiles": [],
       "trackSymbols": [],
@@ -355,16 +362,19 @@
         "system:garage"
       ],
       "related": [
-        "parking-sequence"
+        "parking-sequence",
+        "parking-communication",
+        "parking-story-activity"
       ]
     },
     {
       "id": "parking-timing",
       "type": "timing",
-      "title": "Template: timing",
+      "title": "Template: parking timing — illustrative",
       "file": "docs/uml/interaction/timing/parking-timing.puml",
       "maintenance": "manual",
       "status": "template",
+      "interactionSource": "parking-sequence",
       "project": null,
       "trackFiles": [],
       "trackSymbols": [],
@@ -372,7 +382,8 @@
         "system:garage"
       ],
       "related": [
-        "parking-spot-state"
+        "parking-spot-state",
+        "parking-sequence"
       ]
     }
   ]

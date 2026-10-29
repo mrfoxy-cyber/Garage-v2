@@ -1,19 +1,262 @@
 @startuml
 ' diagram-id: parking-interaction-overview
-' entities: system:garage
-title TEMPLATE: interaction overview
+' Generated from shared interaction: parking-sequence
+' source-puml-sha256: 2d0fd172f7f055a37761f33b2dc071bdd9707c9f47da3de7cb445eb41f1ba6c4
+' story-id: park-vehicle
+title Parking interaction paths
 start
-:ref - Select garage and vehicle;
-:ref - Parking sequence;
-if (Parking successful?) then (yes)
-  :ref - Refresh occupancy;
-else (no)
-  :ref - Display failure;
-endif
+:ref - 1. Park(vehicle, garage, spotNumber);
+' source-segment: parking-sequence:element-2
+' Static source view; MaxDepth=3. Lifelines group calls by declared type, not runtime instance. Alternatives are possible source paths, not a recorded execution. Guards may be infeasible together. Property getters and implicit/external exceptions are not expanded. Framework calls and callbacks are boundaries. Caller continuation assumes the callee returns normally. Async scheduling is not modeled. Expand bodies in: Garage.Models, Garage.Services. Other calls remain visible as boundaries.
+' 1: call Park(vehicle, garage, spotNumber)
+' External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)
+' External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(garage)
+' External/delegate call boundary (not expanded): Catalog.Vehicles.Contains(vehicle)
+if (Source alternatives) then (!Catalog.Vehicles.Contains(vehicle))
+:ref - 2. Failed(&quot;Choose a vehicle from this application's catalog.&quot;, OperationError.VehicleNotFound);
+' source-segment: parking-sequence:element-8
+' 2.1.1: call Failed(&quot;Choose a vehicle from this application's catalog.&quot;, OperationError.VehicleNotFound) [!Catalog.Vehicles.Contains(vehicle)]
+' Scope boundary: method body not expanded.
+' 2.1.2: reply Garage.Results.ParkingResult (if call returns) [!Catalog.Vehicles.Contains(vehicle)]
+' 2.1.3: reply ParkingResult.Failed(&quot;Choose a vehicle from this application's catalog.&quot;, OperationError.VehicleNotFound) [!Catalog.Vehicles.Contains(vehicle)]
 stop
-legend bottom
-  Template only. Select and verify the constituent interactions before promotion.
-  Interaction references use PlantUML activity notation.
-  [[../sequence/parking-sequence.puml Reviewed parking sequence]]
-endlegend
+else (otherwise)
+:ref - 3. ParkNewVehicle(vehicle, garage, spotNumber);
+' source-segment: parking-sequence:element-15
+' 2.2.1: call ParkNewVehicle(vehicle, garage, spotNumber) [otherwise of (!Catalog.Vehicles.Contains(vehicle))]
+' External/delegate call boundary (not expanded): garages.Contains(garage)
+if (Source alternatives) then (!garages.Contains(garage))
+:ref - 4. Failed(&quot;Choose a garage registered with this application.&quot;, OperationError.ValidationFailed);
+' source-segment: parking-sequence:element-19
+' 2.2.2.1.1: call Failed(&quot;Choose a garage registered with this application.&quot;, OperationError.ValidationFailed) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND !garages.Contains(garage)]
+' Scope boundary: method body not expanded.
+' 2.2.2.1.2: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND !garages.Contains(garage)]
+' 2.2.2.1.3: reply ParkingResult.Failed(&quot;Choose a garage registered with this application.&quot;, OperationError.ValidationFailed) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND !garages.Contains(garage)]
+else (otherwise)
+:ref - 5. IsParked(vehicle);
+' source-segment: parking-sequence:element-26
+' 2.2.2.2.1: call IsParked(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage))]
+' Callback boundary (not executed by this analysis): garage =&gt; garage.Vehicles.Any(parked =&gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase))
+' External/delegate call boundary (not expanded): garages.Any(garage =&gt; garage.Vehicles.Any(parked =&gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase)))
+' 2.2.2.2.2: reply garages.Any(garage =&gt; garage.Vehicles.Any(parked =&gt; string.Equals(parked.RegistrationNumber, vehicle.RegistrationNumber, StringComparison.OrdinalIgnoreCase))) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage))]
+if (Source alternatives) then (IsParked(vehicle))
+:ref - 6. Failed($&quot;Vehicle {vehicle.RegistrationNumber} is already parked in a garage.&quot;, OperationError.VehicleAlreadyParked);
+' source-segment: parking-sequence:element-33
+' 2.2.2.2.3.1.1: call Failed($&quot;Vehicle {vehicle.RegistrationNumber} is already parked in a garage.&quot;, OperationError.VehicleAlreadyParked) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND IsParked(vehicle)]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.1.2: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND IsParked(vehicle)]
+' 2.2.2.2.3.1.3: reply ParkingResult.Failed($&quot;Vehicle {vehicle.RegistrationNumber} is already parked in a garage.&quot;, OperationError.VehicleAlreadyParked) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND IsParked(vehicle)]
+else (otherwise)
+if (Source alternatives) then (spotNumber is int spot)
+:ref - 7. Park(vehicle, spot);
+' source-segment: parking-sequence:element-41
+' 2.2.2.2.3.2.1.1.1: call Park(vehicle, spot) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot]
+' External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)
+if (Source alternatives) then (spot &lt; 1 || spot &gt; Capacity)
+:ref - 8. Failed($&quot;Parking spot must be between 1 and {Capacity}.&quot;, OperationError.SpotOutOfRange);
+' source-segment: parking-sequence:element-45
+' 2.2.2.2.3.2.1.1.2.1.1: call Failed($&quot;Parking spot must be between 1 and {Capacity}.&quot;, OperationError.SpotOutOfRange) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND spot &lt; 1 || spot &gt; Capacity]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.2.1.1.2.1.2: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND spot &lt; 1 || spot &gt; Capacity]
+' 2.2.2.2.3.2.1.1.2.1.3: reply ParkingResult.Failed($&quot;Parking spot must be between 1 and {Capacity}.&quot;, OperationError.SpotOutOfRange) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND spot &lt; 1 || spot &gt; Capacity]
+else (otherwise)
+if (Source alternatives) then (parkingSpot.Vehicle is not null)
+:ref - 9. Failed($&quot;Parking spot {spot} is occupied.&quot;, OperationError.SpotOccupied);
+' source-segment: parking-sequence:element-53
+' 2.2.2.2.3.2.1.1.2.2.1.1.1: call Failed($&quot;Parking spot {spot} is occupied.&quot;, OperationError.SpotOccupied) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND parkingSpot.Vehicle is not null]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.2.1.1.2.2.1.1.2: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND parkingSpot.Vehicle is not null]
+' 2.2.2.2.3.2.1.1.2.2.1.1.3: reply ParkingResult.Failed($&quot;Parking spot {spot} is occupied.&quot;, OperationError.SpotOccupied) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND parkingSpot.Vehicle is not null]
+else (otherwise)
+:ref - 10. Fits(vehicle);
+' source-segment: parking-sequence:element-60
+' 2.2.2.2.3.2.1.1.2.2.1.2.1: call Fits(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null)]
+' External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)
+if (Source alternatives) then (Dimensions is null)
+:ref - 11. true;
+' source-segment: parking-sequence:element-64
+' 2.2.2.2.3.2.1.1.2.2.1.2.2.1.1: reply true [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND Dimensions is null]
+else (otherwise)
+:ref - 12. size.LengthMeters &lt;= Dimensions.LengthMeters &amp;&amp; size.WidthMeters &lt;= Dimensions.WidthMeters &amp;&amp; size.HeightMeters &lt;= Dimensions.HeightMeters;
+' source-segment: parking-sequence:element-66
+' 2.2.2.2.3.2.1.1.2.2.1.2.2.2.1: reply size.LengthMeters &lt;= Dimensions.LengthMeters &amp;&amp; size.WidthMeters &lt;= Dimensions.WidthMeters &amp;&amp; size.HeightMeters &lt;= Dimensions.HeightMeters [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (Dimensions is null)]
+endif
+if (Source alternatives) then (!parkingSpot.Fits(vehicle))
+:ref - 13. Failed($&quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.&quot;, OperationError.VehicleDoesNotFit);
+' source-segment: parking-sequence:element-69
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.1.1: call Failed($&quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.&quot;, OperationError.VehicleDoesNotFit) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND !parkingSpot.Fits(vehicle)]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.1.2: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND !parkingSpot.Fits(vehicle)]
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.1.3: reply ParkingResult.Failed($&quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.&quot;, OperationError.VehicleDoesNotFit) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND !parkingSpot.Fits(vehicle)]
+else (otherwise)
+:ref - 14. RegistrationExists(vehicle.RegistrationNumber);
+' source-segment: parking-sequence:element-76
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.1: call RegistrationExists(vehicle.RegistrationNumber) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle))]
+' Callback boundary (not executed by this analysis): spot =&gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)
+' External/delegate call boundary (not expanded): parkingSpots.Any(spot =&gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.2: reply parkingSpots.Any(spot =&gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle))]
+if (Source alternatives) then (RegistrationExists(vehicle.RegistrationNumber))
+:ref - 15. DuplicateRegistration(vehicle);
+' source-segment: parking-sequence:element-83
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.3.1.1: call DuplicateRegistration(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND RegistrationExists(vehicle.RegistrationNumber)]
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.3.1.2: call Failed($&quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.&quot;, OperationError.DuplicateRegistration) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND RegistrationExists(vehicle.RegistrationNumber)]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.3.1.3: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND RegistrationExists(vehicle.RegistrationNumber)]
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.3.1.4: reply ParkingResult.Failed($&quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.&quot;, OperationError.DuplicateRegistration) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND RegistrationExists(vehicle.RegistrationNumber)]
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.3.1.5: reply DuplicateRegistration(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND RegistrationExists(vehicle.RegistrationNumber)]
+else (otherwise)
+:ref - 16. Park(vehicle);
+' source-segment: parking-sequence:element-94
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.3.2.1: call Park(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber))]
+' External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)
+if (Source alternatives) then (Vehicle is not null is false)
+:ref - 17. Fits(vehicle);
+' source-segment: parking-sequence:element-98
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.3.2.2.1.1: call Fits(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND Vehicle is not null is false]
+' Depth boundary: method body not expanded.
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.3.2.2.1.2: reply bool (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND Vehicle is not null is false]
+else (short-circuit)
+endif
+if (Source alternatives) then (Vehicle is not null || !Fits(vehicle))
+:ref - 18. Source boundary;
+' source-segment: parking-sequence:element-104
+' Constructor/initializer boundary (not expanded): new InvalidOperationException(&quot;The spot must be empty and large enough for the vehicle.&quot;)
+' Throws: new InvalidOperationException(&quot;The spot must be empty and large enough for the vehicle.&quot;); this path terminates here.
+else (otherwise)
+:ref - 19. complete;
+' source-segment: parking-sequence:element-106
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.3.2.3.2.1: reply complete [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (Vehicle is not null || !Fits(vehicle))]
+endif
+:ref - 20. Completed(spot, $&quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.&quot;);
+' source-segment: parking-sequence:element-108
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.3.2.4: call Completed(spot, $&quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.&quot;) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber))]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.3.2.5: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber))]
+' 2.2.2.2.3.2.1.1.2.2.1.2.3.2.3.2.6: reply ParkingResult.Completed(spot, $&quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.&quot;) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber))]
+endif
+endif
+endif
+endif
+:ref - 21. garage.Park(vehicle, spot);
+' source-segment: parking-sequence:element-115
+' 2.2.2.2.3.2.1.1.3: reply garage.Park(vehicle, spot) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND spotNumber is int spot]
+else (otherwise)
+:ref - 22. Park(vehicle);
+' source-segment: parking-sequence:element-117
+' 2.2.2.2.3.2.1.2.1: call Park(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot)]
+' External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)
+' 2.2.2.2.3.2.1.2.2: call RegistrationExists(vehicle.RegistrationNumber) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot)]
+' Callback boundary (not executed by this analysis): spot =&gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)
+' External/delegate call boundary (not expanded): parkingSpots.Any(spot =&gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase))
+' 2.2.2.2.3.2.1.2.3: reply parkingSpots.Any(spot =&gt; string.Equals(spot.Vehicle?.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase)) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot)]
+if (Source alternatives) then (RegistrationExists(vehicle.RegistrationNumber))
+:ref - 23. DuplicateRegistration(vehicle);
+' source-segment: parking-sequence:element-127
+' 2.2.2.2.3.2.1.2.4.1.1: call DuplicateRegistration(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND RegistrationExists(vehicle.RegistrationNumber)]
+' 2.2.2.2.3.2.1.2.4.1.2: call Failed($&quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.&quot;, OperationError.DuplicateRegistration) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND RegistrationExists(vehicle.RegistrationNumber)]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.2.1.2.4.1.3: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND RegistrationExists(vehicle.RegistrationNumber)]
+' 2.2.2.2.3.2.1.2.4.1.4: reply ParkingResult.Failed($&quot;A vehicle with registration number {vehicle.RegistrationNumber} is already parked.&quot;, OperationError.DuplicateRegistration) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND RegistrationExists(vehicle.RegistrationNumber)]
+' 2.2.2.2.3.2.1.2.4.1.5: reply DuplicateRegistration(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND RegistrationExists(vehicle.RegistrationNumber)]
+else (otherwise)
+:ref - 24. Source boundary;
+' source-segment: parking-sequence:element-138
+' Callback boundary (not executed by this analysis): spot =&gt; spot.Vehicle is null &amp;&amp; spot.Fits(vehicle)
+' External/delegate call boundary (not expanded): parkingSpots.FirstOrDefault(spot =&gt; spot.Vehicle is null &amp;&amp; spot.Fits(vehicle))
+if (Source alternatives) then (availableSpot is null)
+if (Source alternatives) then (AvailableSpaces == 0)
+:ref - 25. Failed(&quot;The garage is full.&quot;, OperationError.GarageFull);
+' source-segment: parking-sequence:element-142
+' 2.2.2.2.3.2.1.2.4.2.1.1.1.1.1: call Failed(&quot;The garage is full.&quot;, OperationError.GarageFull) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND availableSpot is null AND AvailableSpaces == 0]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.2.1.2.4.2.1.1.1.1.2: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND availableSpot is null AND AvailableSpaces == 0]
+' 2.2.2.2.3.2.1.2.4.2.1.1.1.1.3: reply ParkingResult.Failed(&quot;The garage is full.&quot;, OperationError.GarageFull) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND availableSpot is null AND AvailableSpaces == 0]
+else (otherwise)
+:ref - 26. Failed(&quot;No available parking spot is large enough for this vehicle.&quot;, OperationError.VehicleDoesNotFit);
+' source-segment: parking-sequence:element-149
+' 2.2.2.2.3.2.1.2.4.2.1.1.1.2.1: call Failed(&quot;No available parking spot is large enough for this vehicle.&quot;, OperationError.VehicleDoesNotFit) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND availableSpot is null AND otherwise of (AvailableSpaces == 0)]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.2.1.2.4.2.1.1.1.2.2: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND availableSpot is null AND otherwise of (AvailableSpaces == 0)]
+' 2.2.2.2.3.2.1.2.4.2.1.1.1.2.3: reply ParkingResult.Failed(&quot;No available parking spot is large enough for this vehicle.&quot;, OperationError.VehicleDoesNotFit) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND availableSpot is null AND otherwise of (AvailableSpaces == 0)]
+endif
+else (otherwise)
+:ref - 27. Park(vehicle, availableSpot.Number);
+' source-segment: parking-sequence:element-156
+' 2.2.2.2.3.2.1.2.4.2.1.2.1: call Park(vehicle, availableSpot.Number) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null)]
+' External/delegate call boundary (not expanded): ArgumentNullException.ThrowIfNull(vehicle)
+if (Source alternatives) then (spot &lt; 1 || spot &gt; Capacity)
+:ref - 28. Failed($&quot;Parking spot must be between 1 and {Capacity}.&quot;, OperationError.SpotOutOfRange);
+' source-segment: parking-sequence:element-160
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.1.1: call Failed($&quot;Parking spot must be between 1 and {Capacity}.&quot;, OperationError.SpotOutOfRange) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND spot &lt; 1 || spot &gt; Capacity]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.1.2: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND spot &lt; 1 || spot &gt; Capacity]
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.1.3: reply ParkingResult.Failed($&quot;Parking spot must be between 1 and {Capacity}.&quot;, OperationError.SpotOutOfRange) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND spot &lt; 1 || spot &gt; Capacity]
+else (otherwise)
+if (Source alternatives) then (parkingSpot.Vehicle is not null)
+:ref - 29. Failed($&quot;Parking spot {spot} is occupied.&quot;, OperationError.SpotOccupied);
+' source-segment: parking-sequence:element-168
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.1.1: call Failed($&quot;Parking spot {spot} is occupied.&quot;, OperationError.SpotOccupied) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND parkingSpot.Vehicle is not null]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.1.2: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND parkingSpot.Vehicle is not null]
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.1.3: reply ParkingResult.Failed($&quot;Parking spot {spot} is occupied.&quot;, OperationError.SpotOccupied) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND parkingSpot.Vehicle is not null]
+else (otherwise)
+:ref - 30. Fits(vehicle);
+' source-segment: parking-sequence:element-175
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.1: call Fits(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null)]
+' Depth boundary: method body not expanded.
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.2: reply bool (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null)]
+if (Source alternatives) then (!parkingSpot.Fits(vehicle))
+:ref - 31. Failed($&quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.&quot;, OperationError.VehicleDoesNotFit);
+' source-segment: parking-sequence:element-181
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.1.1: call Failed($&quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.&quot;, OperationError.VehicleDoesNotFit) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND !parkingSpot.Fits(vehicle)]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.1.2: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND !parkingSpot.Fits(vehicle)]
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.1.3: reply ParkingResult.Failed($&quot;Vehicle {vehicle.RegistrationNumber} does not fit in parking spot {spot}.&quot;, OperationError.VehicleDoesNotFit) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND !parkingSpot.Fits(vehicle)]
+else (otherwise)
+:ref - 32. RegistrationExists(vehicle.RegistrationNumber);
+' source-segment: parking-sequence:element-188
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.2.1: call RegistrationExists(vehicle.RegistrationNumber) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle))]
+' Depth boundary: method body not expanded.
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.2.2: reply bool (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle))]
+if (Source alternatives) then (RegistrationExists(vehicle.RegistrationNumber))
+:ref - 33. DuplicateRegistration(vehicle);
+' source-segment: parking-sequence:element-194
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.2.3.1.1: call DuplicateRegistration(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND RegistrationExists(vehicle.RegistrationNumber)]
+' Depth boundary: method body not expanded.
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.2.3.1.2: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND RegistrationExists(vehicle.RegistrationNumber)]
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.2.3.1.3: reply DuplicateRegistration(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND RegistrationExists(vehicle.RegistrationNumber)]
+else (otherwise)
+:ref - 34. Park(vehicle);
+' source-segment: parking-sequence:element-201
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.2.3.2.1: call Park(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber))]
+' Depth boundary: method body not expanded.
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.2.3.2.2: reply complete (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber))]
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.2.3.2.3: call Completed(spot, $&quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.&quot;) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber))]
+' Scope boundary: method body not expanded.
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.2.3.2.4: reply Garage.Results.ParkingResult (if call returns) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber))]
+' 2.2.2.2.3.2.1.2.4.2.1.2.2.2.1.2.3.2.3.2.5: reply ParkingResult.Completed(spot, $&quot;Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.&quot;) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null) AND otherwise of (spot &lt; 1 || spot &gt; Capacity) AND otherwise of (parkingSpot.Vehicle is not null) AND otherwise of (!parkingSpot.Fits(vehicle)) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber))]
+endif
+endif
+endif
+endif
+:ref - 35. Park(vehicle, availableSpot.Number);
+' source-segment: parking-sequence:element-213
+' 2.2.2.2.3.2.1.2.4.2.1.2.3: reply Park(vehicle, availableSpot.Number) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot) AND otherwise of (RegistrationExists(vehicle.RegistrationNumber)) AND otherwise of (availableSpot is null)]
+endif
+endif
+:ref - 36. garage.Park(vehicle);
+' source-segment: parking-sequence:element-215
+' 2.2.2.2.3.2.1.2.5: reply garage.Park(vehicle) [otherwise of (!Catalog.Vehicles.Contains(vehicle)) AND otherwise of (!garages.Contains(garage)) AND otherwise of (IsParked(vehicle)) AND otherwise of (spotNumber is int spot)]
+endif
+endif
+endif
+:ref - 37. ParkNewVehicle(vehicle, garage, spotNumber);
+' source-segment: parking-sequence:element-217
+' 2.2.3: reply ParkNewVehicle(vehicle, garage, spotNumber) [otherwise of (!Catalog.Vehicles.Contains(vehicle))]
+stop
+endif
+note right
+Each ref groups a contiguous segment of parking-sequence. Open a reference for its messages and boundaries.
+Guards and replies come from the same source sequence. Alternative paths are not an execution trace.
+end note
 @enduml

@@ -49,11 +49,13 @@ static class AuthoredData
         {
             var line = lines[cursor];
             if (line.Length == 0 || line.StartsWith('\'') || line.StartsWith('@') && !Regex.IsMatch(line, "^@[-0-9]") ||
-                line.StartsWith("title ", StringComparison.Ordinal) || line == "left to right direction" || line.StartsWith("skinparam ", StringComparison.Ordinal) || line.StartsWith("hide ", StringComparison.Ordinal)) { cursor++; return true; }
+                line.StartsWith("title ", StringComparison.Ordinal) || line is "left to right direction" or "allowmixing" || line.StartsWith("skinparam ", StringComparison.Ordinal) || line.StartsWith("hide ", StringComparison.Ordinal)) { cursor++; return true; }
             if (line.StartsWith("legend", StringComparison.Ordinal))
             {
+                var start = cursor + 1;
                 while (cursor < lines.Length && lines[cursor] != "endlegend") cursor++;
                 if (cursor == lines.Length) throw new Exception(Error("Unclosed legend"));
+                if (diagram.Type == "timing") notes.Add(Text(string.Join(" ", lines[start..cursor].Where(l => !l.StartsWith("[[", StringComparison.Ordinal)))));
                 cursor++; return true;
             }
             return false;

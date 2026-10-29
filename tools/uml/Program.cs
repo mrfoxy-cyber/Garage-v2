@@ -188,7 +188,15 @@ static class Uml
             if (d.Status is not ("active" or "template")) throw new Exception($"Invalid status: {d.Id}");
             if (!d.File.StartsWith("docs/uml/", StringComparison.Ordinal) || !d.File.EndsWith(".puml", StringComparison.Ordinal)) throw new Exception($"Invalid diagram path: {d.File}");
             At(root, d.File);
-            if (d.Maintenance == "generated" && d.Type is not ("class" or "component" or "package" or "sequence" or "use-case" or "activity")) throw new Exception($"No generator for {d.Type}.");
+            if (d.Maintenance == "generated" && d.Type is not ("class" or "component" or "package" or "sequence" or "use-case" or "activity" or "communication" or "interaction-overview")) throw new Exception($"No generator for {d.Type}.");
+            if (InteractionDiagrams.IsProjection(d) || d.InteractionSource is not null)
+            {
+                if (d.Type is not ("communication" or "interaction-overview" or "timing") || d.InteractionSource == d.Id ||
+                    !manifest.Diagrams.Any(s => s.Id == d.InteractionSource && s.Type == "sequence" && s.Maintenance == "generated") ||
+                    model.CodeDiagrams?.SequenceEntries.SingleOrDefault(s => s.Id == d.InteractionSource) is not { } source)
+                    throw new Exception($"{d.Id} needs interactionSource pointing to a generated sequence.");
+                if ((d.StoryIds ?? []).Any(id => id != source.StoryId)) throw new Exception($"Story IDs in {d.Id} disagree with interactionSource {d.InteractionSource}.");
+            }
             foreach (var storyId in d.StoryIds ?? [])
                 if (model.Stories?.Stories.Any(s => s.Id == storyId) != true) throw new Exception($"Unknown story {storyId} in {d.Id}.");
             if (d.StoryIds is not null && d.StoryIds.Distinct().Count() != d.StoryIds.Length) throw new Exception($"Duplicate story reference in {d.Id}.");
@@ -229,9 +237,10 @@ static class Uml
         var output = new SortedDictionary<string, string>(StringComparer.Ordinal);
         if (model.Stories is { } catalogue)
             foreach (var (path, content) in CatalogueStore.Outputs(catalogue)) output.Add(path, content);
+        var interactions = InteractionDiagrams.Capture(manifest, model);
         var stories = StoryDiagrams.Traces(manifest, model);
-        output["docs/uml/model.generated.json"] = Serialize(new { version = 3, projects = model.Projects, types = model.Types,
-            useCases = model.CodeDiagrams?.UseCases ?? [], sequenceEntries = model.CodeDiagrams?.SequenceEntries ?? [], stories });
+        output["docs/uml/model.generated.json"] = Serialize(new { version = 4, projects = model.Projects, types = model.Types,
+            useCases = model.CodeDiagrams?.UseCases ?? [], sequenceEntries = model.CodeDiagrams?.SequenceEntries ?? [], stories, interactions });
         var views = GraphData.Create(manifest, model);
         // Capture authored sources once: interactive metadata, PUML text and previews share this snapshot.
         var authoredSources = manifest.Diagrams.Where(d => d.Maintenance != "generated")
@@ -240,11 +249,16 @@ static class Uml
             views.Add(diagram.Id, AuthoredData.Parse(diagram, authoredSources[diagram.File]));
         foreach (var d in manifest.Diagrams.Where(d => d.Maintenance == "generated"))
         {
+            if (InteractionDiagrams.IsProjection(d))
+            {
+                var projection = InteractionDiagrams.Generate(d, InteractionDiagrams.Source(d, interactions));
+                output[d.File] = projection.Definition.Puml; views.Add(d.Id, projection.View); continue;
+            }
             if (d.Type is "sequence" or "use-case" or "activity")
             {
                 var generated = d.Type == "activity" ? StoryDiagrams.Activity(d, model.Stories ?? throw new Exception("Story catalogue required.")) : model.CodeDiagrams!.Diagrams[d.Id];
                 output[d.File] = generated.Puml;
-                var view = CodeDiagrams.View(d, generated);
+                var view = d.Type == "sequence" ? interactions[d.Id].Sequence with { InteractionId = d.Id } : CodeDiagrams.View(d, generated);
                 if (d.Type == "use-case") view = view with { Nodes = view.Nodes.Select(n => n with {
                     StoryId = stories.SingleOrDefault(s => n.Id == d.Id + ":u_" + s.Id.Replace('-', '_'))?.Id }).ToArray() };
                 views.Add(d.Id, view);
@@ -334,10 +348,11 @@ static class Uml
             lines.Add("@enduml");
             output[d.File] = string.Join("\n", lines) + "\n";
         }
-        var graphData = new { version = 5, stories, diagrams = manifest.Diagrams.Select(d => {
+        var graphData = new { version = 6, stories, interactions, diagrams = manifest.Diagrams.Select(d => {
             var puml = output.TryGetValue(d.File, out var generated) ? generated : authoredSources[d.File];
-            return new { d.Id, d.Type, d.Title, d.Maintenance, d.Status, d.Related, storyIds = StoryDiagrams.StoryIds(d, model),
-                origin = d.Maintenance == "generated" && d.Type is "use-case" or "activity" ? "stories" : d.Maintenance == "generated" ? "code" : "authored",
+            return new { d.Id, d.Type, d.Title, d.Maintenance, d.Status, d.Related, storyIds = StoryDiagrams.StoryIds(d, model), d.InteractionSource,
+                interactionHash = interactions.GetValueOrDefault(d.InteractionSource ?? d.Id)?.SourceHash,
+                origin = InteractionDiagrams.IsProjection(d) ? "interaction" : d.Maintenance == "generated" && d.Type is "use-case" or "activity" ? "stories" : d.Maintenance == "generated" ? "code" : "authored",
                 source = d.File["docs/uml/".Length..], svg = Path.ChangeExtension(d.File["docs/uml/".Length..], ".svg").Replace('\\', '/'),
                 puml, pumlHash = Hash(puml) };
         }).ToArray(), views };
@@ -421,8 +436,9 @@ static class Uml
         var result = new SortedDictionary<string, string>(StringComparer.Ordinal);
         foreach (var (key, hash) in model.Fingerprints)
             if ((!key.StartsWith("symbol:", StringComparison.Ordinal) && d.TrackFiles.Any(p => Glob(p, key))) || d.TrackSymbols.Any(s => key == "symbol:" + s)) result[key] = hash;
-        foreach (var story in model.Stories?.Stories.Where(s => (d.StoryIds ?? []).Contains(s.Id)) ?? []) result[story.Source] = model.Fingerprints[story.Source];
-        result["tracking-policy"] = d.StoryIds is null ? Hash(Serialize(new { d.TrackFiles, d.TrackSymbols, d.Entities, d.Related })) : Hash(Serialize(new { d.TrackFiles, d.TrackSymbols, d.Entities, d.Related, d.StoryIds }));
+        foreach (var story in model.Stories?.Stories.Where(s => StoryDiagrams.StoryIds(d, model).Contains(s.Id)) ?? []) result[story.Source] = model.Fingerprints[story.Source];
+        if (d.InteractionSource is not null) result["interaction:" + d.InteractionSource] = Hash(model.CodeDiagrams!.Diagrams[d.InteractionSource].Puml);
+        result["tracking-policy"] = d.InteractionSource is not null ? Hash(Serialize(new { d.TrackFiles, d.TrackSymbols, d.Entities, d.Related, d.StoryIds, d.InteractionSource })) : d.StoryIds is null ? Hash(Serialize(new { d.TrackFiles, d.TrackSymbols, d.Entities, d.Related })) : Hash(Serialize(new { d.TrackFiles, d.TrackSymbols, d.Entities, d.Related, d.StoryIds }));
         return result;
     }
     public static SortedDictionary<string, Review> Reviews(string root) => File.Exists(At(root, "docs/uml/state/reviews.json")) ? Read<SortedDictionary<string, Review>>(At(root, "docs/uml/state/reviews.json")) : new(StringComparer.Ordinal);
@@ -466,7 +482,7 @@ static class Uml
 }
 
 record Manifest(int Version, string[] Projects, string[] Inputs, Diagram[] Diagrams);
-record Diagram(string Id, string Type, string Title, string File, string Maintenance, string Status, string? Project, string[] TrackFiles, string[] TrackSymbols, string[] Entities, string[] Related, string[]? StoryIds = null);
+record Diagram(string Id, string Type, string Title, string File, string Maintenance, string Status, string? Project, string[] TrackFiles, string[] TrackSymbols, string[] Entities, string[] Related, string[]? StoryIds = null, string? InteractionSource = null);
 record Registry(Entity[] Entities);
 record Entity(string Id, string Kind, string[] Targets);
 record ProjectModel(string Id, string Name, string File, string[] References);

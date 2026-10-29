@@ -121,7 +121,7 @@ static class CodeDiagrams
             Nodes = view.Nodes.Select(n => {
                 var name = Decode(n.Name);
                 return n with { Name = name, Group = Decode(n.Group), Members = n.Members.Select(Decode).ToArray(),
-                    Files = generated.ParticipantSources.GetValueOrDefault(name, n.Files) };
+                    Files = generated.ParticipantSources.GetValueOrDefault(n.Id, generated.ParticipantSources.GetValueOrDefault(name, n.Files)) };
             }).ToArray(),
             Edges = view.Edges.Select(e => e with { Label = Decode(e.Label) }).ToArray(),
             Notes = view.Notes?.Select(Decode).ToArray(),

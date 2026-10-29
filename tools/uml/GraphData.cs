@@ -68,9 +68,10 @@ static class GraphData
 }
 
 record GraphView(string Id, string Title, string Type, GraphNode[] Nodes, GraphEdge[] Edges,
-    SequenceSpec? Sequence = null, TimingSpec? Timing = null, string[]? Notes = null);
-record GraphNode(string Id, string Name, string Kind, string Group, string[] Members, string[] Files, string Declaration, string[] Bases, string? Parent = null, string? StoryId = null);
-record GraphEdge(string Id, string Source, string Target, string Kind, string Label);
+    SequenceSpec? Sequence = null, TimingSpec? Timing = null, string[]? Notes = null, string? InteractionId = null);
+record DiagramReference(string DiagramId, string NodeId);
+record GraphNode(string Id, string Name, string Kind, string Group, string[] Members, string[] Files, string Declaration, string[] Bases, string? Parent = null, string? StoryId = null, DiagramReference? Reference = null);
+record GraphEdge(string Id, string Source, string Target, string Kind, string Label, string[]? MessageIds = null);
 record SequenceSpec(string[] Participants, SequenceItem[] Items);
 record SequenceItem(string Id, string Kind, string Label, string? Source, string? Target, bool Reply, SequenceBranch[] Branches);
 record SequenceBranch(string Label, SequenceItem[] Items);

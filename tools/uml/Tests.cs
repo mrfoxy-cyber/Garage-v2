@@ -118,6 +118,7 @@ static class Tests
             count += AuthoredDataTests.Run();
             count += CodeDiagramTests.Run(root);
             count += StoryDiagramTests.Run(root);
+            count += InteractionDiagramTests.Run(root);
             Console.WriteLine($"{count} UML self-tests passed.");
             return 0;
         }

@@ -2,7 +2,7 @@
 
 The browser's **Use-case stories** entry opens the readable requirements catalogue, grouped into required and optional stories. Its source is `UseCases/`, managed by the separate [UseCaseManager project](../../tools/UseCaseManager/README.md). Every story is treated as complete; invalid content stops generation. Normal UML generation and checking also refresh or check the catalogue. Choose **Diagrams & code** on a story to open its linked requirements views, implementation sequence, reviewed behavior and shared class structure. The use-case diagram reads all story goals and actors; code annotations link implementations to those same story IDs.
 
-This folder connects stories and diagrams to the code in **Garage-v2**. It contains all 14 UML diagram types: 19 diagram files, of which ten are generated, three are reviewed views of the current application, and six are explicitly labeled templates.
+This folder connects stories and diagrams to the code in **Garage-v2**. It contains all 14 UML diagram types: 19 diagram files, of which twelve are generated, three are reviewed views of the current application, and four are explicitly labeled templates.
 
 Start with the [diagram browser](index.html), [components](structural/component/garage-components.puml), or [parking sequence](interaction/sequence/parking-sequence.puml). Render first to create local SVG previews. Every diagram has a stable ID and related-diagram links in the manifest; diagram sources also link to related views.
 
@@ -28,7 +28,7 @@ Use the sidebar to choose a diagram, **Find a class** to locate a type, and **Fo
 | Object / composite structure / profile / communication | Instance values, owning diamonds, contained parts, metaclass/stereotype roles and numbered messages are retained. |
 | Timing | Explicit time coordinates, state levels and a step trace. Click a time point to open its state/time details below the trace. |
 
-The six illustrative templates remain labeled **Template**. Their interactive presentation does not promote them to reviewed descriptions of the implementation. **Diagram notes** exposes source annotations. Static SVG exports remain available through **SVG export**. See [vendor provenance and license](vendor/README.md). No CDN, account, build step or server is required to use the page.
+The four illustrative templates remain labeled **Template**. Their interactive presentation does not promote them to reviewed descriptions of the implementation. Timing is connected to the parking story and sequence, with an explicit explanation that its example coordinates are illustrative. The story defines no deadline, delay or duration requirement. **Diagram notes** exposes source annotations. Static SVG exports remain available through **SVG export**. See [vendor provenance and license](vendor/README.md). No CDN, account, build step or server is required to use the page.
 
 `AuthoredData.cs` reads the bounded PlantUML notation used by the current diagrams, including the generated sequence/use-case sources: entity declarations, containment, member values, notes, labeled connections, activities with `if`/`else`/`endif`, sequence messages and nested `alt` frames, and robust timing signals with increasing sample times. It is not a general PlantUML interpreter. Unsupported statements or unresolved endpoints fail generation with a source location, so new notation must be supported explicitly before it can appear in the live viewer. No second hand-maintained diagram model is required.
 
@@ -56,13 +56,13 @@ docs/uml/
     deployment/              Reviewed local runtime
     profile/                 Template: optional modeling conventions
   behavioral/
-    use-case/                Reviewed user capabilities
-    activity/                Reviewed parking flow
+    use-case/                Generated story goals and linked implementation
+    activity/                Generated parking story flow and reviewed implementation flow
     state-machine/           Reviewed parking spot lifecycle
   interaction/
     sequence/                Reviewed parking collaboration
-    communication/           Template: numbered object messages
-    interaction-overview/    Template: interaction references
+    communication/           Generated collaboration links and numbered guarded messages
+    interaction-overview/    Generated source-segment references and source decisions
     timing/                  Template: illustrative occupancy timeline
   state/reviews.json         Committed review fingerprints and explanations
   reports/                  Ignored Markdown and JSON check results
@@ -70,7 +70,7 @@ tools/uml/                  C# extraction, generation, validation, tests and ren
 .github/workflows/uml-check.yml
 ```
 
-Interaction diagrams are a subset of behavioral UML diagrams, grouped separately here for navigation. The manifest uses JSON so the .NET tooling needs no YAML parser or NuGet packages. Text sources use PlantUML. Communication, interaction overview, composite structure and profile templates use PlantUML's available object, activity, component and class notation; these are not an executable UML metamodel or XMI export.
+Interaction diagrams are a subset of behavioral UML diagrams, grouped separately here for navigation. The manifest uses JSON so the .NET tooling needs no YAML parser or NuGet packages. Text sources use PlantUML. Communication and interaction overview use object and activity notation, while composite structure and profile templates use component and class notation. These are not an executable UML metamodel or XMI export. Mixing the actor with object compartments uses PlantUML's [allowmixing directive](https://plantuml.com/deployment-diagram).
 
 ## Everyday commands
 
@@ -83,7 +83,7 @@ dotnet run --project tools/uml -- check --strict
 dotnet run --project tools/uml -- self-test
 ```
 
-`generate` updates the ten generated diagrams, shared model and browser. It never overwrites hand-authored diagrams or records a review. `check` is read-only for sources and review state; it writes local reports. Generated drift and broken references fail checks. Pending reviews are advisory by default and fail with `--strict`. Exit codes: 0 passed, 1 outdated output or strict review pending, 2 invalid input/tool error. From elsewhere, pass `--root /path/to/Garage-v2` after the command. Add `--verbose` to print exception details when diagnosing a tool error.
+`generate` updates the twelve generated diagrams, shared model and browser. It never overwrites hand-authored diagrams or records a review. `check` is read-only for sources and review state; it writes local reports. Generated drift and broken references fail checks. Pending reviews are advisory by default and fail with `--strict`. Exit codes: 0 passed, 1 outdated output or strict review pending, 2 invalid input/tool error. From elsewhere, pass `--root /path/to/Garage-v2` after the command. Add `--verbose` to print exception details when diagnosing a tool error.
 
 Render and validate full PlantUML syntax with PowerShell 7:
 
@@ -125,7 +125,19 @@ The generated view describes **possible source paths**, not an execution trace. 
 
 As with structural extraction, this is not an MSBuild evaluation: conditional project settings, custom compile items, generated source and package references are not resolved. Calls that cannot be bound are visibly labeled unresolved. Application compilation and tests remain independent checks. An instrumented test trace would be a separate future input for exact scenario sequences and measured timing.
 
-After changing stories, annotations or code, run `pwsh -File tools/uml/render.ps1` to regenerate the model, PUML, interactive views and SVG previews together, then reload `index.html`. The implementation activity/state/deployment views and six templates retain their maintenance policies. Parking's reviewed activity and spot state also reference `park-vehicle` through `storyIds`, so changes to that specification trigger their review.
+After changing stories, annotations or code, run `pwsh -File tools/uml/render.ps1` to regenerate the model, PUML, interactive views and SVG previews together, then reload `index.html`. The implementation activity/state/deployment views and four templates retain their maintenance policies. Parking's reviewed activity and spot state also reference `park-vehicle` through `storyIds`, so changes to that specification trigger their review.
+
+## Shared interaction views
+
+`parking-sequence`, `parking-communication` and `parking-interaction-overview` use one captured interaction. `InteractionDiagrams.cs` projects the code-generated sequence's exact participants, calls, replies, notes and nested alternatives. Both derived manifest entries use `interactionSource: "parking-sequence"`; they inherit its `park-vehicle` story ID. Unknown source IDs, non-sequence sources and conflicting story IDs fail validation. Projections can appear before their source in the manifest.
+
+The shared model and browser snapshot include an `interactions` dictionary. Each interaction records the source PUML hash, sequence tree, ordered messages and nested branch IDs. Branch IDs are deterministic for the captured structure and labels; source edits can change them. They identify source alternatives. Named acceptance-scenario mapping and measured execution traces remain separate inputs. An `otherwise` guard retains its enclosing condition when shown outside the sequence.
+
+Communication keeps one compact connection per sender, receiver and call/reply kind. Expanding a participant reveals every outgoing numbered message and its full guard context. The hierarchical numbers encode source traversal and branch position; they do not claim runtime timing or call-stack nesting. Every communication edge retains its original message IDs. Replies keep their own dashed links. Both the PUML and the interactive details come from the same captured interaction.
+
+The overview partitions linear source segments into interaction references and preserves the nested source guards between them. A reply to the external actor terminates that branch; internal collaborator replies continue within their calling interaction. Expand a reference to read the segment's messages and extraction boundaries. Its **Open sequence** action opens the corresponding source element, including enclosing alternative frames. PUML comments retain the same segment details and source element IDs. Large overviews start near a decision; **Show all** reveals the complete flow.
+
+**Use-case stories → Park vehicle → Diagrams & code** includes all linked interaction views. Its expandable **Source interaction branches** list opens the source sequence context. The timing template also inherits the story link, but its example Empty/Occupied/Empty cycle includes a later removal and is not a measured parking trace. Actual timing constraints need explicit requirements or trace evidence; see [PlantUML timing notation](https://plantuml.com/timing-diagram).
 
 ## How change detection works
 
@@ -169,7 +181,7 @@ Each manifest entry declares `entities` for shared context and `related` for nav
 
 1. Create a `.puml` file in the appropriate type folder. Include `@startuml`, a `' diagram-id: unique-id` line, and `@enduml`.
 2. Add a manifest entry with a unique `id`, `type`, `title`, `file`, `maintenance`, `status`, `project` (null unless a generated class view), `trackFiles`, `trackSymbols`, `entities`, and `related`.
-3. Choose `generated` for supported class/component/package views, the story use-case view, a story activity with exactly one `storyIds` entry and mapped alternatives, or a sequence with a matching `SequenceView` method. Choose `reviewed` with `status: active` for a view checked against implementation. Use `manual` with `status: template` for an illustrative starting point.
+3. Choose `generated` for supported class/component/package views, the story use-case view, a story activity with exactly one `storyIds` entry and mapped alternatives, a sequence with a matching `SequenceView` method, or communication/interaction-overview views with an `interactionSource` pointing to a generated sequence. Choose `reviewed` with `status: active` for a view checked against implementation. Use `manual` with `status: template` for an illustrative starting point. Timing can reference an interaction for navigation while retaining its template status.
 4. For a reviewed view, add concrete tracking scopes. Example: `Garage/Services/**/*.cs`. A `*` matches within one directory; `**` spans directories; `?` matches one non-separator character. Paths use `/` and are case-sensitive, including on Windows. Exact symbols are copied from `model.generated.json` into `trackSymbols`.
 5. Link shared entity IDs and related diagrams. Add registry entities when needed. Replace illustrative values and template labels before promotion.
 6. Run `generate`, review and acknowledge the new view, then run `check --strict`, full syntax validation and rendering.

@@ -21,7 +21,7 @@ function inside(node,frame) { return node.x>=frame.x && node.y>=frame.y && node.
 (async()=>{
   assert.equal(Object.keys(data.views).length,data.diagrams.length);
   for (const diagram of data.diagrams) assert(data.views[diagram.id]);
-  pass('every diagram, including all six templates, has a live model');
+  pass('every diagram, including the four remaining templates, has a live model');
   for (const diagram of data.diagrams) { const scene=await semantic.layout(data.views[diagram.id],options); geometry(scene); }
   pass(`all ${data.diagrams.length} diagram views render finite non-overlapping interactive geometry`);
 
@@ -63,6 +63,22 @@ function inside(node,frame) { return node.x>=frame.x && node.y>=frame.y && node.
   assert(stateScene.edges.some(e=>e.source===e.target&&e.points.length>2));
   pass('state self-transitions receive a routed loop');
 
+  const interaction=data.interactions['parking-sequence'];
+  const communication=data.views['parking-communication'];
+  assert.equal(communication.nodes.length,sequence.sequence.participants.length);
+  assert.deepEqual(communication.edges.flatMap(e=>e.messageIds).sort(),interaction.messages.map(m=>m.id).sort());
+  assert(communication.nodes.every(n=>n.storyId===interaction.storyId&&n.reference.diagramId===interaction.id));
+  const service=communication.nodes.find(n=>n.name==='Garage.Services.GarageService');
+  const expandedCommunication=await semantic.layout(communication,{...options,expandedId:service.id});geometry(expandedCommunication);
+  assert(expandedCommunication.nodes.find(n=>n.id===service.id).height>150);
+  pass('communication keeps all shared messages and expands their guarded details without overlap');
+  const overview=data.views['parking-interaction-overview'];
+  const reference=overview.nodes.find(n=>n.kind==='interaction');
+  assert(overview.nodes.filter(n=>['interaction','decision'].includes(n.kind)).every(n=>n.reference&&sequence.nodes.some(s=>s.id===n.reference.nodeId)));
+  const expandedOverview=await semantic.layout(overview,{...options,expandedId:reference.id});geometry(expandedOverview);
+  assert(overview.interactionId===interaction.id&&overview.nodes.filter(n=>n.kind==='interaction').length>4);
+  pass('generated overview references actual sequence elements and expands source segments without overlap');
+
   const timing=data.views['parking-timing'];const timeScene=await semantic.layout(timing,options);geometry(timeScene);
   const [first,second,third]=timing.timing.lanes[0].samples;
   const a=timeScene.nodes.find(n=>n.id===first.id),b=timeScene.nodes.find(n=>n.id===second.id),c=timeScene.nodes.find(n=>n.id===third.id);
@@ -71,5 +87,9 @@ function inside(node,frame) { return node.x>=frame.x && node.y>=frame.y && node.
   const sampleOpen=await semantic.layout(timing,{...options,expandedId:second.id});geometry(sampleOpen);
   assert(sampleOpen.nodes.find(n=>n.id===second.id).height>100&&sampleOpen.edges.some(e=>e.kind==='timing-trace'));
   pass('time-point details open while the signal trace remains visible');
+  assert.equal(data.diagrams.find(d=>d.id==='parking-timing').status,'template');
+  assert.deepEqual(data.diagrams.find(d=>d.id==='parking-timing').storyIds,['park-vehicle']);
+  assert(timing.notes.some(note=>note.includes('no deadline')));
+  pass('timing is story-linked and explicitly illustrative while duration requirements are absent');
   console.log(count+' authored diagram layout checks passed.');
 })().catch(error=>{console.error(error);process.exitCode=1});

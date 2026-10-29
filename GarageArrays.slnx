@@ -98,6 +98,8 @@
     <File Path="tools/uml/CodeDiagrams.cs" />
     <File Path="tools/uml/CodeDiagramTests.cs" />
     <File Path="tools/uml/StoryDiagrams.cs" />
+    <File Path="tools/uml/InteractionDiagrams.cs" />
+    <File Path="tools/uml/InteractionDiagramTests.cs" />
     <File Path="tools/uml/StoryDiagramTests.cs" />
     <File Path="tools/uml/GraphData.cs" />
     <File Path="tools/uml/GraphDataTests.cs" />

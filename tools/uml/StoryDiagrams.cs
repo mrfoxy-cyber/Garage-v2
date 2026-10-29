@@ -13,6 +13,7 @@ static class StoryDiagrams
     public static string[] StoryIds(Diagram diagram, Model model) => (diagram.StoryIds ?? [])
         .Concat(diagram.Type == "use-case" && diagram.Maintenance == "generated" ? model.Stories?.Stories.Select(s => s.Id) ?? [] : [])
         .Concat(model.CodeDiagrams?.SequenceEntries.Where(s => s.Id == diagram.Id).Select(s => s.StoryId) ?? [])
+        .Concat(model.CodeDiagrams?.SequenceEntries.Where(s => s.Id == diagram.InteractionSource).Select(s => s.StoryId) ?? [])
         .Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToArray();
 
     public static StoryTrace[] Traces(Manifest manifest, Model model) => model.Stories?.Stories.Select(story =>
@@ -38,7 +39,7 @@ static class StoryDiagrams
         {
             lines.Add($"  usecase \"{Text(story.Title)}\" as u_{story.Id.Replace('-', '_')}");
             var code = implementations.SingleOrDefault(c => c.Id == story.Id);
-            sources[story.Title] = sources.GetValueOrDefault(story.Title, []).Concat([story.Source]).Concat(code?.Sources ?? []).Distinct().ToArray();
+            sources[diagram.Id + ":u_" + story.Id.Replace('-', '_')] = new[] { story.Source }.Concat(code?.Sources ?? []).Distinct().ToArray();
         }
         lines.Add("}");
         foreach (var story in catalogue.Stories.OrderBy(s => s.Id, StringComparer.Ordinal))
