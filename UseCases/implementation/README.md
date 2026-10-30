@@ -28,4 +28,4 @@ Direct service-level checks for invalid garage selection, out-of-range spaces an
 
 Both current interfaces use the same domain rules. State is held in memory; input files are not updated when session data changes. The numbered console and richer terminal dashboard are different implementations of user interaction, not separate mandatory interfaces.
 
-The story catalogue and requirements use-case diagram read goals, actors and required/optional classification from Markdown. C# annotations reference those story IDs to link implementation; parking's sequence reads the annotated method and its collaborators. Neither catalogue inclusion nor a diagram is an assignment compliance report.
+The use cases and this page are ordinary Markdown documents maintained by hand. Update these links when code or tests move. A use-case document or a related test link does not by itself establish complete assignment coverage.

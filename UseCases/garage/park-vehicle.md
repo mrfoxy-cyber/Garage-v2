@@ -13,9 +13,9 @@
 
 ## Alternatives
 
-- **Invalid details:** explain the problem and allow correction without crashing. <!-- after: 2; outcome: end -->
-- **Duplicate registration:** reject the request and preserve the vehicles already parked. <!-- after: 2; outcome: end -->
-- **Garage full:** explain that no capacity is available and leave the garage unchanged. <!-- after: 2; outcome: end -->
+- **Invalid details:** explain the problem and allow correction without crashing.
+- **Duplicate registration:** reject the request and preserve the vehicles already parked.
+- **Garage full:** explain that no capacity is available and leave the garage unchanged.
 
 ## Done when
 
@@ -26,8 +26,8 @@
 
 Optional extensions are listed separately: [space selection, dimensions and filtering eligible vehicles](../optional/README.md). A separate catalogue and numbered parking-space objects are not required for basic parking.
 
-```yaml
-id: park-vehicle
-priority: required
-requirements: [GAR-03, GAR-05, GAR-07, GAR-11, GAR-12, GAR-13]
-```
+**ID:** park-vehicle
+
+**Scope:** Required
+
+**Requirement references:** GAR-03, GAR-05, GAR-07, GAR-11, GAR-12, GAR-13

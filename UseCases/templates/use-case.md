@@ -19,8 +19,8 @@
 - [An observable success condition.]
 - [An important rejection or safety condition.]
 
-```yaml
-id: REPLACE-WITH-UNIQUE-LOWERCASE-ID
-priority: required-or-optional
-requirements: []
-```
+**ID:** [Unique descriptive ID.]
+
+**Scope:** [Required or optional.]
+
+**Requirement references:** [Related requirement IDs, if applicable.]

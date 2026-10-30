@@ -23,8 +23,8 @@
 - A vehicle may remain unparked in the catalogue.
 - Immediate parking must succeed before catalogue registration is committed.
 
-```yaml
-id: create-vehicle
-priority: optional
-requirements: [OPT-10, OPT-12]
-```
+**ID:** create-vehicle
+
+**Scope:** Optional
+
+**Requirement references:** OPT-10, OPT-12

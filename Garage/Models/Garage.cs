@@ -1,4 +1,3 @@
-using Garage.Documentation;
 using Garage.Queries;
 using Garage.Results;
 using Garage.Vehicles;
@@ -15,11 +14,9 @@ public sealed class Garage
     public int Capacity { get; }
     public int OccupiedSpaces => parkingSpots.Count(spot => spot.Vehicle is not null);
     public int AvailableSpaces => Capacity - OccupiedSpaces;
-    [UseCase("list-vehicles")]
     public IReadOnlyList<Vehicle> Vehicles => parkingSpots
         .Select(spot => spot.Vehicle).OfType<Vehicle>().ToList().AsReadOnly();
 
-    [UseCase("inspect-spaces")]
     public IReadOnlyList<ParkingSpotInfo> SpotDetails => parkingSpots
         .Select(spot => new ParkingSpotInfo(spot.Number, spot.Dimensions, spot.Vehicle is not null))
         .ToList().AsReadOnly();
@@ -28,7 +25,6 @@ public sealed class Garage
         .Where(spot => spot.Vehicle is not null)
         .Select(spot => new ParkedVehicleInfo(spot.Number, spot.Vehicle!)).ToList().AsReadOnly();
 
-    [UseCase("list-vehicle-types")]
     public IReadOnlyList<VehicleTypeGroup> VehiclesByType => ParkedVehicles
         .GroupBy(parked => parked.Vehicle.GetType().Name)
         .Select(group => new VehicleTypeGroup(group.Key, group.ToList().AsReadOnly()))
@@ -79,7 +75,6 @@ public sealed class Garage
         }
     }
 
-    [UseCase("find-vehicle")]
     public ParkedVehicleInfo? FindVehicleByRegistration(string registrationNumber) =>
         ParkedVehicles.FirstOrDefault(parked => string.Equals(
             parked.Vehicle.RegistrationNumber, registrationNumber, StringComparison.OrdinalIgnoreCase));
@@ -124,7 +119,6 @@ public sealed class Garage
         return ParkingResult.Completed(spot, $"Vehicle {vehicle.RegistrationNumber} parked at spot {spot}.");
     }
 
-    [UseCase("remove-vehicle")]
     public GarageOperationResult Remove(string registrationNumber)
     {
         ParkedVehicleInfo? match = FindVehicleByRegistration(registrationNumber);
@@ -146,7 +140,6 @@ public sealed class Garage
             : Remove(vehicle.RegistrationNumber);
     }
 
-    [UseCase("search-vehicles")]
     public IReadOnlyList<Vehicle> Search(VehicleSearchCriteria criteria)
     {
         ArgumentNullException.ThrowIfNull(criteria);

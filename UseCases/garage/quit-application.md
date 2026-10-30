@@ -20,8 +20,8 @@
 
 Saving garage state between runs is an [optional enhancement](../optional/README.md); this use case does not require persistence or a confirmation prompt.
 
-```yaml
-id: quit-application
-priority: required
-requirements: [GAR-11, GAR-13]
-```
+**ID:** quit-application
+
+**Scope:** Required
+
+**Requirement references:** GAR-11, GAR-13

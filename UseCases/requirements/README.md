@@ -28,4 +28,4 @@ The brief explicitly separates suggested extras from requirements. See [the enha
 
 ## Traceability
 
-Required story footers list the relevant `GAR-*` IDs. These IDs identify requirements, while story IDs such as `create-garage` identify user goals. C# `[UseCase("story-id")]` annotations link code to these goals; test coverage remains a separate concern. Their existence or absence does not change this scope.
+Each required use-case document lists the relevant `GAR-*` IDs under **Requirement references**. These IDs identify requirements, while a document ID such as `create-garage` identifies a user goal. Links to related code and tests are maintained manually in the [implementation notes](../implementation/README.md); they do not change the scope of the requirements.

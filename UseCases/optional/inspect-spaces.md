@@ -21,8 +21,8 @@
 - Configured dimensions are shown when available.
 - Inspection leaves parking assignments unchanged.
 
-```yaml
-id: inspect-spaces
-priority: optional
-requirements: [OPT-03, OPT-08]
-```
+**ID:** inspect-spaces
+
+**Scope:** Optional
+
+**Requirement references:** OPT-03, OPT-08

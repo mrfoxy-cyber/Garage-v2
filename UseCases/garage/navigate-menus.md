@@ -24,8 +24,8 @@
 
 Screen layouts, keyboard shortcuts and a rich dashboard are separate implementation choices or [optional enhancements](../optional/README.md).
 
-```yaml
-id: navigate-menus
-priority: required
-requirements: [GAR-11, GAR-12, GAR-13]
-```
+**ID:** navigate-menus
+
+**Scope:** Required
+
+**Requirement references:** GAR-11, GAR-12, GAR-13

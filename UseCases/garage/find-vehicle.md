@@ -22,8 +22,8 @@
 - The result identifies the matching parked vehicle, or clearly reports no match.
 - Searching leaves the garage unchanged.
 
-```yaml
-id: find-vehicle
-priority: required
-requirements: [GAR-03, GAR-09, GAR-11, GAR-12, GAR-13]
-```
+**ID:** find-vehicle
+
+**Scope:** Required
+
+**Requirement references:** GAR-03, GAR-09, GAR-11, GAR-12, GAR-13

@@ -1,4 +1,3 @@
-using Garage.Documentation;
 using Garage.Models;
 using Garage.Persistence.Json;
 using Garage.Results;
@@ -34,15 +33,12 @@ public sealed class GarageService
     public bool ContainsGarage(string name) => garages.Any(garage =>
         string.Equals(garage.GarageName, name.Trim(), StringComparison.OrdinalIgnoreCase));
 
-    [UseCase("create-garage")]
     public GarageCreationResult CreateGarage(string name, int capacity) =>
         CreateAndRegister(() => new VehicleGarage(name, capacity));
 
-    [UseCase("create-garage-with-dimensions")]
     public GarageCreationResult CreateGarage(string name, IReadOnlyList<Dimensions> sizes) =>
         CreateAndRegister(() => new VehicleGarage(name, sizes));
 
-    [UseCase("create-garage")]
     public GarageCreationResult CreateGarageFromJson(string configurationPath, string? placementPath = null) =>
         CreateAndRegister(() => GarageJsonLoader.Load(configurationPath, placementPath));
 
@@ -59,9 +55,6 @@ public sealed class GarageService
                 : garage.AvailableSpotsFor(vehicle).Count > 0)).ToList().AsReadOnly();
     }
 
-    [UseCase("park-vehicle")]
-    [SequenceView("parking-sequence", MaxDepth = 3,
-        ExpandNamespaces = new[] { "Garage.Services", "Garage.Models" })]
     public ParkingResult Park(Vehicle vehicle, VehicleGarage garage, int? spotNumber = null)
     {
         ArgumentNullException.ThrowIfNull(vehicle);

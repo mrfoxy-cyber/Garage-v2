@@ -21,8 +21,8 @@
 - Vehicles outside the garage are not counted.
 - Viewing the summary leaves the garage unchanged.
 
-```yaml
-id: list-vehicle-types
-priority: required
-requirements: [GAR-02, GAR-08, GAR-11, GAR-12]
-```
+**ID:** list-vehicle-types
+
+**Scope:** Required
+
+**Requirement references:** GAR-02, GAR-08, GAR-11, GAR-12

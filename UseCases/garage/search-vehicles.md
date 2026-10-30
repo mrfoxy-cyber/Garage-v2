@@ -26,8 +26,8 @@
 
 Searching properties specific to a subclass is an [optional enhancement](../optional/README.md).
 
-```yaml
-id: search-vehicles
-priority: required
-requirements: [GAR-01, GAR-10, GAR-11, GAR-12, GAR-13]
-```
+**ID:** search-vehicles
+
+**Scope:** Required
+
+**Requirement references:** GAR-01, GAR-10, GAR-11, GAR-12, GAR-13

@@ -22,4 +22,4 @@ These capabilities may extend the required garage. Their presence in the applica
 
 When an enhancement is selected for development, give it a short optional story or an optional scenario linked to its parent goal. It must not silently add conditions to a required story. For example, sized spaces can extend [Create garage](../garage/create-garage.md), while specific-space selection can extend [Park vehicle](../garage/park-vehicle.md).
 
-Use `priority: optional` in its story footer. Record implementation and tests in [implementation notes](../implementation/README.md).
+Mark its scope as **Optional** in the document. Record implementation and tests in [implementation notes](../implementation/README.md).

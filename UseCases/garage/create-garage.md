@@ -25,8 +25,8 @@
 
 Optional extensions are listed separately: [multiple garages, configuration, file loading and sized spaces](../optional/README.md). Names, dimensions and JSON files are not required inputs to this basic flow.
 
-```yaml
-id: create-garage
-priority: required
-requirements: [GAR-03, GAR-04, GAR-05, GAR-06, GAR-11, GAR-12, GAR-13]
-```
+**ID:** create-garage
+
+**Scope:** Required
+
+**Requirement references:** GAR-03, GAR-04, GAR-05, GAR-06, GAR-11, GAR-12, GAR-13

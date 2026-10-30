@@ -21,8 +21,8 @@
 - A rejected request does not add a partial garage.
 - Sized spaces remain an optional extension of the basic capacity-based garage.
 
-```yaml
-id: create-garage-with-dimensions
-priority: optional
-requirements: [OPT-08]
-```
+**ID:** create-garage-with-dimensions
+
+**Scope:** Optional
+
+**Requirement references:** OPT-08

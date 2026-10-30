@@ -33,7 +33,7 @@ The **domain** is the part that decides what a valid vehicle or parking operatio
 
 The [Garage structure guide](Garage/README.md) explains how models, services, queries, results, and JSON loading connect, with a small example of the complete flow.
 
-The [use-case stories](UseCases/README.md) define required behavior from the Garage 1.0 assignment, with lists replacing its original array rule. Complete stories cover creation, parking, removal, listing, lookup, search, menus and exit; optional enhancements and implementation notes are kept separately. The [use-case manager](tools/UseCaseManager/README.md) validates the files and generates a catalogue in the diagram browser.
+The [use-case documents](UseCases/README.md) describe required behavior from the Garage 1.0 assignment, with lists replacing its original array rule. They cover creation, parking, removal, listing, lookup, search, menus and exit; optional enhancements and implementation notes are kept separately. Read and edit the Markdown files directly through their index.
 
 ## Vehicles and the domain
 
@@ -90,15 +90,3 @@ dotnet test Garage.Tests/Garage.Tests.csproj
 ~~~
 
 The tests cover vehicle validation, creation, parking and removal, searches, JSON loading, and duplicate handling.
-
-## UML diagrams
-
-The [UML guide](docs/uml/README.md) connects all 14 UML diagram types to the code through a manifest and shared identities. Class, component, and package diagrams are generated; parking workflows and the local runtime have reviewed diagrams. Other views start as clearly marked templates.
-
-~~~sh
-dotnet run --project tools/uml -- generate
-dotnet run --project tools/uml -- check
-pwsh -File tools/uml/render.ps1
-~~~
-
-Open [the diagram browser](docs/uml/index.html) after rendering. Pull requests check generated output, report diagrams affected by code changes, and attach SVG previews. See the guide for review acknowledgements and strict checks.

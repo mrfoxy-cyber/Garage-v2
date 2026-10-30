@@ -23,8 +23,8 @@
 - Other parked vehicles remain unchanged.
 - Registration lookup ignores letter case, and success or failure is clearly reported.
 
-```yaml
-id: remove-vehicle
-priority: required
-requirements: [GAR-07, GAR-09, GAR-11, GAR-12, GAR-13]
-```
+**ID:** remove-vehicle
+
+**Scope:** Required
+
+**Requirement references:** GAR-07, GAR-09, GAR-11, GAR-12, GAR-13

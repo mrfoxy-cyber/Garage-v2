@@ -3,9 +3,3 @@ bin/
 obj/
 *.user
 *.suo
-
-# UML build outputs; sources, model and review acknowledgements are versioned.
-tools/uml/.cache/
-docs/uml/reports/
-docs/uml/**/*.svg
-docs/uml/previews.generated.js

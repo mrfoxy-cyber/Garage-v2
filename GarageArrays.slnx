@@ -5,7 +5,6 @@
   </Folder>
   <Folder Name="/Use Cases/">
     <File Path="UseCases/README.md" />
-    <File Path="UseCases/catalogue.generated.md" />
     <File Path="UseCases/templates/use-case.md" />
   </Folder>
   <Folder Name="/Use Cases/Required/">
@@ -32,93 +31,9 @@
   <Folder Name="/Use Cases/Implementation/">
     <File Path="UseCases/implementation/README.md" />
   </Folder>
-  <Folder Name="/UML Diagrams/">
-    <File Path="docs/uml/index.html" />
-    <File Path="docs/uml/viewer.js" />
-    <File Path="docs/uml/use-cases.generated.html" />
-    <File Path="docs/uml/diagrams.generated.js" />
-    <File Path="docs/uml/graph-layout.js" />
-    <File Path="docs/uml/semantic-layout.js" />
-    <File Path="docs/uml/viewer.css" />
-    <File Path="docs/uml/README.md" />
-    <File Path="docs/uml/manifest.json" />
-    <File Path="docs/uml/registry.json" />
-    <File Path="docs/uml/model.generated.json" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Structural/Class/">
-    <File Path="docs/uml/structural/class/garage-classes.puml" />
-    <File Path="docs/uml/structural/class/garage-console-classes.puml" />
-    <File Path="docs/uml/structural/class/garage-terminal-classes.puml" />
-    <File Path="docs/uml/structural/class/garage-tests-classes.puml" />
-    <File Path="docs/uml/structural/class/vehicle-classes.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Structural/Object/">
-    <File Path="docs/uml/structural/object/garage-object.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Structural/Component/">
-    <File Path="docs/uml/structural/component/garage-components.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Structural/Composite Structure/">
-    <File Path="docs/uml/structural/composite-structure/garage-composite.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Structural/Package/">
-    <File Path="docs/uml/structural/package/garage-packages.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Structural/Deployment/">
-    <File Path="docs/uml/structural/deployment/local-deployment.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Structural/Profile/">
-    <File Path="docs/uml/structural/profile/garage-profile.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Behavioral/Use Case/">
-    <File Path="docs/uml/behavioral/use-case/garage-use-cases.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Behavioral/Activity/">
-    <File Path="docs/uml/behavioral/activity/parking-activity.puml" />
-    <File Path="docs/uml/behavioral/activity/parking-story-activity.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Behavioral/State Machine/">
-    <File Path="docs/uml/behavioral/state-machine/parking-spot-state.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Interaction/Sequence/">
-    <File Path="docs/uml/interaction/sequence/parking-sequence.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Interaction/Communication/">
-    <File Path="docs/uml/interaction/communication/parking-communication.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Interaction/Interaction Overview/">
-    <File Path="docs/uml/interaction/interaction-overview/parking-interaction-overview.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Interaction/Timing/">
-    <File Path="docs/uml/interaction/timing/parking-timing.puml" />
-  </Folder>
-  <Folder Name="/UML Diagrams/Automation/">
-    <File Path="tools/uml/Uml.csproj" />
-    <File Path="tools/uml/Program.cs" />
-    <File Path="tools/uml/CodeDiagrams.cs" />
-    <File Path="tools/uml/CodeDiagramTests.cs" />
-    <File Path="tools/uml/StoryDiagrams.cs" />
-    <File Path="tools/uml/InteractionDiagrams.cs" />
-    <File Path="tools/uml/InteractionDiagramTests.cs" />
-    <File Path="tools/uml/StoryDiagramTests.cs" />
-    <File Path="tools/uml/GraphData.cs" />
-    <File Path="tools/uml/GraphDataTests.cs" />
-    <File Path="tools/uml/AuthoredData.cs" />
-    <File Path="tools/uml/AuthoredDataTests.cs" />
-    <File Path="tools/uml/GraphGallery.cs" />
-    <File Path="tools/uml/graph-layout-tests.js" />
-    <File Path="tools/uml/semantic-layout-tests.js" />
-    <File Path="tools/uml/Tests.cs" />
-    <File Path="tools/uml/render.ps1" />
-    <File Path="docs/uml/state/reviews.json" />
-    <File Path=".github/workflows/uml-check.yml" />
-  </Folder>
   <Project Path="Garage.Console/Garage.Console.csproj" />
   <Project Path="Garage.Terminal/Garage.Terminal.csproj" />
   <Project Path="Garage.Tests/Garage.Tests.csproj" />
   <Project Path="Garage/Garage.csproj" />
   <Project Path="Vehicle/Vehicle.csproj" />
-  <Folder Name="/Tools/">
-    <Project Path="tools/UseCaseManager/UseCaseManager.csproj" />
-  </Folder>
 </Solution>
